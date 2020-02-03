@@ -10,3 +10,5 @@ green() {
 }
 
 echo "minishell test"
+
+echo "echo -n bonjour" | ./minishell
