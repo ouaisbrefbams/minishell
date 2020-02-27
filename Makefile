@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/02/03 04:14:25 by cacharle         ###   ########.fr        #
+#    Updated: 2020/02/27 17:58:16 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,12 +19,14 @@ LIBFTDIR = libft
 INCLUDEDIR = include
 SRCDIR = src
 OBJDIR = obj
+OBJDIRS = $(shell find $(SRCDIR) -type d | sed 's/src/$(OBJDIR)/')
 
 INCLUDEFILES = minishell.h
 INCLUDE = $(addprefix $(INCLUDEDIR)/, $(INCLUDEFILES))
 
-SRCFILES = main.c
-SRC = $(addprefix $(SRCDIR)/, $(SRCFILES))
+SRCFILES = $(shell find $(SRCDIR) -name "*.c")
+SRC = $(SRCFILES)
+# SRC = $(addprefix $(SRCDIR)/, $(SRCFILES))
 
 OBJ = $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
@@ -35,15 +37,15 @@ LDFLAGS = -L$(LIBFTDIR) -lft
 NAME = minishell
 
 .PHONY: all
-all: libft_all make_obj_dir $(NAME)
+all: libft_all prebuild $(NAME)
 
 .PHONY: test
 test:
 	./$(TESTEXEC)
 
-.PHONY: make_obj_dir
-make_obj_dir:
-	@if [ ! -d "$(OBJDIR)" ]; then echo "Making object dir"; mkdir $(OBJDIR); fi
+.PHONY: prebuild
+prebuild:
+	@for subdir in $(OBJDIRS); do echo "Making dir $$subdir"; mkdir -p $$subdir; done
 
 $(NAME): $(OBJ)
 	@echo "Linking: $@"

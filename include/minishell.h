@@ -6,22 +6,26 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/26 16:10:56 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/27 18:07:06 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <dirent.h>
+# include <sys/wait.h>
+# include <signal.h>
+# include <sys/stat.h>
+
 # include "libft.h"
 # include "libft_ht.h"
-
-
-typedef struct
-{
-	int		argc;
-	char	**argv;
-}						t_command;
+# include "libft_lst.h"
+# include "libft_util.h"
 
 typedef int 			t_status;
 
@@ -45,9 +49,6 @@ typedef struct
 	t_ftlst				*redirections;
 }						t_command;
 
-// parsing steps
-// 1. interpolation des variable
-
 typedef enum
 {
 	SEPARATOR_SEMICOLON,
@@ -67,6 +68,28 @@ typedef struct
 */
 
 t_parsing				*ms_parse(char *input);
+
+/*
+** path.c
+*/
+
+typedef struct
+{
+	t_ftht				*commands;
+	t_ftlst				*dirs;
+}						t_path;
+
+t_path					*ms_path_update(t_path *path, const char *path_str);
+void					ms_path_destroy(t_path *path);
+
+/*
+** environment.c
+*/
+
+// t_ftht					*ms_environment_update(t_ftht *environment, char **envp);
+// char					**ms_environment_(t_ftht *environment, char **envp);
+// void					ms_environment_destroy(t_ftht *environment);
+
 
 /*
 ** builtin*.c
