@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   state.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 11:50:29 by cacharle         ###   ########.fr       */
+/*   Created: 2020/02/28 11:51:54 by cacharle          #+#    #+#             */
+/*   Updated: 2020/02/28 12:36:10 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int argc, char **argv, char **envp)
+int						ms_state_init(t_state *state, const char **envp)
 {
-	t_state	state;
-	char	*line;
-	int		ret;
-
-	if (ms_state_init(&state, envp) == -1)
-		return (1);
-	
-	while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1)
-	{
-		if (ms_eval(ms_parse(line)) == -1)
-			continue ;  // and display error
-		free(line);
-	}
-	free(line);
-	ms_state_destroy(&state);
+	if ((state->environment = ms_environment_from_array(envp)) == NULL)
+		return (-1);
+	state->path = NULL;
+	if ((state->path = ms_path_update(state->path, ft_htget(state->environment, MS_PATH_KEY))) == NULL)
+		return (-1);
 	return (0);
+}
+
+void					ms_state_destroy(t_state *state)
+{
+	if (state == NULL)
+		return ;
+	ms_path_destroy(state->path);
+	ft_htdestroy(state->environment, ms_ht_del_str_entry);
 }

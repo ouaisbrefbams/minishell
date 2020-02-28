@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 11:50:29 by cacharle         ###   ########.fr       */
+/*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
+/*   Updated: 2020/02/28 11:57:30 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int argc, char **argv, char **envp)
+void				ms_ht_del_str_entry(t_ftht_content *content)
 {
-	t_state	state;
-	char	*line;
-	int		ret;
-
-	if (ms_state_init(&state, envp) == -1)
-		return (1);
-	
-	while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1)
-	{
-		if (ms_eval(ms_parse(line)) == -1)
-			continue ;  // and display error
-		free(line);
-	}
-	free(line);
-	ms_state_destroy(&state);
-	return (0);
+	if (content == NULL)
+		return ;
+	free(content->key);
+	free(content->value);
 }
