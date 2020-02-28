@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 12:34:21 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/28 15:30:10 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # include "ms_parse.h"
 
 # define MS_PATH_KEY "PATH"
+# define MS_PIPE_WRITE 1
+# define MS_PIPE_READ 0
 
 typedef struct
 {
@@ -42,6 +44,12 @@ typedef struct
 	t_path				*path;
 	t_ftht				*environment;
 }						t_state;
+
+typedef struct
+{
+	int					pipe_in[2];
+	int					pipe_out[2];
+}						t_command_frame;
 
 /*
 ** state.c

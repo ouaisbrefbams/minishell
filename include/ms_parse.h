@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 12:28:59 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/28 14:57:58 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ typedef struct
 {
 	char				*name;
 	char				**argv;
-	t_ftlst				*redirections;
+	t_ftlst				*redirections;  // need to store them in reverse order
 }						t_command;
 
 typedef enum
 {
 	SEPARATOR_SEMICOLON,
 	SEPARATOR_PIPE,
-	SEPARATOR_AND,
-	SEPARATOR_OR,
+	// SEPARATOR_AND,  // with parhenthesis => harder
+	// SEPARATOR_OR,
 }						t_separator;
 
 typedef struct
