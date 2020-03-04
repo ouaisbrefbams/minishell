@@ -21,7 +21,7 @@ t_ftht					*ms_environment_from_array(const char **envp)
 	char	*key;
 	char	*value;
 	/* int		equal_pos; */
-	
+
 	if (envp == NULL)
 		return (NULL);
 	if ((environment = ft_htnew(MS_ENVIRONMENT_HT_SIZE)) == NULL)
@@ -32,12 +32,14 @@ t_ftht					*ms_environment_from_array(const char **envp)
 		// free stuff on error
 		if ((value = ft_strchr(envp[i], '=')) == NULL)
 			return (NULL);
-		if ((key = ft_strndup(envp[i], ft_strspn(envp[i], "="))) == NULL)
+		if ((key = ft_strndup(envp[i], ft_strcspn(envp[i], "="))) == NULL)
 			return (NULL);
-		if ((value = ft_strdup(value)) == NULL)
+		/* printf("%s -- %d\n", envp[i], strcspn(envp[i], "=")); */
+		if ((value = ft_strdup(value + 1)) == NULL)
 			return (NULL);
 		if (ft_htset(environment, key, value, ms_ht_del_str_entry) == NULL)
 			return (NULL);
+		free(key);
 	}
 	return (environment);
 }
@@ -49,8 +51,3 @@ char					**ms_environment_to_array(t_ftht *environment)
 	return (NULL);
 
 }
-
-/* void					ms_environment_destroy(t_ftht *environment) */
-/* { */
-/* 	ft_htdestroy(environment, ms_ht_del_str_entry); */
-/* } */

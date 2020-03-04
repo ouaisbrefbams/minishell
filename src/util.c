@@ -18,4 +18,5 @@ void				ms_ht_del_str_entry(t_ftht_content *content)
 		return ;
 	free(content->key);
 	free(content->value);
+	free(content);
 }

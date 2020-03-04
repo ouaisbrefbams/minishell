@@ -31,7 +31,7 @@ SRC = $(SRCFILES)
 OBJ = $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 CC = gcc
-CCFLAGS = -I$(LIBFTDIR)/include -I$(INCLUDEDIR) -Wall -Wextra #-Werror
+CCFLAGS = -g -I$(LIBFTDIR)/include -I$(INCLUDEDIR) -Wall -Wextra #-Werror
 LDFLAGS = -L$(LIBFTDIR) -lft
 
 NAME = minishell

@@ -77,22 +77,19 @@ void					ms_path_destroy(t_path *path);
 
 t_ftht					*ms_environment_from_array(const char **envp);
 char					**ms_environment_to_array(t_ftht *environment);
-// probably bloat
-// void					ms_environment_destroy(t_ftht *environment);
 
 /*
 ** builtin*.c
 */
 
-typedef int 			t_status;
-
-typedef t_status		(*t_builtin_func)(int argc, char **argv, char **envp);
+typedef int     		(*t_builtin_func)(t_state *state);
 t_builtin_func 			ms_echo;
 t_builtin_func 			ms_cd;
 t_builtin_func 			ms_pwd;
 t_builtin_func 			ms_export;
 t_builtin_func 			ms_unset;
-t_builtin_func 			ms_env;
+// t_builtin_func 			ms_env;
+int                     ms_env(t_state *state);
 t_builtin_func 			ms_exit;
 
 /*
