@@ -21,6 +21,7 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <sys/stat.h>
+# include <stdbool.h>
 
 # include "libft.h"
 # include "libft_ht.h"
@@ -82,15 +83,14 @@ char					**ms_environment_to_array(t_ftht *environment);
 ** builtin*.c
 */
 
-typedef int     		(*t_builtin_func)(t_state *state);
-t_builtin_func 			ms_echo;
-t_builtin_func 			ms_cd;
-t_builtin_func 			ms_pwd;
-t_builtin_func 			ms_export;
-t_builtin_func 			ms_unset;
-// t_builtin_func 			ms_env;
+// typedef int     		(*t_builtin_func)(t_state *state);
+int                     ms_echo(char **argv);
+int                     ms_cd(t_state *state, char **argv);
+int                     ms_pwd(t_state *state);
+int                     ms_export(t_state *state, char **argv);
+int                     ms_unset(t_state *state, char **argv);
 int                     ms_env(t_state *state);
-t_builtin_func 			ms_exit;
+// int                     ms_exit(t_state *state);
 
 /*
 ** util.c

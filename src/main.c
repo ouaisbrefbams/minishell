@@ -22,7 +22,10 @@ int main(int argc, char **argv, const char **envp)
     (void)argv;
 	if (ms_state_init(&state, envp) == -1)
 		return (1);
-	ms_env(&state);
+	/* ms_env(&state); */
+	/* ms_pwd(&state); */
+	/* ms_cd(&state, NULL); */
+	/* ms_pwd(&state); */
 
 	/* while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1) */
 	/* { */
