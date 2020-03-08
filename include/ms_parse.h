@@ -17,37 +17,23 @@
 
 typedef enum
 {
-	REDIRECTION_OUT,
-	REDIRECTION_IN,
-	REDIRECTION_APPEND
-}						t_redirection_type;
+    TAG_CMD,
+    TAG_ARG,
+    TAG_ENDCMD,
+    TAG_PIPE,
+    TAG_AND,
+    TAG_OR,
+    TAG_REDIR_OUT,
+    TAG_REDIR_IN,
+    TAG_REDIR_APPEND
+}   t_tag;
 
-typedef struct
-{
-	char				*filename;
-	t_redirection_type	type;
-}						t_redirection;
-
-typedef struct
-{
-	char				*name;
-	char				**argv;
-	t_ftlst				*redirections;  // need to store them in reverse order
-}						t_command;
-
-typedef enum
-{
-	SEPARATOR_SEMICOLON,
-	SEPARATOR_PIPE,
-	// SEPARATOR_AND,  // with parhenthesis => harder
-	// SEPARATOR_OR,
-}						t_separator;
-
-typedef struct
-{
-	t_ftlst 			*commands;
-	t_ftlst 			*separators;
-}						t_parsing;
+typedef struct t_ast {
+    t_tag           tag;
+    char*           contents;
+    int             children_num;
+    struct t_ast**  children;
+} t_ast;
 
 /*
 ** parse.c
