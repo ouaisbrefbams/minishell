@@ -72,10 +72,13 @@ typedef struct t_ast {
     struct t_ast**  children;
 } t_ast;
 
+char          **ms_lexer(char *input);
+
 /*
 ** parse.c
 */
 
-t_parsing				*ms_parse(char *input);
+
+void		*ms_parse(char *input);
 
 #endif

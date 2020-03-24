@@ -63,7 +63,7 @@ void					ms_state_destroy(t_state *state);
 ** eval.c
 */
 
-int						ms_eval(t_parsing *parsing);
+int						ms_eval(t_ast *parsing);
 
 /*
 ** path.c

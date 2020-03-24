@@ -1,10 +1,9 @@
 
 
-
-char          **ms_lexer(char *input)
+char          *ms_lexer(char *input)
 {
               char **out_lex;
       if (!input)
-        return (NULL);
-
+        return ("");
+    return ("");
 }
