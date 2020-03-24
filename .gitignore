@@ -2,3 +2,4 @@ minishell
 *.o
 *.ghc
 *.a
+tags
