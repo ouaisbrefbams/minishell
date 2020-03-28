@@ -12,19 +12,18 @@
 
 #include "minishell.h"
 
-#define MS_ENVIRONMENT_HT_SIZE 2048
+#define MS_ENV_HT_SIZE 2048
 
-t_ftht					*ms_environment_from_array(const char **envp)
+t_env					ms_env_from_array(char **envp)
 {
-	t_ftht	*environment;
+	t_env	env;
 	int		i;
 	char	*key;
 	char	*value;
-	/* int		equal_pos; */
 
 	if (envp == NULL)
 		return (NULL);
-	if ((environment = ft_htnew(MS_ENVIRONMENT_HT_SIZE)) == NULL)
+	if ((env = ft_htnew(MS_ENV_HT_SIZE)) == NULL)
 		return (NULL);
 	i = -1;
 	while (envp[++i] != NULL)
@@ -34,20 +33,18 @@ t_ftht					*ms_environment_from_array(const char **envp)
 			return (NULL);
 		if ((key = ft_strndup(envp[i], ft_strcspn(envp[i], "="))) == NULL)
 			return (NULL);
-		/* printf("%s -- %d\n", envp[i], strcspn(envp[i], "=")); */
 		if ((value = ft_strdup(value + 1)) == NULL)
 			return (NULL);
-		if (ft_htset(environment, key, value, ms_ht_del_str_entry) == NULL)
+		if (ft_htset(env, key, value, ms_ht_del_str_entry) == NULL)
 			return (NULL);
 		free(key);
 	}
-	return (environment);
+	return (env);
 }
 
-char					**ms_environment_to_array(t_ftht *environment)
+char					**ms_env_to_array(t_env env)
 {
-	(void)environment;
+	(void)env;
 	// need ft_htlen
 	return (NULL);
-
 }

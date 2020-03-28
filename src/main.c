@@ -14,15 +14,18 @@
 
 int main(int argc, char **argv, const char **envp)
 {
-	t_state	state;
+	t_path	path;
+	t_env	env;
 	/* char	*line; */
 	/* int		ret; */
 
     (void)argc;
     (void)argv;
-	if (ms_state_init(&state, envp) == -1)
-		return (1);
-	/* ms_env(&state); */
+	env = ms_env_from_array((char**)envp);
+	path = ms_path_update(NULL, ft_htget(env, MS_PATH_KEY));
+
+	printf("%s\n", (char*)ft_htget(path, "nmap"));
+	/* ms_env(env); */
 	/* ms_pwd(&state); */
 	/* ms_cd(&state, NULL); */
 	/* ms_pwd(&state); */
@@ -34,6 +37,7 @@ int main(int argc, char **argv, const char **envp)
 	/* 	free(line); */
 	/* } */
 	/* free(line); */
-	ms_state_destroy(&state);
+	ft_htdestroy(path, ms_ht_del_str_entry);
+	ft_htdestroy(env, ms_ht_del_str_entry);
 	return (0);
 }

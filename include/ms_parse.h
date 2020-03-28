@@ -65,20 +65,20 @@ typedef enum
 ** foo  bar
 */
 
-typedef struct t_ast {
-    t_tag           tag;
-    char*           contents;
-    int             children_num;
-    struct t_ast**  children;
-} t_ast;
+typedef struct		s_ast
+{
+    t_tag			tag;
+    char*			contents;
+    int				children_num;
+    struct s_ast**	children;
+}					t_ast;
 
-char          **ms_lexer(char *input);
+char				**ms_lexer(char *input);
 
 /*
 ** parse.c
 */
 
-
-void		*ms_parse(char *input);
+t_ast				*ms_parse(char *input);
 
 #endif

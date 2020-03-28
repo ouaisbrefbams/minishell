@@ -12,6 +12,10 @@
 
 #include "minishell.h"
 
+/*
+** delete a hash table entry containing a allocated string key and value
+*/
+
 void				ms_ht_del_str_entry(t_ftht_content *content)
 {
 	if (content == NULL)

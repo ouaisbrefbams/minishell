@@ -9,6 +9,7 @@
 /*   Updated: 2020/02/28 15:30:10 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include <stdio.h>  // for debugging - dont remove
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -34,68 +35,44 @@
 # define MS_PIPE_WRITE 1
 # define MS_PIPE_READ 0
 
-typedef struct
-{
-	t_ftht				*commands;
-	t_ftlst				*dirs;
-}						t_path;
-
-typedef struct
-{
-	t_path				*path;
-	t_ftht				*environment;
-}						t_state;
-
-typedef struct
-{
-	int					pipe_in[2];
-	int					pipe_out[2];
-}						t_command_frame;
-
-/*
-** state.c
-*/
-
-int						ms_state_init(t_state *state, const char **envp);
-void					ms_state_destroy(t_state *state);
+typedef t_ftht*			t_path;
+typedef t_ftht*			t_env;
 
 /*
 ** eval.c
 */
 
-int						ms_eval(t_ast *parsing);
+int						ms_eval(t_path path, t_env env, t_ast *ast);
 
 /*
 ** path.c
 */
 
-t_path					*ms_path_update(t_path *path, const char *path_str);
-void					ms_path_destroy(t_path *path);
+t_path					ms_path_update(t_path path, char *path_var);
 
 /*
-** environment.c
+** env.c
 */
 
-t_ftht					*ms_environment_from_array(const char **envp);
-char					**ms_environment_to_array(t_ftht *environment);
+t_env					ms_env_from_array(char **envp);
+char					**ms_env_to_array(t_env env);
 
 /*
-** builtin*.c
+** builtin*.c - directory with all builtin commands
 */
 
-// typedef int     		(*t_builtin_func)(t_state *state);
 int                     ms_echo(char **argv);
-int                     ms_cd(t_state *state, char **argv);
-int                     ms_pwd(t_state *state);
-int                     ms_export(t_state *state, char **argv);
-int                     ms_unset(t_state *state, char **argv);
-int                     ms_env(t_state *state);
-// int                     ms_exit(t_state *state);
+int                     ms_cd(t_env env, char **argv);
+int                     ms_pwd(void);
+int                     ms_export(t_env env, char **argv);
+int                     ms_unset(t_env env, char **argv);
+int                     ms_env(t_env env);
+int                     ms_exit(void);
 
 /*
-** util.c
+** util.c - various utilitary functions
 */
 
-void				ms_ht_del_str_entry(t_ftht_content *content);
+void					ms_ht_del_str_entry(t_ftht_content *content);
 
 #endif

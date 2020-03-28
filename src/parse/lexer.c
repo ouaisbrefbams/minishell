@@ -1,9 +1,11 @@
+#include "minishell.h"
 
-
-char          *ms_lexer(char *input)
+char          **ms_lexer(char *input)
 {
-              char **out_lex;
-      if (!input)
-        return ("");
-    return ("");
+	char **out_lex;
+
+	(void)out_lex;
+	if (!input)
+		return (NULL);
+	return (NULL);
 }

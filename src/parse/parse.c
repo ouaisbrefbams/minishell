@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-void			*ms_parse(char *input)
+t_ast				*ms_parse(char *input)
 {
-    char **out_lex;
+/*     char **out_lex; */
+/*     if (!(out_lex = ms_lexer(input))) */
+/*       return (NULL); */
 
-    if (!(out_lex = ms_lexer(input)))
-      ;
-
-    //(void)input;
+    (void)input;
+	return (NULL);
 }
