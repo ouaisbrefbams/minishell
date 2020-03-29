@@ -68,7 +68,7 @@ typedef enum
 typedef struct		s_ast
 {
     t_tag			tag;
-    char*			contents;
+    char*			content;
     int				children_num;
     struct s_ast**	children;
 }					t_ast;

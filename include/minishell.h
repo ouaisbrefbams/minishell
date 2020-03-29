@@ -42,6 +42,25 @@ typedef t_ftht*			t_env;
 ** eval.c
 */
 
+typedef struct
+{
+	t_status_type		type;
+	union
+	{
+		char			*error_msg;
+		char			*arg;
+		int				code;
+	}					value;
+}						t_status;
+
+typedef enum
+{
+	STYPE_ERROR,
+	STYPE_ARG,
+	STYPE_FILE,
+	// ...
+}						t_status_type;
+
 int						ms_eval(t_path path, t_env env, t_ast *ast);
 
 /*
