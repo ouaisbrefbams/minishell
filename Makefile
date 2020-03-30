@@ -12,6 +12,9 @@
 
 RM = rm -f
 MAKE = make
+DOXYGEN = doxygen
+DOXYGEN_FILE = Doxyfile
+DOC_DIR = doc
 
 TESTEXEC = test.sh
 
@@ -81,3 +84,9 @@ libft_clean:
 .PHONY: libft_fclean
 libft_fclean:
 	$(MAKE) -C $(LIBFTDIR) fclean
+
+doc:
+	$(DOXYGEN) $(DOXYGEN_FILE)
+
+doc_clean:
+	$(RM) -r $(DOC_DIR)

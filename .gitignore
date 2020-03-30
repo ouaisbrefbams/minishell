@@ -3,3 +3,4 @@ minishell
 *.ghc
 *.a
 tags
+doc/*

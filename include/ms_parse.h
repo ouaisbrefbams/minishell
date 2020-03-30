@@ -16,6 +16,19 @@
 # include "minishell.h"
 
 /*
+** Context free grammar:
+**
+** redir_in     ::= '<' <string>
+** redir_out    ::= '>' <string>
+** redir_append ::= '>>' <string>
+** string       ::= '\'' .+ '\'' | '"' .+ '"' | [^ ]+
+** sep          ::= '&&' | '||' | '|' | ';'
+** expr         ::= <redir_in> | <redir_out> | <redir_append> | <string>
+** sexpr        ::= <expr>+
+** line         ::= <sexpr> <sep> <line> | <sexpr>
+*/
+
+/*
 ** TAG_CMD:          command name
 ** TAG_ARG:          command argument
 ** TAG_ENDCMD:       `;`
