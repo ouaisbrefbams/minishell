@@ -1,48 +1,10 @@
+/**
+** \file   eval.c
+** \brief  Evaluation of an AST
+*/
+
 #include "minishell.h"
 
-t_val *val_new_redir(t_val_type type, char *filename)
-{
-	t_val *val;
-
-	if ((val = val_new(type)) == NULL)
-		return (NULL);
-	if (type == VAL_REDIR_IN)
-		val->data.fd = open(filename, O_RDONLY);
-	else if (type == VAL_REDIR_OUT)
-		val->data.fd = open(filename, O_WRONLY);
-	else if (type == VAL_REDIR_APPEND)
-		val->data.fd = open(filename, O_RDWR);
-	if (val->data.fd < 0)
-	{
-		free(val);
-		return (NULL);
-	}
-	return (val);
-}
-
-t_val *val_new_err(char *msg)
-{
-	t_val *val;
-
-	if ((val == malloc(sizeof(t_val))) == NULL)
-		return (NULL);
-	val->type = VAL_ERR;
-	if ((val->data.str = ft_strdup(msg)) == NULL)
-		return (NULL);
-	return (val);
-}
-
-t_val *read_ast(t_ast *ast)
-{
-	t_val *val;
-
-	if (ast->tag == TAG_REDIR_IN)
-	{
-		val = val_new();
-		val->type = VAL_REDIR_IN;
-		val->value.fd = open(ast->content, O_RDONLY);
-	}
-}
 
 static bool check_node(t_ast *ast)
 {
@@ -129,6 +91,7 @@ static char	**get_args(t_ast *ast)
 	*/
 }
 
+//reduce?
 int	ms_eval(t_path path, t_env env, t_ast *ast)
 {
 	int	status;

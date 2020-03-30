@@ -85,8 +85,10 @@ libft_clean:
 libft_fclean:
 	$(MAKE) -C $(LIBFTDIR) fclean
 
+.PHONY: doc
 doc:
 	$(DOXYGEN) $(DOXYGEN_FILE)
 
+.PHONY: doc_clean
 doc_clean:
 	$(RM) -r $(DOC_DIR)

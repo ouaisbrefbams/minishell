@@ -15,67 +15,49 @@
 
 # include "minishell.h"
 
-/*
-** Context free grammar:
+/**
+** \file   ms_parse.h
+** \brief  Input parsing and AST manipulation
 **
+** Context free grammar:
+** ```
 ** redir_in     ::= '<' <string>
 ** redir_out    ::= '>' <string>
 ** redir_append ::= '>>' <string>
 ** string       ::= '\'' .+ '\'' | '"' .+ '"' | [^ ]+
 ** sep          ::= '&&' | '||' | '|' | ';'
 ** expr         ::= <redir_in> | <redir_out> | <redir_append> | <string>
-** sexpr        ::= <expr>+
-** line         ::= <sexpr> <sep> <line> | <sexpr>
+** cmd          ::= <expr>+
+** line         ::= <cmd> <sep> <line> | <cmd>
+** ```
 */
 
-/*
-** TAG_CMD:          command name
-** TAG_ARG:          command argument
-** TAG_ENDCMD:       `;`
-** TAG_PIPE:         `|`
-** TAG_AND:          `&&`
-** TAG_OR:           `||`
-** TAG_REDIR_OUT:    `>`
-** TAG_REDIR_IN:     `<`
-** TAG_REDIR_APPEND: `>>`
+/**
+** \brief                  AST node tag
+** \param TAG_STRING       string
+** \param TAG_SEP          `;` | `|` | `&&` | `||`
+** \param TAG_REDIR_OUT    `>`
+** \param TAG_REDIR_IN     `<`
+** \param TAG_REDIR_APPEND `>>`
 */
 
 typedef enum
 {
-    TAG_CMD,
-    TAG_ARG,
-    TAG_ENDCMD,
-    TAG_PIPE,
-    TAG_AND,
-    TAG_OR,
+    TAG_STRING,
+    TAG_SEP,
     TAG_REDIR_OUT,
     TAG_REDIR_IN,
-    TAG_REDIR_APPEND
+    TAG_REDIR_APPEND,
+	TAG_CMD,
+	TAG_LINE,
 }   t_tag;
 
-/*
-** AST (Abstract Syntax Tree)
-** A node of the ast is represented by a tag (his type) and a content associated with it.
-** (i.e a TAG_CMD would be paired with the command executable name)
-** Each node also has children node which must be evaluated before him
-**
-** examle: "echo foo bar && ls"
-**
-** tags:
-**       TAG_AND
-**   	/       \
-**     /         \
-**   TAG_CMD    TAG_CMD
-**   /      \
-** TAG_ARG  TAG_ARG
-**
-** content:
-**  	 &&
-**   	/ \
-**     /   \
-**   echo   ls
-**   /  \
-** foo  bar
+/**
+** \brief               AST (Abstract Syntax Tree)
+** \param tag           tag (type) of node
+** \param content       substring of the parsed string which corespond to tag
+** \param children_num  number of children
+** \param children      children nodes
 */
 
 typedef struct		s_ast
@@ -86,6 +68,11 @@ typedef struct		s_ast
     struct s_ast**	children;
 }					t_ast;
 
+
+/*
+** lexer.c
+*/
+
 char				**ms_lexer(char *input);
 
 /*
@@ -93,5 +80,13 @@ char				**ms_lexer(char *input);
 */
 
 t_ast				*ms_parse(char *input);
+
+/*
+** ast.c
+*/
+
+t_ast				*ms_ast_new(t_tag tag);
+void				ms_ast_destroy(t_ast *ast);
+void				ms_ast_iter(t_ast *ast, void (*f)(void *f_arg, t_ast *children), void *arg);
 
 #endif

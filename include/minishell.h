@@ -14,6 +14,11 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+/**
+** \file   minishell.h
+** \brief  Common header
+*/
+
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
@@ -31,8 +36,16 @@
 
 # include "ms_parse.h"
 
-# define MS_PATH_KEY "PATH"
+/**
+** \brief  Pipe write index
+*/
+
 # define MS_PIPE_WRITE 1
+
+/**
+** \brief  Pipe read index
+*/
+
 # define MS_PIPE_READ 0
 
 typedef t_ftht*			t_path;

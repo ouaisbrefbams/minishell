@@ -10,9 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/**
+** \file   env.c
+** \brief  Environment hash table manipulation
+*/
+
 #include "minishell.h"
 
+/**
+** \brief  Number of buckets of an environment hash table
+*/
+
 #define MS_ENV_HT_SIZE 2048
+
+/**
+** \brief       Convert array of string to environment hash table
+** \param envp  array of string (each in the format `name=value`)
+** \return      Environment hash table or NULL on error
+*/
 
 t_env					ms_env_from_array(char **envp)
 {
@@ -41,6 +56,12 @@ t_env					ms_env_from_array(char **envp)
 	}
 	return (env);
 }
+
+/**
+** \brief       Convert environment to array of string
+** \param env   Environment hash table
+** \return      Array of string on NULL on error
+*/
 
 char					**ms_env_to_array(t_env env)
 {

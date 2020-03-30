@@ -10,10 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/**
+** \file   utils.c
+** \brief  Various functions
+*/
+
 #include "minishell.h"
 
-/*
-** delete a hash table entry containing a allocated string key and value
+/**
+** \brief          Delete function for a entry containing a allocated key and value
+** \param content  Hash table entry content
 */
 
 void				ms_ht_del_str_entry(t_ftht_content *content)

@@ -1,3 +1,8 @@
+/**
+** \file   echo.c
+** \brief  `echo` builtin
+*/
+
 #include "minishell.h"
 
 int	ms_echo(char **argv)

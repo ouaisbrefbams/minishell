@@ -10,7 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+/**
+** \file   main.c
+** \brief  Minishell entrypoint
+*/
+
 #include "minishell.h"
+
+/**
+** \brief       Program entrypoint
+** \param argc  Number of arguments in `argv`
+** \param argv  Array of string, argument of the program
+** \param envp  NULL terminated array of string representing the environment
+** \return      0 if ok, 1 otherwise
+*/
 
 int main(int argc, char **argv, const char **envp)
 {

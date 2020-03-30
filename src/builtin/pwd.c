@@ -1,3 +1,7 @@
+/**
+** \file   pwd.c
+** \brief  `pwd` builtin
+*/
 #include "minishell.h"
 
 int	ms_pwd(void)

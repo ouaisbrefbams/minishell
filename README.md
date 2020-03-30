@@ -8,6 +8,11 @@ minishell project of school 42
 >make test
 ```
 
+## Documentation
+
+Generate with `make doc` (clean with `make doc_clean`).
+You can then read the man pages in ./doc/man or open ./doc/html/index.html in your browser.
+
 ## TODO
 
 ### Mandatory
@@ -26,7 +31,7 @@ minishell project of school 42
 - [ ] `'` and `"` should work like in bash except for multiline commands
 - [ ] Redirections `<` `>` `>>` should work like in bash except for file descriptor aggregation
 - [ ] Pipes | should work like in bash
-- [ ] Environment variables (`$` followed by characters) should work like in bash 
+- [ ] Environment variables (`$` followed by characters) should work like in bash
 - [ ] `$?` should work like in bash
 - [ ] `ctrl-C`, `ctrl-D` and `ctrl-\` should have the same result as in bash
 

@@ -1,3 +1,8 @@
+/**
+** \file   lexer.c
+** \brief  Lexer
+*/
+
 #include "minishell.h"
 
 char          **ms_lexer(char *input)

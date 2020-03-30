@@ -1,3 +1,8 @@
+/**
+** \file   parse.c
+** \brief  Parser
+*/
+
 #include "minishell.h"
 
 t_ast				*ms_parse(char *input)
