@@ -35,7 +35,7 @@ int main(int argc, char **argv, const char **envp)
     (void)argc;
     (void)argv;
 	env = ms_env_from_array((char**)envp);
-	path = ms_path_update(NULL, ft_htget(env, MS_PATH_KEY));
+	path = ms_path_update(NULL, ft_htget(env, "PATH"));
 
 	printf("%s\n", (char*)ft_htget(path, "nmap"));
 	/* ms_env(env); */

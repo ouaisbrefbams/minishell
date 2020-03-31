@@ -35,18 +35,25 @@
 # include "libft_util.h"
 
 # include "ms_parse.h"
+// # include "ms_eval.h"
+
+/**
+** \brief  Value of pipe entry if closed
+*/
+
+# define PIPE_CLOSED -1
 
 /**
 ** \brief  Pipe write index
 */
 
-# define MS_PIPE_WRITE 1
+# define PIPE_WRITE 1
 
 /**
 ** \brief  Pipe read index
 */
 
-# define MS_PIPE_READ 0
+# define PIPE_READ 0
 
 typedef t_ftht*			t_path;
 typedef t_ftht*			t_env;
@@ -80,6 +87,6 @@ int                     ms_exit(void);
 ** util.c - various utilitary functions
 */
 
-void					ms_ht_del_str_entry(t_ftht_content *content);
+void					ms_ht_del_str_entry(t_ftht_entry *entry);
 
 #endif

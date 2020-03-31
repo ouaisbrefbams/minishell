@@ -6,71 +6,38 @@
 ** \brief  Evaluation module
 */
 
-/*
-** arg:
-**   type ARG
-**   value string
-**
-** redir in:
-**   type REDIRIN
-**   value fd
-**
-** redir out:
-**   type REDIROUT
-**   value fd
-**
-** redir append:
-**   type REDIRAPPEND
-**   value fd
-*/
+# include "minishell.h"
 
 /**
-** \enum t_val_type
-** \brief  A type for an evaluation node
-**
-** \param VAL_ERR error
-** \param VAL_ERR argument
-** \param VAL_REDIR redirection
-** \param VAL_SEXPR S-expression
-*/
-
-typedef enum
-{
-	VAL_ERR,
-	VAL_ARG,
-	VAL_EXEC,
-	VAL_REDIR_IN,
-	VAL_REDIR_OUT,
-	VAL_REDIR_APPEND,
-	VAL_CMD,
-	VAL_SEXPR,
-}				t_val_type;
-
-/**
-** \brief            An evaluation node struct
-** \param type       type of node
-** \param data       union of possible data
-** \param data::fd   file descriptor for redirection node
-** \param data::str  string for error, arguments, command
+** \brief        Evaluation state struct
 */
 
 typedef struct
 {
-	t_val_type	type;
-	union
-	{
-		char	*str;
-		int		code;
-		int		fd;
-	}			data;
-}				t_val;
+	int			status;
+	int			in_pipe[2];   // need stack pipe
+	int			out_pipe[2];
+	t_path		path;
+	t_env		env;
+}				t_eval_state;
 
 /**
-** \brief  evaluate an AST
-** \param path  path to commands executable
-** \param env   environment variables
-** \param ast   Abstract syntax tree to evaluate
+** \brief      Evaluation status struct
 */
-int				ms_eval(t_path path, t_env env, t_ast *ast);
+
+typedef struct
+{
+	char		*err;
+	int			status;
+}				t_eval_status;
+
+
+/**
+** \brief        Evaluate an AST
+** \param state  State of the evaluation
+** \param ast    Abstract syntax tree to evaluate
+*/
+
+int				ms_eval(t_eval_state *state, t_ast *ast);
 
 #endif

@@ -19,14 +19,15 @@
 
 /**
 ** \brief          Delete function for a entry containing a allocated key and value
-** \param content  Hash table entry content
+** \param entry    Hash table entry
+**
 */
 
-void				ms_ht_del_str_entry(t_ftht_content *content)
+void				ms_ht_del_str_entry(t_ftht_entry *entry)
 {
-	if (content == NULL)
+	if (entry == NULL)
 		return ;
-	free(content->key);
-	free(content->value);
-	free(content);
+	free(entry->key);
+	free(entry->value);
+	free(entry);
 }

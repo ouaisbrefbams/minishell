@@ -5,11 +5,11 @@
 
 #include "minishell.h"
 
-void	st_print_env_variable(t_ftht_content *content)
+void	st_print_env_variable(t_ftht_entry *entry)
 {
-	ft_putstr(content->key);
+	ft_putstr(entry->key);
 	ft_putchar('=');
-	ft_putstr((char*)content->value);
+	ft_putstr((char*)entry->value);
 	ft_putchar('\n');
 }
 

@@ -14,6 +14,7 @@
 # define MS_PARSE_H
 
 # include "minishell.h"
+# include "ast.h"
 
 /**
 ** \file   ms_parse.h
@@ -41,16 +42,16 @@
 ** \param TAG_REDIR_APPEND `>>`
 */
 
-typedef enum
-{
-    TAG_STRING,
-    TAG_SEP,
-    TAG_REDIR_OUT,
-    TAG_REDIR_IN,
-    TAG_REDIR_APPEND,
-	TAG_CMD,
-	TAG_LINE,
-}   t_tag;
+// typedef enum
+// {
+//     TAG_STRING,
+//     TAG_SEP,
+//     TAG_REDIR_OUT,
+//     TAG_REDIR_IN,
+//     TAG_REDIR_APPEND,
+// 	TAG_CMD,
+// 	TAG_LINE,
+// }   t_ast_tag;
 
 /**
 ** \brief               AST (Abstract Syntax Tree)
@@ -60,14 +61,13 @@ typedef enum
 ** \param children      children nodes
 */
 
-typedef struct		s_ast
-{
-    t_tag			tag;
-    char*			content;
-    int				children_num;
-    struct s_ast**	children;
-}					t_ast;
-
+// typedef struct		s_ast
+// {
+//     t_tag			tag;
+//     char*			content;
+//     int				children_num;
+//     struct s_ast**	children;
+// }					t_ast;
 
 /*
 ** lexer.c
@@ -85,8 +85,8 @@ t_ast				*ms_parse(char *input);
 ** ast.c
 */
 
-t_ast				*ms_ast_new(t_tag tag);
-void				ms_ast_destroy(t_ast *ast);
-void				ms_ast_iter(t_ast *ast, void (*f)(void *f_arg, t_ast *children), void *arg);
+// t_ast				*ms_ast_new(t_tag tag);
+// void				ms_ast_destroy(t_ast *ast);
+// void				ms_ast_iter(t_ast *ast, void (*f)(void *f_arg, t_ast *children), void *arg);
 
 #endif
