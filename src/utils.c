@@ -23,7 +23,7 @@
 **
 */
 
-void				ms_ht_del_str_entry(t_ftht_entry *entry)
+void				ht_del_str_entry(t_ftht_entry *entry)
 {
 	if (entry == NULL)
 		return ;

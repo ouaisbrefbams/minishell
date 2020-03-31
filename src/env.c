@@ -29,7 +29,7 @@
 ** \return      Environment hash table or NULL on error
 */
 
-t_env					ms_env_from_array(char **envp)
+t_env					env_from_array(char **envp)
 {
 	t_env	env;
 	int		i;
@@ -50,7 +50,7 @@ t_env					ms_env_from_array(char **envp)
 			return (NULL);
 		if ((value = ft_strdup(value + 1)) == NULL)
 			return (NULL);
-		if (ft_htset(env, key, value, ms_ht_del_str_entry) == NULL)
+		if (ft_htset(env, key, value, ht_del_str_entry) == NULL)
 			return (NULL);
 		free(key);
 	}
@@ -63,7 +63,7 @@ t_env					ms_env_from_array(char **envp)
 ** \return      Array of string on NULL on error
 */
 
-char					**ms_env_to_array(t_env env)
+char					**env_to_array(t_env env)
 {
 	(void)env;
 	// need ft_htlen

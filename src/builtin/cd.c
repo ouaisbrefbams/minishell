@@ -5,7 +5,7 @@
 
 #include "minishell.h"
 
-int	ms_cd(t_env env, char **argv)
+int	builtin_cd(t_env env, char **argv)
 {
 	char	*path;
 

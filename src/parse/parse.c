@@ -3,12 +3,12 @@
 ** \brief  Parser
 */
 
-#include "minishell.h"
+#include "parse.h"
 
-t_ast				*ms_parse(char *input)
+t_ast				*parse(char *input)
 {
 /*     char **out_lex; */
-/*     if (!(out_lex = ms_lexer(input))) */
+/*     if (!(out_lex = lexer(input))) */
 /*       return (NULL); */
 
     (void)input;

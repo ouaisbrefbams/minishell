@@ -34,23 +34,23 @@ int main(int argc, char **argv, const char **envp)
 
     (void)argc;
     (void)argv;
-	env = ms_env_from_array((char**)envp);
-	path = ms_path_update(NULL, ft_htget(env, "PATH"));
+	env = env_from_array((char**)envp);
+	path = path_update(NULL, ft_htget(env, "PATH"));
 
 	printf("%s\n", (char*)ft_htget(path, "nmap"));
-	/* ms_env(env); */
-	/* ms_pwd(&state); */
-	/* ms_cd(&state, NULL); */
-	/* ms_pwd(&state); */
+	/* env(env); */
+	/* pwd(&state); */
+	/* cd(&state, NULL); */
+	/* pwd(&state); */
 
 	/* while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1) */
 	/* { */
-	/* 	if (ms_eval(ms_parse(line)) == -1) */
+	/* 	if (eval(parse(line)) == -1) */
 	/* 		continue ;  // and display error */
 	/* 	free(line); */
 	/* } */
 	/* free(line); */
-	ft_htdestroy(path, ms_ht_del_str_entry);
-	ft_htdestroy(env, ms_ht_del_str_entry);
+	ft_htdestroy(path, ht_del_str_entry);
+	ft_htdestroy(env, ht_del_str_entry);
 	return (0);
 }

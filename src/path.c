@@ -42,7 +42,7 @@ static t_path			st_path_dir_update(t_path path, char *dirname)
 	{
 		if ((tmp = ft_strjoin3(dirname, "/", entry->d_name)) == NULL)
 			return (NULL);
-		if (ft_htset(path, entry->d_name, tmp, ms_ht_del_str_entry) == NULL)
+		if (ft_htset(path, entry->d_name, tmp, ht_del_str_entry) == NULL)
 			return (NULL);
 	}
 	if (closedir(dir) == -1)
@@ -57,7 +57,7 @@ static t_path			st_path_dir_update(t_path path, char *dirname)
 ** \return          The updated/created path hash table or NULL on error
 */
 
-t_path					ms_path_update(t_path path, char *path_var)
+t_path					path_update(t_path path, char *path_var)
 {
 	int		i;
 	char	**dirs;

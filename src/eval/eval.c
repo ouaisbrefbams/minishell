@@ -3,19 +3,19 @@
 ** \brief  Evaluation of an AST
 */
 
-#include "ms_eval.h"
+#include "eval.h"
 
 static int eval_line(t_eval_state *state, t_line *line)
 {
 	int	status;
 
 	if (line->right == NULL)
-		return (ms_eval(state, line->left));
-	status = ms_eval(state, line->left);
+		return (eval(state, line->left));
+	status = eval(state, line->left);
 	if ((line->sep == SEP_AND && status != 0) ||
 		(line->sep == SEP_OR && status == 0))
 		return (status);
-	return (ms_eval(state, line->right));
+	return (eval(state, line->right));
 }
 
 static char	*search_exec_path(t_path path, char *path_var, char *exec_name)
@@ -25,7 +25,7 @@ static char	*search_exec_path(t_path path, char *path_var, char *exec_name)
 	// try current first
 	if ((exec_path = ft_htget(path, exec_name)) == NULL)
 	{
-		if (ms_path_update(path, path_var) == NULL)
+		if (path_update(path, path_var) == NULL)
 			return (NULL);
 		if ((exec_path = ft_htget(path, exec_name)) == NULL)
 			return (NULL);
@@ -67,7 +67,7 @@ static int eval_cmd(t_eval_state *state, t_cmd *cmd)
 	return (WEXITSTATUS(child_pid));
 }
 
-int	ms_eval(t_eval_state *state, t_ast *ast)
+int	eval(t_eval_state *state, t_ast *ast)
 {
 	if (ast->tag == TAG_LINE)
 		return eval_line(state, &ast->data.line);

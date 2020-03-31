@@ -34,9 +34,6 @@
 # include "libft_lst.h"
 # include "libft_util.h"
 
-# include "ms_parse.h"
-// # include "ms_eval.h"
-
 /**
 ** \brief  Value of pipe entry if closed
 */
@@ -62,31 +59,31 @@ typedef t_ftht*			t_env;
 ** path.c
 */
 
-t_path					ms_path_update(t_path path, char *path_var);
+t_path					path_update(t_path path, char *path_var);
 
 /*
 ** env.c
 */
 
-t_env					ms_env_from_array(char **envp);
-char					**ms_env_to_array(t_env env);
+t_env					env_from_array(char **envp);
+char					**env_to_array(t_env env);
 
 /*
 ** builtin*.c - directory with all builtin commands
 */
 
-int                     ms_echo(char **argv);
-int                     ms_cd(t_env env, char **argv);
-int                     ms_pwd(void);
-int                     ms_export(t_env env, char **argv);
-int                     ms_unset(t_env env, char **argv);
-int                     ms_env(t_env env);
-int                     ms_exit(void);
+int                     builtin_echo(char **argv);
+int                     builtin_cd(t_env env, char **argv);
+int                     builtin_pwd(void);
+int                     builtin_export(t_env env, char **argv);
+int                     builtin_unset(t_env env, char **argv);
+int                     builtin_env(t_env env);
+int                     builtin_exit(void);
 
 /*
 ** util.c - various utilitary functions
 */
 
-void					ms_ht_del_str_entry(t_ftht_entry *entry);
+void					ht_del_str_entry(t_ftht_entry *entry);
 
 #endif

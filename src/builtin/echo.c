@@ -5,7 +5,7 @@
 
 #include "minishell.h"
 
-int	ms_echo(char **argv)
+int	builtin_echo(char **argv)
 {
 	bool	newline;
 

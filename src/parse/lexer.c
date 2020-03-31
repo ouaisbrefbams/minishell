@@ -5,7 +5,7 @@
 
 #include "minishell.h"
 
-char          **ms_lexer(char *input)
+char          **lexer(char *input)
 {
 	char **out_lex;
 

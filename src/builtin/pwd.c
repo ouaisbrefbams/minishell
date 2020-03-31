@@ -2,9 +2,10 @@
 ** \file   pwd.c
 ** \brief  `pwd` builtin
 */
+
 #include "minishell.h"
 
-int	ms_pwd(void)
+int	builtin_pwd(void)
 {
 	char	buf[PATH_MAX];
 

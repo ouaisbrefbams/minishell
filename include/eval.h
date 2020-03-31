@@ -2,11 +2,12 @@
 # define MS_EVAL_H
 
 /**
-** \file   ms_eval.h
+** \file   eval.h
 ** \brief  Evaluation module
 */
 
 # include "minishell.h"
+# include "ast.h"
 
 /**
 ** \brief        Evaluation state struct
@@ -38,6 +39,6 @@ typedef struct
 ** \param ast    Abstract syntax tree to evaluate
 */
 
-int				ms_eval(t_eval_state *state, t_ast *ast);
+int				eval(t_eval_state *state, t_ast *ast);
 
 #endif
