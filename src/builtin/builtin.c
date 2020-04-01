@@ -1,15 +1,27 @@
-/**
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/04/01 17:11:01 by charles           #+#    #+#             */
+/*   Updated: 2020/04/01 17:46:48 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
 ** \file      builtin.c
 ** \brief     Builtin functions
 */
 
 #include "minishell.h"
 
-/**
+/*
 ** \brief      Array storing builtin executable name and associated functions
 */
 
-static struct s_builtin_entry g_builtin_lookup[] = {
+static struct s_builtin_entry	g_builtin_lookup[] = {
 	{"echo", builtin_echo},
 	{"cd", builtin_cd},
 	{"pwd", builtin_pwd},
@@ -19,14 +31,15 @@ static struct s_builtin_entry g_builtin_lookup[] = {
 	{"exit", builtin_exit},
 };
 
-/**
+/*
 ** \brief       Call builtin function associated with command name
-** \param argv  Arguments to the builtin 'main', with argv[0] being the executable name
+** \param argv  Arguments to the builtin 'main',
+**              with argv[0] being the executable name
 ** \param env   Environment Vector
 ** \return      Builtin main return status
 */
 
-int		builtin_dispatch_run(char **argv, t_env env)
+int								builtin_dispatch_run(char **argv, t_env env)
 {
 	size_t	i;
 
@@ -40,13 +53,13 @@ int		builtin_dispatch_run(char **argv, t_env env)
 	return (BUILTIN_NOT_FOUND);
 }
 
-/**
+/*
 ** \brief            Check if executable name is a builtin
 ** \param exec_name  Executable name
 ** \return           True if executable name is a builtin
 */
 
-bool		builtin_check_exec_name(char *exec_name)
+bool							builtin_check_exec_name(char *exec_name)
 {
 	size_t	i;
 

@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.h                                         :+:      :+:    :+:   */
+/*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 14:57:58 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/04/01 17:49:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MS_PARSE_H
-# define MS_PARSE_H
+#ifndef PARSE_H
+# define PARSE_H
 
 # include "minishell.h"
 # include "ast.h"
 
-/**
+/*
 ** \file   parse.h
 ** \brief  Input parsing and AST manipulation
 **

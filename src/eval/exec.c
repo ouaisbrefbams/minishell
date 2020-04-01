@@ -1,11 +1,23 @@
-/**
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/04/01 17:06:11 by charles           #+#    #+#             */
+/*   Updated: 2020/04/01 17:06:12 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
 ** \file   exec.c
 ** \brief  Executable name and path
 */
 
 #include "eval.h"
 
-/**
+/*
 ** \brief             Check if executable name is already a path
 ** \param exec_name   Executable name
 ** \return            True if valid
@@ -18,7 +30,7 @@ bool	exec_is_path(char *exec_name)
 			|| ft_strncmp(exec_name, "/", 1) == 0);
 }
 
-/**
+/*
 ** \brief             Check if executable path is valid
 ** \param exec_path   Executable path
 ** \return            True if valid
@@ -36,7 +48,7 @@ bool	exec_is_valid(char *exec_path)
 	return (true);
 }
 
-/**
+/*
 ** \brief              Search executable name in path
 ** \param path         Path hash table
 ** \param path_var     Path environment string in case we need to update path

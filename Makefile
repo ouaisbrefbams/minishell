@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/02/27 17:58:16 by cacharle         ###   ########.fr        #
+#    Updated: 2020/04/01 18:08:25 by charles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,12 +24,9 @@ SRCDIR = src
 OBJDIR = obj
 OBJDIRS = $(shell find $(SRCDIR) -type d | sed 's/src/$(OBJDIR)/')
 
-INCLUDEFILES = minishell.h
-INCLUDE = $(addprefix $(INCLUDEDIR)/, $(INCLUDEFILES))
+INCLUDE = $(shell find $(INCLUDEDIR) -name "*.h")
 
-SRCFILES = $(shell find $(SRCDIR) -name "*.c")
-SRC = $(SRCFILES)
-# SRC = $(addprefix $(SRCDIR)/, $(SRCFILES))
+SRC = $(shell find $(SRCDIR) -name "*.c")
 
 OBJ = $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
@@ -95,8 +92,11 @@ libft_fclean:
 
 .PHONY: doc
 doc:
+	mkdir -p tmp
+	for f in $(SRC) $(INCLUDE) $(shell find libft/src -name "*.c") $(shell find libft/include -name "*.h"); do mkdir -p tmp/`dirname $$f` && sed 's_^/\*$$_/**_' $$f > tmp/$$f; done
 	$(DOXYGEN) $(DOXYGEN_FILE)
 
 .PHONY: doc_clean
 doc_clean:
 	$(RM) -r $(DOC_DIR)
+	$(RM) -r tmp

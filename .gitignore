@@ -4,3 +4,4 @@ minishell
 *.a
 tags
 doc/*
+tmp/*

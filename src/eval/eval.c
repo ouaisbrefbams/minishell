@@ -1,18 +1,30 @@
-/**
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   eval.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/04/01 17:05:21 by charles           #+#    #+#             */
+/*   Updated: 2020/04/01 17:09:36 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
 ** \file   eval.c
 ** \brief  Evaluation of an AST
 */
 
 #include "eval.h"
 
-/**
+/*
 ** \brief        Evaluate a line
 ** \param state  State of the evaluation
 ** \param line   Line to evaluate
 ** \return       Last Executed command status or -1 on error
 */
 
-static int eval_line(t_eval_state *state, t_line *line)
+static int	eval_line(t_eval_state *state, t_line *line)
 {
 	int	status;
 
@@ -26,14 +38,14 @@ static int eval_line(t_eval_state *state, t_line *line)
 	return (eval(state, line->right));
 }
 
-/**
+/*
 ** \brief        Evaluate a command
 ** \param state  Evaluation state
 ** \param cmd    Command to evaluate
 ** \return       Executable status or -1 on error
 */
 
-static int eval_cmd(t_eval_state *state, t_cmd *cmd)
+static int	eval_cmd(t_eval_state *state, t_cmd *cmd)
 {
 	int		child_pid;
 	char	*exec_path;
@@ -54,7 +66,7 @@ static int eval_cmd(t_eval_state *state, t_cmd *cmd)
 		pipe_setup_child(state->pipe_in, state->pipe_out);
 		if (is_builtin)
 			exit(builtin_dispatch_run(cmd->argv, state->env));
-		else if (execve(exec_path, cmd->argv, NULL /*env_array*/) == -1)
+		else if (execve(exec_path, cmd->argv, NULL) == -1)
 			exit(EXIT_FAILURE);
 		exit(EXIT_SUCCESS);
 	}
@@ -62,19 +74,19 @@ static int eval_cmd(t_eval_state *state, t_cmd *cmd)
 	return (WEXITSTATUS(child_pid));
 }
 
-/**
+/*
 ** \brief        Evaluate an AST
 ** \param state  State of the evaluation
 ** \param ast    Abstract syntax tree to evaluate
 ** \return       Executable status or -1 on error
 */
 
-int	eval(t_eval_state *state, t_ast *ast)
+int			eval(t_eval_state *state, t_ast *ast)
 {
 	errno = 0;
 	if (ast->tag == TAG_LINE)
-		return eval_line(state, &ast->data.line);
+		return (eval_line(state, &ast->data.line));
 	if (ast->tag == TAG_CMD)
-		return eval_cmd(state, &ast->data.cmd);
+		return (eval_cmd(state, &ast->data.cmd));
 	return (-1);
 }

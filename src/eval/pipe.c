@@ -1,11 +1,23 @@
-/**
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/04/01 17:05:58 by charles           #+#    #+#             */
+/*   Updated: 2020/04/01 17:05:59 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
 ** \file   pipe.c
 ** \brief  Pipes setup
 */
 
 #include "eval.h"
 
-/**
+/*
 ** \brief           Setup STDIN and STDOUT pipe in the parent process
 ** \param cmd       Command to setup
 ** \param pipe_in   STDIN pipe
@@ -29,7 +41,7 @@ int	pipe_setup_parent(t_cmd *cmd, int pipe_in[2], int pipe_out[2])
 	return (0);
 }
 
-/**
+/*
 ** \brief           Setup STDIN and STDOUT pipe in the child process
 ** \param pipe_in   STDIN pipe
 ** \param pipe_out  STDOUT pipe

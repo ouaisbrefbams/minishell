@@ -6,15 +6,15 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 15:30:10 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/04/01 17:54:36 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdio.h>  // for debugging - dont remove
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+#include <stdio.h>  // for debugging - dont remove
 
-/**
+/*
 ** \file   minishell.h
 ** \brief  Common header
 */
@@ -34,19 +34,19 @@
 # include "libft_lst.h"
 # include "libft_util.h"
 
-/**
+/*
 ** \brief  Value of pipe entry if closed
 */
 
 # define PIPE_CLOSED -1
 
-/**
+/*
 ** \brief  Pipe write index
 */
 
 # define PIPE_WRITE 1
 
-/**
+/*
 ** \brief  Pipe read index
 */
 
@@ -74,33 +74,33 @@ char					**env_to_array(t_env env);
 ** builtin*.c - directory with all builtin commands
 */
 
-/**
+/*
 ** \brief       Type of a builtin main function
 */
 
 typedef int	(*t_builtin_func)(char **argv, t_env env);
 
-/**
+/*
 ** \brief       Entry of builtin lookup array
 ** \param name  Executable name of builtin
 ** \param func  Associated function
 */
 
-struct	s_builtin_entry
+struct					s_builtin_entry
 {
-	char			*name;
-	t_builtin_func	func;
+	char				*name;
+	t_builtin_func		func;
 };
 
 int						builtin_dispatch_run(char **argv, t_env env);
 bool					builtin_check_exec_name(char *exec_name);
-int                     builtin_echo(char **argv, t_env env);
-int                     builtin_cd(char **argv, t_env env);
-int                     builtin_pwd(char **argv, t_env env);
-int                     builtin_export(char **argv, t_env env);
-int                     builtin_unset(char **argv, t_env env);
-int                     builtin_env(char **argv, t_env env);
-int                     builtin_exit(char **argv, t_env env);
+int						builtin_echo(char **argv, t_env env);
+int						builtin_cd(char **argv, t_env env);
+int						builtin_pwd(char **argv, t_env env);
+int						builtin_export(char **argv, t_env env);
+int						builtin_unset(char **argv, t_env env);
+int						builtin_env(char **argv, t_env env);
+int						builtin_exit(char **argv, t_env env);
 
 /*
 ** util.c - various utilitary functions

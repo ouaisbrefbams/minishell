@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   environment.c                                      :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 12:30:55 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/04/01 17:03:50 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/**
+/*
 ** \file   env.c
 ** \brief  Environment hash table manipulation
 */
 
 #include "minishell.h"
 
-/**
+/*
 ** \brief  Number of buckets of an environment hash table
 */
 
 #define MS_ENV_HT_SIZE 2048
 
-/**
+/*
 ** \brief       Convert array of string to environment hash table
 ** \param envp  array of string (each in the format `name=value`)
 ** \return      Environment hash table or NULL on error
@@ -57,7 +57,7 @@ t_env					env_from_array(char **envp)
 	return (env);
 }
 
-/**
+/*
 ** \brief       Convert environment to array of string
 ** \param env   Environment hash table
 ** \return      Array of string on NULL on error
@@ -66,6 +66,5 @@ t_env					env_from_array(char **envp)
 char					**env_to_array(t_env env)
 {
 	(void)env;
-	// need ft_htlen
 	return (NULL);
 }

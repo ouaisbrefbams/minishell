@@ -6,25 +6,26 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 12:33:31 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/04/01 17:55:28 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/**
+/*
 ** \file   path.c
 ** \brief  Path hash table manipulation
 */
 
 #include "minishell.h"
 
-/**
+/*
 ** \brief  Number of buckets of a path hash table
 */
 
 #define MS_PATH_HT_SIZE 8192
 
-/**
-** \brief          Update `path` with all files in the directory named `dirname`.
+/*
+** \brief          Update `path` with all files
+**                 in the directory named `dirname`.
 ** \param path     Path hash table
 ** \param dirname  directory name
 ** \return         Same path or NULL on error
@@ -50,10 +51,11 @@ static t_path			st_path_dir_update(t_path path, char *dirname)
 	return (path);
 }
 
-/**
+/*
 ** \brief           Update the path
 ** \param path		Path hash table or NULL to create a new one
-** \param path_var  PATH environment variable where each directory is separated by a ':'
+** \param path_var  PATH environment variable where
+**                  each directory is separated by a ':'
 ** \return          The updated/created path hash table or NULL on error
 */
 

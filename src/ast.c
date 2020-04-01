@@ -1,11 +1,23 @@
-/**
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
+/*   Updated: 2020/04/01 17:05:44 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/*
 ** \file    ast.c
 ** \brief   AST functions
 */
 
 #include "ast.h"
 
-/**
+/*
 ** \brief       Create a new AST node according to `tag`
 ** \param tag   Tag of node
 ** \param data  Pointer to node data (t_cmd or t_line)
@@ -30,7 +42,7 @@ t_ast			*ast_new(t_ast_tag tag, void *data)
 	return (ast);
 }
 
-/**
+/*
 ** \brief      Destroy an AST node and all his child nodes
 ** \param ast  AST to destroy
 */

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/**
+/*
 ** \file   main.c
 ** \brief  Minishell entrypoint
 */
@@ -19,7 +19,7 @@
 #include "ast.h"
 #include "eval.h"
 
-/**
+/*
 ** \brief       Program entrypoint
 ** \param argc  Number of arguments in `argv`
 ** \param argv  Array of string, argument of the program

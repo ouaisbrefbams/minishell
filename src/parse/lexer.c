@@ -1,4 +1,4 @@
-/**
+/*
 ** \file   lexer.c
 ** \brief  Lexer
 */

@@ -1,4 +1,4 @@
-/**
+/*
 ** \file   parse.c
 ** \brief  Parser
 */
