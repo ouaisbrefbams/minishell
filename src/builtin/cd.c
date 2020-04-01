@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:20 by charles           #+#    #+#             */
-/*   Updated: 2020/04/01 17:10:21 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/01 22:15:49 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	builtin_cd(char **argv, t_env env)
 
 	path = argv[1];
 	if (argv[1] == NULL)
-		path = ft_htget(env, "HOME");
+		path = env_search(env, "HOME");
 	if (path == NULL)
 		return (1);
 	if (chdir(path) == -1)

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/28 11:50:29 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/04/01 23:12:51 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv, char **envp)
 	/* int		ret; */
 
 	env = env_from_array(envp);
-	path = path_update(NULL, ft_htget(env, "PATH"));
+	path = path_update(NULL, env_search(env, "PATH"));
 
 	t_ast *ast;
 	t_line line;
@@ -70,7 +70,7 @@ int main(int argc, char **argv, char **envp)
 	state.pipe_out[1] = -1;
 	state.path = path;
 	state.env = env;
-	eval(&state, ast);
+	printf("ret: %d %s\n", eval(&state, ast), strerror(errno));
 
 	ast_destroy(ast);
 	/* while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1) */
@@ -81,6 +81,6 @@ int main(int argc, char **argv, char **envp)
 	/* } */
 	/* free(line); */
 	ft_htdestroy(path, ht_del_str_entry);
-	ft_htdestroy(env, ht_del_str_entry);
+	ft_vecdestroy(env, free);
 	return (0);
 }

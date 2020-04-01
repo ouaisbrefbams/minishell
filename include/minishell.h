@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/01 17:54:36 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/01 22:13:47 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include "libft_ht.h"
 # include "libft_lst.h"
 # include "libft_util.h"
+# include "libft_vec.h"
 
 /*
 ** \brief  Value of pipe entry if closed
@@ -55,7 +56,7 @@
 # define BUILTIN_NOT_FOUND -2
 
 typedef t_ftht*			t_path;
-typedef t_ftht*			t_env;
+typedef t_ftvec*		t_env;
 
 /*
 ** path.c
@@ -68,7 +69,7 @@ t_path					path_update(t_path path, char *path_var);
 */
 
 t_env					env_from_array(char **envp);
-char					**env_to_array(t_env env);
+char					*env_search(t_env env, char *key);
 
 /*
 ** builtin*.c - directory with all builtin commands
