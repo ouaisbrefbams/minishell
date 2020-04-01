@@ -6,6 +6,11 @@
 ** \brief    AST structs
 */
 
+# include <stdlib.h>
+# include <stdbool.h>
+# include "libft_mem.h"
+# include "libft_util.h"
+
 /**
 ** \brief            Separator type
 ** \param SEP_END    Regular command end `;`
@@ -76,5 +81,8 @@ struct s_ast
 		t_cmd	cmd;
 	}			data;
 };
+
+t_ast			*ast_new(t_ast_tag tag, void *data);
+void			ast_destroy(t_ast *ast);
 
 #endif

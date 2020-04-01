@@ -21,7 +21,7 @@
 ** \brief  Number of buckets of a path hash table
 */
 
-#define MS_PATH_HT_SIZE 4096
+#define MS_PATH_HT_SIZE 8192
 
 /**
 ** \brief          Update `path` with all files in the directory named `dirname`.

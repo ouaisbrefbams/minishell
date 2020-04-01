@@ -16,6 +16,8 @@
 */
 
 #include "minishell.h"
+#include "ast.h"
+#include "eval.h"
 
 /**
 ** \brief       Program entrypoint
@@ -25,24 +27,52 @@
 ** \return      0 if ok, 1 otherwise
 */
 
-int main(int argc, char **argv, const char **envp)
+int main(int argc, char **argv, char **envp)
 {
+	(void)argc;
+	(void)argv;
+	/* (void)envp; */
 	t_path	path;
 	t_env	env;
 	/* char	*line; */
 	/* int		ret; */
 
-    (void)argc;
-    (void)argv;
-	env = env_from_array((char**)envp);
+	env = env_from_array(envp);
 	path = path_update(NULL, ft_htget(env, "PATH"));
 
-	printf("%s\n", (char*)ft_htget(path, "nmap"));
-	/* env(env); */
-	/* pwd(&state); */
-	/* cd(&state, NULL); */
-	/* pwd(&state); */
+	t_ast *ast;
+	t_line line;
+	t_cmd cmd;
+	t_eval_state state;
 
+	cmd.argv = ft_split("ls -l", ' ');
+	cmd.in = NULL;
+	cmd.out = NULL;
+	cmd.is_append = false;
+
+	line.left = ast_new(TAG_CMD, &cmd);
+	line.right = NULL;
+	line.sep = SEP_END;
+	ast = ast_new(TAG_LINE, &line);
+
+	/* printf("%p\n", ast); */
+	/* printf("%d\n", ast->tag); */
+	/* printf("%p\n", ast->data.line.left); */
+	/* printf("%p\n", ast->data.line.right); */
+	/* printf("%d\n", ast->data.line.left->tag); */
+	/* printf("%p\n", ast->data.line.left->data.cmd.argv); */
+	/* printf("%s\n", ast->data.line.left->data.cmd.argv[0]); */
+	/* printf("%s\n", ast->data.line.left->data.cmd.argv[1]); */
+
+	state.in_pipe[0] = -1;
+	state.in_pipe[1] = -1;
+	state.out_pipe[0] = -1;
+	state.out_pipe[1] = -1;
+	state.path = path;
+	state.env = env;
+	eval(&state, ast);
+
+	ast_destroy(ast);
 	/* while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1) */
 	/* { */
 	/* 	if (eval(parse(line)) == -1) */

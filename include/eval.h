@@ -15,7 +15,6 @@
 
 typedef struct
 {
-	int			status;
 	int			in_pipe[2];   // need stack pipe
 	int			out_pipe[2];
 	t_path		path;
