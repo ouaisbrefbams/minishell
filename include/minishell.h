@@ -52,6 +52,8 @@
 
 # define PIPE_READ 0
 
+# define BUILTIN_NOT_FOUND -2
+
 typedef t_ftht*			t_path;
 typedef t_ftht*			t_env;
 
@@ -72,13 +74,33 @@ char					**env_to_array(t_env env);
 ** builtin*.c - directory with all builtin commands
 */
 
-int                     builtin_echo(char **argv);
-int                     builtin_cd(t_env env, char **argv);
-int                     builtin_pwd(void);
-int                     builtin_export(t_env env, char **argv);
-int                     builtin_unset(t_env env, char **argv);
-int                     builtin_env(t_env env);
-int                     builtin_exit(void);
+/**
+** \brief       Type of a builtin main function
+*/
+
+typedef int	(*t_builtin_func)(char **argv, t_env env);
+
+/**
+** \brief       Entry of builtin lookup array
+** \param name  Executable name of builtin
+** \param func  Associated function
+*/
+
+struct	s_builtin_entry
+{
+	char			*name;
+	t_builtin_func	func;
+};
+
+int						builtin_dispatch_run(char **argv, t_env env);
+bool					builtin_check_exec_name(char *exec_name);
+int                     builtin_echo(char **argv, t_env env);
+int                     builtin_cd(char **argv, t_env env);
+int                     builtin_pwd(char **argv, t_env env);
+int                     builtin_export(char **argv, t_env env);
+int                     builtin_unset(char **argv, t_env env);
+int                     builtin_env(char **argv, t_env env);
+int                     builtin_exit(char **argv, t_env env);
 
 /*
 ** util.c - various utilitary functions

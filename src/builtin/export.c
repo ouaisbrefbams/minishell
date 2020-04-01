@@ -5,7 +5,11 @@
 
 #include "minishell.h"
 
-/* int	export(t_env env, char **argv) */
-/* { */
-/* 	return (0); */
-/* } */
+int	builtin_export(char **argv, t_env env)
+{
+	(void)argv;
+	(void)env;
+	/* if (ft_htset(env, ) == NULL) */
+	/* 	return (-1); */
+	return (0);
+}

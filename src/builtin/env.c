@@ -13,8 +13,9 @@ void	st_print_env_variable(t_ftht_entry *entry)
 	ft_putchar('\n');
 }
 
-int		builtin_env(t_env env)
+int		builtin_env(char **argv, t_env env)
 {
+	(void)argv;
 	ft_htiter(env, st_print_env_variable);
 	return (0);
 }

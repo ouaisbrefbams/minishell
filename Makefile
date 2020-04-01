@@ -44,7 +44,7 @@ all: libft_all prebuild $(NAME)
 
 .PHONY: test
 test:
-	./$(TESTEXEC)
+	@./$(TESTEXEC)
 
 .PHONY: prebuild
 prebuild:
@@ -52,7 +52,7 @@ prebuild:
 
 $(NAME): $(OBJ)
 	@echo "Linking: $@"
-	$(CC) -o $@ $(OBJ) $(LDFLAGS)
+	@$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCLUDE)
 	@echo "Compiling: $@"
@@ -73,17 +73,25 @@ fclean: libft_fclean
 .PHONY: re
 re: fclean all
 
+.PHONY: relocal
+relocal:
+	@echo "Removing objects"
+	@$(RM) -r $(OBJDIR)
+	@echo "Removing exectable"
+	@$(RM) $(NAME)
+relocal: all
+
 .PHONY: libft_all
 libft_all:
-	$(MAKE) -C $(LIBFTDIR) all
+	@$(MAKE) -C $(LIBFTDIR) all
 
 .PHONY: libft_clean
 libft_clean:
-	$(MAKE) -C $(LIBFTDIR) clean
+	@$(MAKE) -C $(LIBFTDIR) clean
 
 .PHONY: libft_fclean
 libft_fclean:
-	$(MAKE) -C $(LIBFTDIR) fclean
+	@$(MAKE) -C $(LIBFTDIR) fclean
 
 .PHONY: doc
 doc:

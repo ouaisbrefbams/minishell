@@ -64,10 +64,10 @@ int main(int argc, char **argv, char **envp)
 	/* printf("%s\n", ast->data.line.left->data.cmd.argv[0]); */
 	/* printf("%s\n", ast->data.line.left->data.cmd.argv[1]); */
 
-	state.in_pipe[0] = -1;
-	state.in_pipe[1] = -1;
-	state.out_pipe[0] = -1;
-	state.out_pipe[1] = -1;
+	state.pipe_in[0] = -1;
+	state.pipe_in[1] = -1;
+	state.pipe_out[0] = -1;
+	state.pipe_out[1] = -1;
 	state.path = path;
 	state.env = env;
 	eval(&state, ast);

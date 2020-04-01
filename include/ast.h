@@ -27,7 +27,8 @@ typedef enum
 	SEP_OR,
 }				t_sep;
 
-typedef struct s_ast t_ast;
+struct s_ast;
+
 /**
 ** \brief            Line struct
 ** \param left       AST to the left of separator
@@ -37,8 +38,8 @@ typedef struct s_ast t_ast;
 
 typedef struct
 {
-	t_ast		*left;
-	t_ast		*right;
+	struct s_ast		*left;
+	struct s_ast		*right;
 	t_sep		sep;
 }				t_line;
 
@@ -58,6 +59,12 @@ typedef struct
 	bool		is_append;
 }				t_cmd;
 
+/**
+** \brief            AST node tag (type)
+** \param TAG_CMD    Command AST node
+** \param TAG_LINE   Line AST node
+*/
+
 typedef enum
 {
 	TAG_CMD,
@@ -66,13 +73,13 @@ typedef enum
 
 /**
 ** \brief             AST node struct
-** \param type        Node type
+** \param tag         Node tag
 ** \param data        Union containning possible node data
 ** \param data::cmd   Command struct
 ** \param data::line  Line struct
 */
 
-struct s_ast
+typedef struct	s_ast
 {
 	t_ast_tag	tag;
 	union
@@ -80,7 +87,7 @@ struct s_ast
 		t_line	line;
 		t_cmd	cmd;
 	}			data;
-};
+}				t_ast;
 
 t_ast			*ast_new(t_ast_tag tag, void *data);
 void			ast_destroy(t_ast *ast);

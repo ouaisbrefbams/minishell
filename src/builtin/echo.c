@@ -5,10 +5,11 @@
 
 #include "minishell.h"
 
-int	builtin_echo(char **argv)
+int	builtin_echo(char **argv, t_env env)
 {
 	bool	newline;
 
+	(void)env;
 	newline = ft_strcmp(argv[1], "-n") == 0;
 	if (newline)
 		argv++;

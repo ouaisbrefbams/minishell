@@ -15,8 +15,8 @@
 
 typedef struct
 {
-	int			in_pipe[2];   // need stack pipe
-	int			out_pipe[2];
+	int			pipe_in[2];   // need stack pipe
+	int			pipe_out[2];
 	t_path		path;
 	t_env		env;
 }				t_eval_state;
@@ -31,13 +31,25 @@ typedef struct
 	int			status;
 }				t_eval_status;
 
-
-/**
-** \brief        Evaluate an AST
-** \param state  State of the evaluation
-** \param ast    Abstract syntax tree to evaluate
+/*
+** eval.c
 */
 
 int				eval(t_eval_state *state, t_ast *ast);
+
+/*
+** exec.c
+*/
+
+bool			exec_is_path(char *path_str);
+bool 			exec_is_valid(char *exec_path);
+char			*exec_search_path(t_path path, char *path_var, char *exec_name);
+
+/*
+** pipe.c
+*/
+
+int				pipe_setup_parent(t_cmd *cmd, int pipe_in[2], int pipe_out[2]);
+int				pipe_setup_child(int pipe_in[2], int pipe_out[2]);
 
 #endif

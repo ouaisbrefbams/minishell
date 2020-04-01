@@ -1,4 +1,17 @@
+/**
+** \file    ast.c
+** \brief   AST functions
+*/
+
 #include "ast.h"
+
+/**
+** \brief       Create a new AST node according to `tag`
+** \param tag   Tag of node
+** \param data  Pointer to node data (t_cmd or t_line)
+**              which will be copied in ast::data union
+** \return      Created node or NULL on error
+*/
 
 t_ast			*ast_new(t_ast_tag tag, void *data)
 {
@@ -17,26 +30,25 @@ t_ast			*ast_new(t_ast_tag tag, void *data)
 	return (ast);
 }
 
-static void		cmd_destroy(t_cmd *cmd)
-{
-	ft_split_destroy(cmd->argv);
-	free(cmd->in);
-	free(cmd->out);
-}
-
-static void		line_destroy(t_line *line)
-{
-	ast_destroy(line->left);
-	ast_destroy(line->right);
-}
+/**
+** \brief      Destroy an AST node and all his child nodes
+** \param ast  AST to destroy
+*/
 
 void			ast_destroy(t_ast *ast)
 {
 	if (ast == NULL)
 		return ;
 	if (ast->tag == TAG_CMD)
-		cmd_destroy(&ast->data.cmd);
+	{
+		ft_split_destroy(ast->data.cmd.argv);
+		free(ast->data.cmd.in);
+		free(ast->data.cmd.out);
+	}
 	else if (ast->tag == TAG_LINE)
-		line_destroy(&ast->data.line);
+	{
+		ast_destroy(ast->data.line.left);
+		ast_destroy(ast->data.line.right);
+	}
 	free(ast);
 }
