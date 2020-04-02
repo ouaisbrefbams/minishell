@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/01 17:55:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/03 07:17:04 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,19 @@ static t_path			st_path_dir_update(t_path path, char *dirname)
 {
 	DIR				*dir;
 	struct dirent	*entry;
-	char			*tmp;
+	char			*filepath;
 
 	if ((dir = opendir(dirname)) == NULL)
 		return (NULL);
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if ((tmp = ft_strjoin3(dirname, "/", entry->d_name)) == NULL)
+		if ((filepath = ft_strjoin3(dirname, "/", entry->d_name)) == NULL ||
+			ft_htset(path, entry->d_name, filepath, free) == NULL)
+		{
+			free(filepath);
+			closedir(dir);
 			return (NULL);
-		if (ft_htset(path, entry->d_name, tmp, ht_del_str_entry) == NULL)
-			return (NULL);
+		}
 	}
 	if (closedir(dir) == -1)
 		return (NULL);

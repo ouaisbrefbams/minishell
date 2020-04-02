@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/04/01 17:52:43 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/02 13:27:59 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,14 @@ typedef struct		s_cmd
 ** \brief            AST node tag (type)
 ** \param TAG_CMD    Command AST node
 ** \param TAG_LINE   Line AST node
+** \param TAG_ROOT   Root line AST node
 */
 
 typedef enum		e_ast_tag
 {
 	TAG_CMD,
 	TAG_LINE,
+	TAG_ROOT,
 }					t_ast_tag;
 
 /*

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/01 23:12:51 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/03 08:56:46 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,14 @@ int main(int argc, char **argv, char **envp)
 	state.pipe_out[1] = -1;
 	state.path = path;
 	state.env = env;
-	printf("ret: %d %s\n", eval(&state, ast), strerror(errno));
+	t_io_frame frame;
+	io_frame_init(&frame);
+	printf("ret: %d %s\n", eval(&frame,&state, ast), strerror(errno));
 
-	ast_destroy(ast);
+	/* char buf[2048]; */
+	/* printf("%s\n", getcwd(buf, 2048)); */
+	/* builtin_env(NULL, state.env); */
+	/* ast_destroy(ast); */
 	/* while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1) */
 	/* { */
 	/* 	if (eval(parse(line)) == -1) */
@@ -80,7 +85,7 @@ int main(int argc, char **argv, char **envp)
 	/* 	free(line); */
 	/* } */
 	/* free(line); */
-	ft_htdestroy(path, ht_del_str_entry);
+	ft_htdestroy(path, free);
 	ft_vecdestroy(env, free);
 	return (0);
 }

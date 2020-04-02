@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/04/01 17:53:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/02 15:38:11 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,17 @@ typedef struct	s_eval_status
 	int			status;
 }				t_eval_status;
 
+typedef struct
+{
+	int			pipe_in[2];
+	int			pipe_out[2];
+}				t_io_frame;
+
 /*
 ** eval.c
 */
 
-int				eval(t_eval_state *state, t_ast *ast);
+int				eval(t_io_frame *frame, t_eval_state *state, t_ast *ast);
 
 /*
 ** exec.c
@@ -63,5 +69,6 @@ char			*exec_search_path(t_path path, char *path_var, char *exec_name);
 
 int				pipe_setup_parent(t_cmd *cmd, int pipe_in[2], int pipe_out[2]);
 int				pipe_setup_child(int pipe_in[2], int pipe_out[2]);
+int			io_frame_init(t_io_frame *frame);
 
 #endif

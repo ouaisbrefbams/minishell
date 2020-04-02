@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/01 23:09:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/02 10:33:12 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ t_env	env_from_array(char **envp)
 	while (envp[i] != NULL)
 		if (ft_strchr(envp[i++], '=') == NULL)
 			return (NULL);
-	if ((env = ft_vecnew(i)) == NULL)
+	if ((env = ft_vecnew(i + 1)) == NULL)
 		return (NULL);
-	env->size = i;
+	env->size = i + 1;
 	i = 0;
 	while (envp[i] != NULL)
 	{
@@ -45,6 +45,7 @@ t_env	env_from_array(char **envp)
 		}
 		i++;
 	}
+	env->data[i] = NULL;
 	return (env);
 }
 
