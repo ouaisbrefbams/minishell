@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/03 08:56:46 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/03 14:25:48 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,22 @@ int main(int argc, char **argv, char **envp)
 	/* int		ret; */
 
 	env = env_from_array(envp);
-	path = path_update(NULL, env_search(env, "PATH"));
-
-	t_ast *ast;
-	t_line line;
-	t_cmd cmd;
-	t_eval_state state;
-
-	cmd.argv = ft_split("ls -l", ' ');
-	cmd.in = NULL;
-	cmd.out = NULL;
-	cmd.is_append = false;
-
-	line.left = ast_new(TAG_CMD, &cmd);
-	line.right = NULL;
-	line.sep = SEP_END;
-	ast = ast_new(TAG_LINE, &line);
+	/* path = path_update(NULL, env_search(env, "PATH")); */
+    /*  */
+	/* t_ast *ast; */
+	/* t_line line; */
+	/* t_cmd cmd; */
+	/* t_eval_state state; */
+    /*  */
+	/* cmd.argv = ft_split("ls -l", ' '); */
+	/* cmd.in = NULL; */
+	/* cmd.out = NULL; */
+	/* cmd.is_append = false; */
+    /*  */
+	/* line.left = ast_new(TAG_CMD, &cmd); */
+	/* line.right = NULL; */
+	/* line.sep = SEP_END; */
+	/* ast = ast_new(TAG_LINE, &line); */
 
 	/* printf("%p\n", ast); */
 	/* printf("%d\n", ast->tag); */
@@ -64,15 +64,15 @@ int main(int argc, char **argv, char **envp)
 	/* printf("%s\n", ast->data.line.left->data.cmd.argv[0]); */
 	/* printf("%s\n", ast->data.line.left->data.cmd.argv[1]); */
 
-	state.pipe_in[0] = -1;
-	state.pipe_in[1] = -1;
-	state.pipe_out[0] = -1;
-	state.pipe_out[1] = -1;
-	state.path = path;
-	state.env = env;
-	t_io_frame frame;
-	io_frame_init(&frame);
-	printf("ret: %d %s\n", eval(&frame,&state, ast), strerror(errno));
+	/* state.pipe_in[0] = -1; */
+	/* state.pipe_in[1] = -1; */
+	/* state.pipe_out[0] = -1; */
+	/* state.pipe_out[1] = -1; */
+	/* state.path = path; */
+	/* state.env = env; */
+	/* t_io_frame frame; */
+	/* io_frame_init(&frame); */
+	/* printf("ret: %d %s\n", eval(&frame,&state, ast), strerror(errno)); */
 
 	/* char buf[2048]; */
 	/* printf("%s\n", getcwd(buf, 2048)); */
@@ -85,7 +85,8 @@ int main(int argc, char **argv, char **envp)
 	/* 	free(line); */
 	/* } */
 	/* free(line); */
-	ft_htdestroy(path, free);
+	/* ft_htdestroy(path, free); */
+	printf("%s\n", preprocess("*.c", env));
 	ft_vecdestroy(env, free);
 	return (0);
 }

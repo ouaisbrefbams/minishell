@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:20 by charles           #+#    #+#             */
-/*   Updated: 2020/04/02 11:33:15 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/03 12:11:52 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 int	builtin_cd(char **argv, t_env env)
 {
+	//change $PWD
 	(void)env;
 	if (argv[1] == NULL)
 		return (1);

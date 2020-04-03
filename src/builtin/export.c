@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/04/02 10:46:27 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/03 12:11:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ int	builtin_export(char **argv, t_env env)
 {
 	char	*tmp;
 
+	// modify existing
+	// set with no string without '='
 	if (ft_strchr(argv[1], '=') == NULL)
 		return (1);
 	if ((tmp = ft_strdup(argv[1])) == NULL)

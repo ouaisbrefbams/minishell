@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/03 07:17:04 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/03 13:53:01 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,27 +31,17 @@
 ** \return         Same path or NULL on error
 */
 
-static t_path			st_path_dir_update(t_path path, char *dirname)
+static int			st_add_file(char *dirname, struct dirent *entry, void *path)
 {
-	DIR				*dir;
-	struct dirent	*entry;
-	char			*filepath;
+	char	*filepath;
 
-	if ((dir = opendir(dirname)) == NULL)
-		return (NULL);
-	while ((entry = readdir(dir)) != NULL)
+	if ((filepath = ft_strjoin3(dirname, "/", entry->d_name)) == NULL ||
+		ft_htset((t_path)path, entry->d_name, filepath, free) == NULL)
 	{
-		if ((filepath = ft_strjoin3(dirname, "/", entry->d_name)) == NULL ||
-			ft_htset(path, entry->d_name, filepath, free) == NULL)
-		{
-			free(filepath);
-			closedir(dir);
-			return (NULL);
-		}
+		free(filepath);
+		return (-1);
 	}
-	if (closedir(dir) == -1)
-		return (NULL);
-	return (path);
+	return (0);
 }
 
 /*
@@ -74,8 +64,8 @@ t_path					path_update(t_path path, char *path_var)
 	if ((dirs = ft_split(path_var, ':')) == NULL)
 		return (NULL);
 	i = -1;
-	while (dirs[++i] != NULL)
-		if (st_path_dir_update(path, dirs[i]) == NULL)
+	while (dirs[++i] != NULL)  // carefull with non existant dir error
+		if (utils_directory_iter(dirs[i], path, st_add_file) == -1)
 			return (ft_split_destroy(dirs));
 	ft_split_destroy(dirs);
 	return (path);

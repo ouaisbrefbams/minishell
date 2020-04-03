@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/01 22:13:47 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/03 14:24:34 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # include "libft_lst.h"
 # include "libft_util.h"
 # include "libft_vec.h"
+# include "libft_dstr.h"
 
 /*
 ** \brief  Value of pipe entry if closed
@@ -104,9 +105,19 @@ int						builtin_env(char **argv, t_env env);
 int						builtin_exit(char **argv, t_env env);
 
 /*
+** preprocess.c
+*/
+
+char					*preprocess(char *input, t_env env);
+
+/*
 ** util.c - various utilitary functions
 */
 
-void					ht_del_str_entry(t_ftht_entry *entry);
+int						utils_directory_iter(
+							char *dirname,
+							void *param,
+							int (*f)(char*, struct dirent*, void*)
+						);
 
 #endif
