@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/03 14:25:48 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/04 18:37:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	/* (void)envp; */
-	t_path	path;
+	/* t_path	path; */
 	t_env	env;
 	/* char	*line; */
 	/* int		ret; */
@@ -86,7 +86,10 @@ int main(int argc, char **argv, char **envp)
 	/* } */
 	/* free(line); */
 	/* ft_htdestroy(path, free); */
-	printf("%s\n", preprocess("*.c", env));
+	/* ms_glob("src#<{(|"); */
+	char *j = ms_glob("*/");
+	printf("%s\n", j);
+	free(j);
 	ft_vecdestroy(env, free);
 	return (0);
 }

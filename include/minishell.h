@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/03 14:24:34 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/04 14:50:21 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int						builtin_exit(char **argv, t_env env);
 ** preprocess.c
 */
 
+char	*ms_glob(char *pattern);
 char					*preprocess(char *input, t_env env);
 
 /*

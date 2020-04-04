@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/03 14:25:31 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/04 13:33:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,13 @@
 
 t_env	env_from_array(char **envp)
 {
-	char	*tmp;
 	t_env	env;
 
 	if ((env = ft_vecnew(ENV_VEC_DEFAULT_SIZE)) == NULL)
 		return (NULL);
 	while (*envp != NULL)
 	{
-		if ((tmp = ft_strdup(*envp)) == NULL ||
-			ft_vecpush(env, tmp) == NULL)
+		if (ft_vecpush_safe(env, ft_strdup(*envp)) == NULL)
 		{
 			ft_vecdestroy(env, free);
 			return (NULL);
