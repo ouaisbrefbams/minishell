@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/04 13:33:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/05 14:42:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_env	env_from_array(char **envp)
 ** \return     Value after '=' in environment variable array or NULL if not found
 */
 
+// could be a wrapper around ft_lfind
 char	*env_search(t_env env, char *key)
 {
 	size_t	i;
@@ -64,12 +65,14 @@ char	*env_search(t_env env, char *key)
 	return (NULL);
 }
 
-char	*env_match_first(t_env env, const char *haystack)
+char	*env_search_first_match(t_env env, const char *haystack)
 {
 	int		len;
 	size_t	i;
 
-	len = -1;
+	if (ft_isdigit(*haystack))
+		return (NULL);
+	len = 0;
 	while (ft_isalnum(haystack[len]) || haystack[len] == '_')
 		len++;
 	while (i < env->size)

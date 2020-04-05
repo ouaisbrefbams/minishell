@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/04 14:50:21 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/05 14:52:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_path					path_update(t_path path, char *path_var);
 
 t_env					env_from_array(char **envp);
 char					*env_search(t_env env, char *key);
+char					*env_search_first_match(t_env env, const char *haystack);
 
 /*
 ** builtin*.c - directory with all builtin commands
@@ -108,17 +109,6 @@ int						builtin_exit(char **argv, t_env env);
 ** preprocess.c
 */
 
-char	*ms_glob(char *pattern);
 char					*preprocess(char *input, t_env env);
-
-/*
-** util.c - various utilitary functions
-*/
-
-int						utils_directory_iter(
-							char *dirname,
-							void *param,
-							int (*f)(char*, struct dirent*, void*)
-						);
 
 #endif

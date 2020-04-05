@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/03 14:58:17 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/05 14:51:52 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,27 @@ int		utils_directory_iter(
 	if (closedir(dir) == -1)
 		return (-1);
 	return (0);
-
 }
 
-/* int		utils_not_alnum */
+/* bool	utils_is_var_name(char *name) */
+/* { */
+/* 	if (!(ft_isalpha(*name) || *name == '_')) */
+/* 		return (false); */
+/* 	name++; */
+/* 	while (*name != '\0) */
+/* 		if (!(ft_isalnum(*name) || *name == '_')) */
+/* 			return (false); */
+/* 	return (true); */
+/* } */
+
+size_t	utils_var_end(char *name)
+{
+	size_t	i;
+
+	if (ft_isdigit(*name))
+		return (0);
+	i = 0;
+	while (ft_isalnum(name[i]) || name[i] == '_')
+		i++;
+	return (i);
+}

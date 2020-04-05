@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/04 18:37:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/05 12:15:57 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "minishell.h"
 #include "ast.h"
 #include "eval.h"
+#include "ms_glob.h"
 
 /*
 ** \brief       Program entrypoint
@@ -87,7 +88,7 @@ int main(int argc, char **argv, char **envp)
 	/* free(line); */
 	/* ft_htdestroy(path, free); */
 	/* ms_glob("src#<{(|"); */
-	char *j = ms_glob("*/");
+	char *j = ms_glob("*/*.c");
 	printf("%s\n", j);
 	free(j);
 	ft_vecdestroy(env, free);
