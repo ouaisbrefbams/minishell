@@ -5,12 +5,23 @@
 
 #include "minishell.h"
 
-char          **lexer(char *input)
+static char		**lex_len(char *input)
 {
-	char **out_lex;
+	int i;
 
+	i = 0;
+	while(input[i] != '\0')
+	{
+		lex_comp_cmd(input);
+		i++;
+	}
+}
+
+char          	**lexer(char *input)
+{
 	(void)out_lex;
 	if (!input)
 		return (NULL);
+	lex_len(input);
 	return (NULL);
 }
