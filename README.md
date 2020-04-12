@@ -18,8 +18,8 @@ You can then read the man pages in ./doc/man or open ./doc/html/index.html in yo
 ### Mandatory
 
 - [ ] Show a prompt when waiting for a new command
-- [ ] Search and launch the right executable (based on the *PATH* variable or by using relative or absolute path) like in bash  @HappyTramp
-- [ ] It must implement the builtins like in bash:  @nass1pro
+- [x] Search and launch the right executable (based on the *PATH* variable or by using relative or absolute path) like in bash
+- [ ] It must implement the builtins like in bash:
 	- [ ] `echo` with option `-n`
 	- [ ] `cd` without `-` option
 	- [ ] `pwd` without any options

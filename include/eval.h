@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/04/02 15:38:11 by charles          ###   ########.fr       */
+/*   Updated: 2020/05/04 11:58:16 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@
 
 typedef struct
 {
-	int			pipe_in[2];
-	int			pipe_out[2];
+	int			p[2];
 	t_path		path;
 	t_env		env;
 }				t_eval_state;
@@ -45,15 +44,24 @@ typedef struct	s_eval_status
 
 typedef struct
 {
-	int			pipe_in[2];
-	int			pipe_out[2];
-}				t_io_frame;
+	t_eval_state	*state;
+	t_line			*line;
+	int fd_in;
+	int fd_out;
+}					t_fork_param_line;
+
+typedef struct
+{
+	char			*exec_path;
+	char			**argv;
+	char			**envp;
+}					t_fork_param_execve;
 
 /*
 ** eval.c
 */
 
-int				eval(t_io_frame *frame, t_eval_state *state, t_ast *ast);
+int				eval(int fd_in, int fd_out, t_eval_state *state, t_ast *ast);
 
 /*
 ** exec.c
@@ -69,6 +77,5 @@ char			*exec_search_path(t_path path, char *path_var, char *exec_name);
 
 int				pipe_setup_parent(t_cmd *cmd, int pipe_in[2], int pipe_out[2]);
 int				pipe_setup_child(int pipe_in[2], int pipe_out[2]);
-int			io_frame_init(t_io_frame *frame);
 
 #endif

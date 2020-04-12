@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:21 by charles           #+#    #+#             */
-/*   Updated: 2020/04/02 17:08:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/05/04 12:00:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,70 +17,19 @@
 
 #include "eval.h"
 
-#define PARAM_SIZE 3
+/*
+** \brief          Wrap a function in a fork
+** \param fd_in    fork input file descriptor
+** \param fd_out   fork output file descriptor
+** \param passed   param of the wrapped function
+** \param wrapped  function to wrap
+*/
 
-#define PARAM_STATE 0
-#define PARAM_LINE 1
-
-#define PARAM_EXEC_PATH 0
-#define PARAM_ARGV 1
-#define PARAM_ENVP 2
-
-int			io_frame_init(t_io_frame *frame)
-{
-	if (pipe(frame->pipe_in) == -1
-		|| pipe(frame->pipe_out) == -1)
-		return (-1);
-	/* frame->pipe_in[PIPE_READ] = STDIN_FILENO; */
-	/* frame->pipe_in[PIPE_WRITE] = PIPE_CLOSED; */
-	/* frame->pipe_out[PIPE_READ] = PIPE_CLOSED; */
-	/* frame->pipe_out[PIPE_WRITE] = STDOUT_FILENO; */
-	return (0);
-}
-
-static int	eval_root(void *params[PARAM_SIZE])
-{
-	int				status;
-	t_eval_state	*state;
-	t_line			*line;
-	t_io_frame		frame_left;
-	t_io_frame		frame_right;
-
-	state = params[PARAM_STATE];
-	line = params[PARAM_LINE];
-	io_frame_init(&frame_left);
-	if (line->right == NULL)
-		return (eval(&frame_left, state, line->left));
-
-	if (line->sep == SEP_PIPE)
-		dup2(STDOUT_FILENO, frame_left.pipe_out[PIPE_WRITE]);
-
-	if ((status = eval(&frame_left, state, line->left)) == -1)
-		return (-1);
-	if ((line->sep == SEP_AND && status != 0) ||
-		(line->sep == SEP_OR && status == 0))
-		return (status);
-
-	if (line->sep == SEP_PIPE)
-		dup2(frame_right.pipe_in[PIPE_WRITE], frame_left.pipe_out[PIPE_READ]);
-
-	return (eval(&frame_right, state, line->right));
-}
-
-int execve_wrapper(void *params[PARAM_SIZE])
-{
-	return (execve(
-		params[PARAM_EXEC_PATH],
-		params[PARAM_ARGV],
-		params[PARAM_ENVP]
-	));
-}
-
-int exec_wrap(
-	t_io_frame *frame,
-	void *passed[PARAM_SIZE],
-	int (*wrapped)(void *params[PARAM_SIZE])
-)
+int			fork_wrap(
+	int	fd_in,
+	int fd_out,
+	void *passed,
+	int (*wrapped)(void *param))
 {
 	int		status;
 	pid_t	child_pid;
@@ -89,8 +38,8 @@ int exec_wrap(
 		return (-1);
 	if (child_pid == 0)
 	{
-		if (dup2(STDIN_FILENO, frame->pipe_in[PIPE_READ]) == -1 ||
-			dup2(STDOUT_FILENO, frame->pipe_out[PIPE_WRITE]) == -1)
+		if (dup2(STDIN_FILENO, fd_in) == -1 ||
+			dup2(STDOUT_FILENO, fd_out) == -1)
 			exit(EXIT_FAILURE);
 		if ((status = wrapped(passed)) == -1)
 			exit(EXIT_FAILURE);
@@ -100,25 +49,24 @@ int exec_wrap(
 	return (WEXITSTATUS(child_pid));
 }
 
-/*
-** \brief        Evaluate a line
-** \param state  State of the evaluation
-** \param line   Line to evaluate
-** \return       Last Executed command status or -1 on error
-*/
-
-static int	eval_line(t_io_frame *frame, t_eval_state *state, t_line *line)
-{
-	void	*params[PARAM_SIZE];
-
-	params[PARAM_STATE] = state;
-	params[PARAM_LINE] = line;
-	return (exec_wrap(frame, params, &eval_root));
-}
-
-int run_builtin(t_eval_state *state, char **argv)
+int 		run_builtin(t_eval_state *state, char **argv)
 {
 	return (builtin_dispatch_run(argv, state->env));
+}
+
+/*
+** \brief        execve syscall wrapper passed it to fork_wrap
+** \param param  function params
+** \return       execve return value
+*/
+
+int 		execve_wrapper(void *param)
+{
+	return (execve(
+		((t_fork_param_execve*)param)->exec_path,
+		((t_fork_param_execve*)param)->argv,
+		((t_fork_param_execve*)param)->envp
+	));
 }
 
 /*
@@ -128,49 +76,85 @@ int run_builtin(t_eval_state *state, char **argv)
 ** \return       Executable status or -1 on error
 */
 
-static int	eval_cmd(t_io_frame *frame, t_eval_state *state, t_cmd *cmd)
+static int	eval_cmd(int fd_in, int fd_out, t_eval_state *state, t_cmd *cmd)
 {
-	void	*params[PARAM_SIZE];
+	t_fork_param_execve	param;
 
 	if (builtin_check_exec_name(cmd->argv[0]))
 		return (run_builtin(state, cmd->argv));
-	params[PARAM_EXEC_PATH] = exec_search_path(
+	param.exec_path = exec_search_path(
 			state->path, env_search(state->env, "PATH"), cmd->argv[0]);
-	if (params[PARAM_EXEC_PATH] == NULL)
+	if (param.exec_path == NULL)
 		return (-1);
-	if (cmd->in != NULL)
-		if ((frame->pipe_in[PIPE_WRITE] = open(cmd->in, O_RDONLY)) == -1)
-			return (-1);
-	if (cmd->out != NULL)
-		if ((frame->pipe_out[PIPE_READ] = open(cmd->out,
-				(cmd->is_append ? O_APPEND : O_RDONLY) | O_CREAT)) == -1)
-			return (-1);
-	params[PARAM_ARGV] = cmd->argv;
-	params[PARAM_ENVP] = state->env->data;
-	return (exec_wrap(frame, params, &execve_wrapper));
+	if (cmd->in != NULL && (fd_in = open(cmd->in, O_RDONLY)) == -1)
+		return (-1);
+	if (cmd->out != NULL && (fd_out = open(cmd->out,
+			(cmd->is_append ? O_APPEND : O_RDONLY) | O_CREAT)) == -1)
+		return (-1);
+	param.argv = cmd->argv;
+	param.envp = (char**)state->env->data;
+	return (fork_wrap(fd_in, fd_out, &param, &execve_wrapper));
+}
+
+/*
+** \brief        Evaluate a line
+** \param state  State of the evaluation
+** \param line   Line to evaluate
+** \return       Last Executed command status or -1 on error
+*/
+static int	eval_line(void *param)
+{
+	int				status;
+	t_eval_state	*state;
+	t_line			*line;
+	int fd_in;
+	int fd_out;
+
+	state = ((t_fork_param_line*)param)->state;
+	line = ((t_fork_param_line*)param)->line;
+	fd_in = ((t_fork_param_line*)param)->fd_in;
+	fd_out = ((t_fork_param_line*)param)->fd_out;
+
+	/* if (line->right == NULL) */
+	/* 	return (eval(state, line->left)); */
+
+	/* if (line->sep == SEP_PIPE) */
+	/* 	pipe(state->p); */
+
+	if (line->left->tag == TAG_LINE)
+	{
+		return (fork_wrap(fd_in, fd_out, param, &eval_line));
+	}
+	if ((status = eval(fd_in, fd_out, state, line->left)) == -1)
+		return (-1);
+	if ((line->sep == SEP_AND && status != 0) ||
+		(line->sep == SEP_OR && status == 0))
+		return (status);
+
+	return (eval(fd_in, fd_out, state, line->right));
 }
 
 /*
 ** \brief        Evaluate an AST
 ** \param state  State of the evaluation
 ** \param ast    Abstract syntax tree to evaluate
-** \return       Executable status or -1 on error
+** \return       Last command status or -1 on error
 */
 
-int			eval(t_io_frame *frame, t_eval_state *state, t_ast *ast)
+int			eval(int fd_in, int fd_out, t_eval_state *state, t_ast *ast)
 {
-	void	*params[PARAM_SIZE];
+	t_fork_param_line param;
 
 	errno = 0;
-	if (ast->tag == TAG_ROOT)
-	{
-		params[PARAM_STATE] = state;
-		params[PARAM_LINE] = &ast->data.line;
-		return (eval_root(params));
-	}
 	if (ast->tag == TAG_LINE)
-		return (eval_line(frame, state, &ast->data.line));
+	{
+		param.state = state;
+		param.line = &ast->line;
+		param.fd_in = fd_in;
+		param.fd_out = fd_out;
+		return (eval_line(&param));
+	}
 	if (ast->tag == TAG_CMD)
-		return (eval_cmd(frame, state, &ast->data.cmd));
+		return (eval_cmd(fd_in, fd_out, state, &ast->cmd));
 	return (-1);
 }
