@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:21 by charles           #+#    #+#             */
-/*   Updated: 2020/04/01 23:15:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/05/04 12:00:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,55 @@
 #include "eval.h"
 
 /*
-** \brief        Evaluate a line
-** \param state  State of the evaluation
-** \param line   Line to evaluate
-** \return       Last Executed command status or -1 on error
+** \brief          Wrap a function in a fork
+** \param fd_in    fork input file descriptor
+** \param fd_out   fork output file descriptor
+** \param passed   param of the wrapped function
+** \param wrapped  function to wrap
 */
 
-static int	eval_line(t_eval_state *state, t_line *line)
+int			fork_wrap(
+	int	fd_in,
+	int fd_out,
+	void *passed,
+	int (*wrapped)(void *param))
 {
-	int	status;
+	int		status;
+	pid_t	child_pid;
 
-	if (line->right == NULL)
-		return (eval(state, line->left));
-	if ((status = eval(state, line->left)) == -1)
+	if ((child_pid = fork()) == -1)
 		return (-1);
-	if ((line->sep == SEP_AND && status != 0) ||
-		(line->sep == SEP_OR && status == 0))
-		return (status);
-	return (eval(state, line->right));
+	if (child_pid == 0)
+	{
+		if (dup2(STDIN_FILENO, fd_in) == -1 ||
+			dup2(STDOUT_FILENO, fd_out) == -1)
+			exit(EXIT_FAILURE);
+		if ((status = wrapped(passed)) == -1)
+			exit(EXIT_FAILURE);
+		exit(status);
+	}
+	wait(&child_pid);
+	return (WEXITSTATUS(child_pid));
+}
+
+int 		run_builtin(t_eval_state *state, char **argv)
+{
+	return (builtin_dispatch_run(argv, state->env));
+}
+
+/*
+** \brief        execve syscall wrapper passed it to fork_wrap
+** \param param  function params
+** \return       execve return value
+*/
+
+int 		execve_wrapper(void *param)
+{
+	return (execve(
+		((t_fork_param_execve*)param)->exec_path,
+		((t_fork_param_execve*)param)->argv,
+		((t_fork_param_execve*)param)->envp
+	));
 }
 
 /*
@@ -45,48 +76,85 @@ static int	eval_line(t_eval_state *state, t_line *line)
 ** \return       Executable status or -1 on error
 */
 
-static int	eval_cmd(t_eval_state *state, t_cmd *cmd)
+static int	eval_cmd(int fd_in, int fd_out, t_eval_state *state, t_cmd *cmd)
 {
-	int		child_pid;
-	char	*exec_path;
-	bool	is_builtin;
+	t_fork_param_execve	param;
 
-	is_builtin = builtin_check_exec_name(cmd->argv[0]); // no fork if builtin
-	if (!is_builtin)
-	{
-		if ((exec_path = exec_search_path(state->path,
-						env_search(state->env, "PATH"), cmd->argv[0])) == NULL)
-			return (-1);
-	}
-	pipe_setup_parent(cmd, state->pipe_in, state->pipe_out);
-	if ((child_pid = fork()) == -1)
+	if (builtin_check_exec_name(cmd->argv[0]))
+		return (run_builtin(state, cmd->argv));
+	param.exec_path = exec_search_path(
+			state->path, env_search(state->env, "PATH"), cmd->argv[0]);
+	if (param.exec_path == NULL)
 		return (-1);
-	if (child_pid == 0)
+	if (cmd->in != NULL && (fd_in = open(cmd->in, O_RDONLY)) == -1)
+		return (-1);
+	if (cmd->out != NULL && (fd_out = open(cmd->out,
+			(cmd->is_append ? O_APPEND : O_RDONLY) | O_CREAT)) == -1)
+		return (-1);
+	param.argv = cmd->argv;
+	param.envp = (char**)state->env->data;
+	return (fork_wrap(fd_in, fd_out, &param, &execve_wrapper));
+}
+
+/*
+** \brief        Evaluate a line
+** \param state  State of the evaluation
+** \param line   Line to evaluate
+** \return       Last Executed command status or -1 on error
+*/
+static int	eval_line(void *param)
+{
+	int				status;
+	t_eval_state	*state;
+	t_line			*line;
+	int fd_in;
+	int fd_out;
+
+	state = ((t_fork_param_line*)param)->state;
+	line = ((t_fork_param_line*)param)->line;
+	fd_in = ((t_fork_param_line*)param)->fd_in;
+	fd_out = ((t_fork_param_line*)param)->fd_out;
+
+	/* if (line->right == NULL) */
+	/* 	return (eval(state, line->left)); */
+
+	/* if (line->sep == SEP_PIPE) */
+	/* 	pipe(state->p); */
+
+	if (line->left->tag == TAG_LINE)
 	{
-		pipe_setup_child(state->pipe_in, state->pipe_out);
-		if (is_builtin)
-			exit(builtin_dispatch_run(cmd->argv, state->env));
-		else if (execve(exec_path, cmd->argv, NULL) == -1)
-			exit(EXIT_FAILURE);
-		exit(EXIT_SUCCESS);
+		return (fork_wrap(fd_in, fd_out, param, &eval_line));
 	}
-	wait(&child_pid);
-	return (WEXITSTATUS(child_pid));
+	if ((status = eval(fd_in, fd_out, state, line->left)) == -1)
+		return (-1);
+	if ((line->sep == SEP_AND && status != 0) ||
+		(line->sep == SEP_OR && status == 0))
+		return (status);
+
+	return (eval(fd_in, fd_out, state, line->right));
 }
 
 /*
 ** \brief        Evaluate an AST
 ** \param state  State of the evaluation
 ** \param ast    Abstract syntax tree to evaluate
-** \return       Executable status or -1 on error
+** \return       Last command status or -1 on error
 */
 
-int			eval(t_eval_state *state, t_ast *ast)
+int			eval(int fd_in, int fd_out, t_eval_state *state, t_ast *ast)
 {
+	t_fork_param_line param;
+
 	errno = 0;
 	if (ast->tag == TAG_LINE)
-		return (eval_line(state, &ast->data.line));
+	{
+		param.state = state;
+		param.line = &ast->line;
+		param.fd_in = fd_in;
+		param.fd_out = fd_out;
+		return (eval_line(&param));
+	}
 	if (ast->tag == TAG_CMD)
-		return (eval_cmd(state, &ast->data.cmd));
+		return (eval_cmd(fd_in, fd_out, state, &ast->cmd));
 	return (-1);
 }

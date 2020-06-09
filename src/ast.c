@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/04/01 17:05:44 by charles          ###   ########.fr       */
+/*   Updated: 2020/05/04 12:00:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ t_ast			*ast_new(t_ast_tag tag, void *data)
 	ft_bzero(ast, sizeof(t_ast));
 	ast->tag = tag;
 	if (tag == TAG_CMD)
-		ft_memcpy(&ast->data.cmd, (t_cmd*)data, sizeof(t_cmd));
+		ft_memcpy(&ast->cmd, (t_cmd*)data, sizeof(t_cmd));
 	else if (tag == TAG_LINE)
-		ft_memcpy(&ast->data.line, (t_line*)data, sizeof(t_line));
+		ft_memcpy(&ast->line, (t_line*)data, sizeof(t_line));
 	return (ast);
 }
 
@@ -53,14 +53,14 @@ void			ast_destroy(t_ast *ast)
 		return ;
 	if (ast->tag == TAG_CMD)
 	{
-		ft_split_destroy(ast->data.cmd.argv);
-		free(ast->data.cmd.in);
-		free(ast->data.cmd.out);
+		ft_split_destroy(ast->cmd.argv);
+		free(ast->cmd.in);
+		free(ast->cmd.out);
 	}
 	else if (ast->tag == TAG_LINE)
 	{
-		ast_destroy(ast->data.line.left);
-		ast_destroy(ast->data.line.right);
+		ast_destroy(ast->line.left);
+		ast_destroy(ast->line.right);
 	}
 	free(ast);
 }

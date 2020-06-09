@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/01 23:12:51 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/05 12:15:57 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "minishell.h"
 #include "ast.h"
 #include "eval.h"
+#include "ms_glob.h"
 
 /*
 ** \brief       Program entrypoint
@@ -32,28 +33,28 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	/* (void)envp; */
-	t_path	path;
+	/* t_path	path; */
 	t_env	env;
 	/* char	*line; */
 	/* int		ret; */
 
 	env = env_from_array(envp);
-	path = path_update(NULL, env_search(env, "PATH"));
-
-	t_ast *ast;
-	t_line line;
-	t_cmd cmd;
-	t_eval_state state;
-
-	cmd.argv = ft_split("ls -l", ' ');
-	cmd.in = NULL;
-	cmd.out = NULL;
-	cmd.is_append = false;
-
-	line.left = ast_new(TAG_CMD, &cmd);
-	line.right = NULL;
-	line.sep = SEP_END;
-	ast = ast_new(TAG_LINE, &line);
+	/* path = path_update(NULL, env_search(env, "PATH")); */
+    /*  */
+	/* t_ast *ast; */
+	/* t_line line; */
+	/* t_cmd cmd; */
+	/* t_eval_state state; */
+    /*  */
+	/* cmd.argv = ft_split("ls -l", ' '); */
+	/* cmd.in = NULL; */
+	/* cmd.out = NULL; */
+	/* cmd.is_append = false; */
+    /*  */
+	/* line.left = ast_new(TAG_CMD, &cmd); */
+	/* line.right = NULL; */
+	/* line.sep = SEP_END; */
+	/* ast = ast_new(TAG_LINE, &line); */
 
 	/* printf("%p\n", ast); */
 	/* printf("%d\n", ast->tag); */
@@ -64,15 +65,20 @@ int main(int argc, char **argv, char **envp)
 	/* printf("%s\n", ast->data.line.left->data.cmd.argv[0]); */
 	/* printf("%s\n", ast->data.line.left->data.cmd.argv[1]); */
 
-	state.pipe_in[0] = -1;
-	state.pipe_in[1] = -1;
-	state.pipe_out[0] = -1;
-	state.pipe_out[1] = -1;
-	state.path = path;
-	state.env = env;
-	printf("ret: %d %s\n", eval(&state, ast), strerror(errno));
+	/* state.pipe_in[0] = -1; */
+	/* state.pipe_in[1] = -1; */
+	/* state.pipe_out[0] = -1; */
+	/* state.pipe_out[1] = -1; */
+	/* state.path = path; */
+	/* state.env = env; */
+	/* t_io_frame frame; */
+	/* io_frame_init(&frame); */
+	/* printf("ret: %d %s\n", eval(&frame,&state, ast), strerror(errno)); */
 
-	ast_destroy(ast);
+	/* char buf[2048]; */
+	/* printf("%s\n", getcwd(buf, 2048)); */
+	/* builtin_env(NULL, state.env); */
+	/* ast_destroy(ast); */
 	/* while ((ret = ft_next_line(STDIN_FILENO, &line)) == 1) */
 	/* { */
 	/* 	if (eval(parse(line)) == -1) */
@@ -80,7 +86,11 @@ int main(int argc, char **argv, char **envp)
 	/* 	free(line); */
 	/* } */
 	/* free(line); */
-	ft_htdestroy(path, ht_del_str_entry);
+	/* ft_htdestroy(path, free); */
+	/* ms_glob("src#<{(|"); */
+	char *j = ms_glob("*/*.c");
+	printf("%s\n", j);
+	free(j);
 	ft_vecdestroy(env, free);
 	return (0);
 }

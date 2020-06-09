@@ -1,37 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/04/01 17:10:51 by charles           #+#    #+#             */
-/*   Updated: 2020/04/02 11:17:03 by charles          ###   ########.fr       */
+/*   Created: 2020/04/05 12:05:49 by charles           #+#    #+#             */
+/*   Updated: 2020/04/05 14:51:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef UTILS_H
+# define UTILS_H
+
 /*
-** \file   unset.c
-** \brief  `unset` builtin
+** \file   utils.h
+** \brief  Various utilitary functions
 */
 
-#include "minishell.h"
+typedef int	(*t_directory_iter_func)(char*, struct dirent*, void*);
 
-int	builtin_unset(char **argv, t_env env)
-{
-	size_t	i;
+int		utils_directory_iter(
+	char *dirname,
+	void *param,
+	t_directory_iter_func f
+);
 
-	if (argv[1] == NULL)
-		return (1);
-	i = 0;
-	while (i < env->size)
-	{
-		if (ft_strncmp(env->data[i], argv[1], ft_strlen(argv[1])) == 0)
-		{
-			ft_vecremove(env, i, free);
-			return (0);
-		}
-		i++;
-	}
-	return (1);
-}
+size_t	utils_var_end(char *name);
+
+#endif

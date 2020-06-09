@@ -1,37 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   ms_glob.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/04/01 17:10:51 by charles           #+#    #+#             */
-/*   Updated: 2020/04/02 11:17:03 by charles          ###   ########.fr       */
+/*   Created: 2020/04/05 11:45:11 by charles           #+#    #+#             */
+/*   Updated: 2020/04/05 13:05:10 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-** \file   unset.c
-** \brief  `unset` builtin
-*/
+#ifndef MS_GLOB_H
+# define MS_GLOB_H
 
-#include "minishell.h"
+# include <dirent.h>
+# include <unistd.h>
+# include <stddef.h>
+# include "libft_str.h"
+# include "libft_vec.h"
+# include "utils.h"
 
-int	builtin_unset(char **argv, t_env env)
+struct		s_glob_param
 {
-	size_t	i;
+	char	*pattern;
+	t_ftvec	*matches;
+};
 
-	if (argv[1] == NULL)
-		return (1);
-	i = 0;
-	while (i < env->size)
-	{
-		if (ft_strncmp(env->data[i], argv[1], ft_strlen(argv[1])) == 0)
-		{
-			ft_vecremove(env, i, free);
-			return (0);
-		}
-		i++;
-	}
-	return (1);
-}
+t_ftvec		*glob_matches(char *pattern);
+char		*ms_glob(char *pattern);
+
+#endif

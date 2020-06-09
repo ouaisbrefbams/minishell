@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/01 23:09:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/04/05 14:42:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 #include "minishell.h"
 
+#define ENV_VEC_DEFAULT_SIZE 64
+
 /*
 ** \brief       Convert array of string to environment hash table
 ** \param envp  array of string (each in the format `name=value`)
@@ -26,26 +28,19 @@
 t_env	env_from_array(char **envp)
 {
 	t_env	env;
-	size_t	i;
 
-	i = 0;
-	while (envp[i] != NULL)
-		if (ft_strchr(envp[i++], '=') == NULL)
-			return (NULL);
-	if ((env = ft_vecnew(i)) == NULL)
+	if ((env = ft_vecnew(ENV_VEC_DEFAULT_SIZE)) == NULL)
 		return (NULL);
-	env->size = i;
-	i = 0;
-	while (envp[i] != NULL)
+	while (*envp != NULL)
 	{
-		if ((env->data[i] = ft_strdup(envp[i])) == NULL)
+		if (ft_vecpush_safe(env, ft_strdup(*envp)) == NULL)
 		{
 			ft_vecdestroy(env, free);
 			return (NULL);
 		}
-		i++;
+		envp++;
 	}
-	return (env);
+	return (ft_vecpush(env, NULL));
 }
 
 /**
@@ -55,6 +50,7 @@ t_env	env_from_array(char **envp)
 ** \return     Value after '=' in environment variable array or NULL if not found
 */
 
+// could be a wrapper around ft_lfind
 char	*env_search(t_env env, char *key)
 {
 	size_t	i;
@@ -63,6 +59,25 @@ char	*env_search(t_env env, char *key)
 	while (i < env->size)
 	{
 		if (ft_strncmp((char*)env->data[i], key, ft_strlen(key)) == 0)
+			return (ft_strchr((char*)env->data[i], '=') + 1);
+		i++;
+	}
+	return (NULL);
+}
+
+char	*env_search_first_match(t_env env, const char *haystack)
+{
+	int		len;
+	size_t	i;
+
+	if (ft_isdigit(*haystack))
+		return (NULL);
+	len = 0;
+	while (ft_isalnum(haystack[len]) || haystack[len] == '_')
+		len++;
+	while (i < env->size)
+	{
+		if (ft_strncmp((char*)env->data[i], haystack, len) == 0)
 			return (ft_strchr((char*)env->data[i], '=') + 1);
 		i++;
 	}
