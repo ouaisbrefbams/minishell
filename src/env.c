@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/05 14:42:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/05/08 13:48:40 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ char	*env_search_first_match(t_env env, const char *haystack)
 	len = 0;
 	while (ft_isalnum(haystack[len]) || haystack[len] == '_')
 		len++;
+	i = 0;
 	while (i < env->size)
 	{
 		if (ft_strncmp((char*)env->data[i], haystack, len) == 0)

@@ -7,8 +7,10 @@
 
 t_ast				*parse(char **input)
 {
+	int i = 0;
+
     while (input[i] != '\0')
     {
-        
+
     }
 }

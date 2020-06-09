@@ -6,12 +6,13 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/04/03 13:50:17 by charles          ###   ########.fr        #
+#    Updated: 2020/06/09 10:51:41 by charles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 RM = rm -f
-MAKE = make
+MAKE = make --no-print-directory
+JOBS = 4
 DOXYGEN = doxygen
 DOXYGEN_FILE = Doxyfile
 DOC_DIR = doc
@@ -37,7 +38,11 @@ LDFLAGS = -L$(LIBFTDIR) -lft
 NAME = minishell
 
 .PHONY: all
-all: libft_all prebuild $(NAME)
+all: libft_all prebuild
+	@$(MAKE) -j$(JOBS) allnopre
+
+.PHONY: allnopre
+allnopre: $(NAME)
 
 .PHONY: test
 test:

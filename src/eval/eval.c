@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:21 by charles           #+#    #+#             */
-/*   Updated: 2020/05/04 12:00:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/05/15 00:12:51 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static int	eval_cmd(int fd_in, int fd_out, t_eval_state *state, t_cmd *cmd)
 	if (cmd->in != NULL && (fd_in = open(cmd->in, O_RDONLY)) == -1)
 		return (-1);
 	if (cmd->out != NULL && (fd_out = open(cmd->out,
-			(cmd->is_append ? O_APPEND : O_RDONLY) | O_CREAT)) == -1)
+			(cmd->is_append ? O_APPEND : O_WRONLY) | O_CREAT)) == -1)
 		return (-1);
 	param.argv = cmd->argv;
 	param.envp = (char**)state->env->data;
@@ -102,6 +102,7 @@ static int	eval_cmd(int fd_in, int fd_out, t_eval_state *state, t_cmd *cmd)
 ** \param line   Line to evaluate
 ** \return       Last Executed command status or -1 on error
 */
+
 static int	eval_line(void *param)
 {
 	int				status;

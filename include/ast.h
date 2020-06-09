@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/05/04 11:59:43 by charles          ###   ########.fr       */
+/*   Updated: 2020/05/14 23:54:46 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ typedef struct		s_ast
 	{
 		t_line		line;
 		t_cmd		cmd;
-	}				;
+	};
 }					t_ast;
 
 t_ast				*ast_new(t_ast_tag tag, void *data);
