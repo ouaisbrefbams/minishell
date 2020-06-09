@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/05 14:51:52 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/09 15:49:39 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,5 @@ size_t	utils_var_end(char *name)
 	i = 0;
 	while (ft_isalnum(name[i]) || name[i] == '_')
 		i++;
-	return (i);
+	return (i + 1);
 }

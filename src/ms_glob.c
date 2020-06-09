@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   glob.c                                             :+:      :+:    :+:   */
+/*   ms_glob.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/05 11:44:07 by charles           #+#    #+#             */
-/*   Updated: 2020/04/05 13:21:25 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/09 16:20:22 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ char			*ms_glob(char *pattern)
 		return (NULL);
 	ft_vecsort(matches, ft_compar_str);
 	if (ft_vecpush(matches, NULL) == NULL ||
-		(join = ft_strsjoin((char**)matches->data, "\n")) == NULL)
+		(join = ft_strsjoin((char**)matches->data, " ")) == NULL)
 	{
 		ft_vecdestroy(matches, free);
 		return (NULL);

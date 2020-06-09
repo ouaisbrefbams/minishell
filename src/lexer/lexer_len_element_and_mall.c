@@ -38,6 +38,7 @@ char 		**lexer_malloc_len_elem(char *input, int i, char **out)
 	int k = 0;
 	int temp = 0;
 
+	(void)i;
 	j += lexer_count_len_element(&input[j], 0);
 	k = j;
 	out[temp] = malloc(sizeof(char) * k);

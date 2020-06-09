@@ -5,3 +5,5 @@ minishell
 tags
 doc/*
 tmp/*
+.DS_Store
+a.out

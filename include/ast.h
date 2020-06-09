@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/05/14 23:54:46 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/09 11:44:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ typedef struct		s_line
 
 typedef struct		s_cmd
 {
-	char			**argv;
-	char			*in;
-	char			*out;
+	char			**argv; // change to t_ftvec of t_token
+	char			*in;    // change to t_token
+	char			*out;   // change to t_token
 	bool			is_append;
 }					t_cmd;
 

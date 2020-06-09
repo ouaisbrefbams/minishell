@@ -1,5 +1,22 @@
-
 #include "minishell.h"
+
+// just to make iterpolation compile
+//////////////////////////////////////
+enum e_token_tag
+{
+	LTAG_STR,
+	LTAG_STR_SINGLE,
+	LTAG_STR_DOUBLE,
+};
+
+typedef struct
+{
+	enum e_token_tag	tag;
+	char				*content;
+}						t_token;
+
+t_token		*token_new(enum e_token_tag tag, char *content);
+//////////////////////////////////////
 
 char        **lexer(char *input);
 int         lexer_sep(char input);

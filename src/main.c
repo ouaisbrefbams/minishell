@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/05 12:15:57 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/09 16:53:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "ast.h"
 #include "eval.h"
 #include "ms_glob.h"
+#include "lexer.h"
 
 /*
 ** \brief       Program entrypoint
@@ -88,9 +89,24 @@ int main(int argc, char **argv, char **envp)
 	/* free(line); */
 	/* ft_htdestroy(path, free); */
 	/* ms_glob("src#<{(|"); */
-	char *j = ms_glob("*/*.c");
-	printf("%s\n", j);
-	free(j);
+
+	/* char *j = ms_glob("|)}>#*.c"); */
+	/* printf("%s\n", j); */
+	/* free(j); */
+
+	t_ftvec *v = ft_vecnew(32);
+	/* ft_vecpush(v, token_new(LTAG_STR, "$TERM$LFS$TERM$TERM.")); */
+	/* ft_vecpush(v, token_new(LTAG_STR, "$$LFS$TERM$TERM.")); */
+	ft_vecpush(v, token_new(LTAG_STR, "*/*.c$TERM"));
+	/* ft_vecpush(v, token_new(LTAG_STR, "src#<{(|.c include#<{(|.h")); */
+	/* ft_vecpush(v, token_new(LTAG_STR, "$A$B")); */
+	char **as = preprocess_argv(v, env);
+	char **tmp = as;
+
+	while (*as != NULL)
+		puts(*as++);
+
+	ft_split_destroy(tmp);
 	ft_vecdestroy(env, free);
 	return (0);
 }
