@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/05 11:45:11 by charles           #+#    #+#             */
-/*   Updated: 2020/04/05 13:05:10 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/09 17:51:34 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ struct		s_glob_param
 
 t_ftvec		*glob_matches(char *pattern);
 char		*ms_glob(char *pattern);
+char		*ms_globf(char *pattern);
 
 #endif

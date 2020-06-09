@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/09 16:53:45 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/09 17:48:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,11 @@ int main(int argc, char **argv, char **envp)
 	/* free(j); */
 
 	t_ftvec *v = ft_vecnew(32);
-	/* ft_vecpush(v, token_new(LTAG_STR, "$TERM$LFS$TERM$TERM.")); */
-	/* ft_vecpush(v, token_new(LTAG_STR, "$$LFS$TERM$TERM.")); */
+	ft_vecpush(v, token_new(LTAG_STR, "$TERM$LFS$TERM$TERM."));
+	ft_vecpush(v, token_new(LTAG_STR, "$$LFS$TERM$TERM."));
 	ft_vecpush(v, token_new(LTAG_STR, "*/*.c$TERM"));
-	/* ft_vecpush(v, token_new(LTAG_STR, "src#<{(|.c include#<{(|.h")); */
-	/* ft_vecpush(v, token_new(LTAG_STR, "$A$B")); */
+	ft_vecpush(v, token_new(LTAG_STR, "src/*.c include/*.h"));
+	ft_vecpush(v, token_new(LTAG_STR, "$A$B"));
 	char **as = preprocess_argv(v, env);
 	char **tmp = as;
 

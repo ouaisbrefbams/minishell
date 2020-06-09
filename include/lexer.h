@@ -16,6 +16,7 @@ typedef struct
 }						t_token;
 
 t_token		*token_new(enum e_token_tag tag, char *content);
+void		token_destroy(t_token *token);
 //////////////////////////////////////
 
 char        **lexer(char *input);
