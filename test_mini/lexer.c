@@ -10,6 +10,8 @@ int 			len_is_not_sep(char *input)
 	i = -1;
 	while(input[++i])
 	{
+		if (input[i] == '\\' && input[i + 1] == ' ')
+			i += 2;
 		if (lexer_sep(input[i]))
 		{
 			if (input[i + 1] == ' ')
@@ -19,7 +21,7 @@ int 			len_is_not_sep(char *input)
 		}
 		if (input[i] == '\'' || input[i] == '"')
 		{
-			i = lexer_verif_entre_cote(input, i);
+			i += lexer_verif_entre_cote(input, i);
 			if (input[i] == ' ')
 				return(i + 1);
 			return(i);
@@ -83,7 +85,6 @@ void  					check_input_out(char *input)
 		free(str);
 		i += j;
 	}
-
 }
 
 t_token					*create_token_list(void)
@@ -92,7 +93,6 @@ t_token					*create_token_list(void)
 
 	if (!(lst_token = malloc(sizeof(t_token) * 1)))
 		return (NULL);
-
 	free(lst_token);
 	return (lst_token);
 }
