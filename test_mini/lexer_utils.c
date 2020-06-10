@@ -56,7 +56,7 @@ int             lexe_space(char *input)
     return(i);
 }
 
-int             lex_verif_simple_cote(char *input, int i)
+static int             lex_verif_simple_cote(char *input, int i)
 {
     i++;
     while(input[i] != '\0')

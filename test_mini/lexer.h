@@ -1,7 +1,6 @@
 
 # include <stdio.h>
 # include <stdlib.h>
-# include <libc.h>
 # include "libft/include/libft_lst.h"
 # include "libft/include/libft_str.h"
 
