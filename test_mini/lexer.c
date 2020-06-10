@@ -10,6 +10,8 @@ int 			len_is_not_sep(char *input)
 	i = -1;
 	while(input[++i])
 	{
+		if (input[i] == '\\' && input[i + 1] == ' ')
+			i += 2;
 		if (lexer_sep(input[i]))
 		{
 			if (input[i + 1] == ' ')
@@ -19,7 +21,7 @@ int 			len_is_not_sep(char *input)
 		}
 		if (input[i] == '\'' || input[i] == '"')
 		{
-			i = lexer_verif_entre_cote(input, i);
+			i += lexer_verif_entre_cote(input, i);
 			if (input[i] == ' ')
 				return(i + 1);
 			return(i);
@@ -57,7 +59,9 @@ int				check_input(char *input)
 	return(len_is_not_sep(&input[i]));
 }
 
-void  					check_input_out(char *input)
+
+
+int 					check_input_out(char *input)
 {
 	int i;
 	int j;
@@ -70,43 +74,67 @@ void  					check_input_out(char *input)
 		j += len_is_not_sep(&input[i]);
 		if (j != 0)
 		{
-			str = malloc(sizeof(char) * j + 1);
-			ft_strlcpy(str, &input[i], j + 1);
-			printf("%s%d\n",str, j);
-			free(str);
+			return(j);
 		}
 		i += j;
 		j = check_input(&input[i]);
-		str = malloc(sizeof(char) * j + 1);
-		ft_strlcpy(str, &input[i], j + 1);
-		printf("%s%d\n",str, j);
-		free(str);
-		i += j;
+		return(j);
 	}
-
+	return(0);
 }
 
-t_token					*create_token_list(void)
+t_token 						*lexer_lst_token_str(char *input, int i, int j)
 {
-	t_token *lst_token;
+	t_token 					*lst_token;
 
 	if (!(lst_token = malloc(sizeof(t_token) * 1)))
 		return (NULL);
-
-	free(lst_token);
+	lst_token->token = 0;
+	lst_token->value = NULL;
+	if (!(lst_token->value = malloc(sizeof(char) * j + 1)))
+		return(0);
+	if (!(ft_strlcpy(lst_token->value, &input[i], j + 1)))
+	{
+		free(lst_token);
+		return(0);
+	}
+	printf("%s\n", lst_token->value);
 	return (lst_token);
+}
+
+static t_ftlst				*create_token_list(char *input, t_ftlst **lst)
+{
+	t_token 				*lst_token;
+	t_ftlst					*new;
+	int 					i;
+	int						j;
+
+	i = 0;
+	while (i < ft_strlen(input))
+	{
+		j = 0;
+		j += check_input(&input[i]);
+		lst_token = lexer_lst_token_str(input,i,j);
+		new = ft_lstnew((void *) lst_token);
+		ft_lstpush_back(lst, new);
+		i += j;
+	}
+	return (*lst);
 }
 
 t_ftlst        			*lexer(char *input)
 {
-	t_ftlst				*lst;
+	t_ftlst				**lst;
+	int 				i;
 
 	if (!input)
 		return (0);
-	if(!(lst = malloc(sizeof(t_ftlst) * 1)))
-		return(NULL);
-
-	check_input_out(input);
+	lst = malloc(sizeof(t_ftlst *) * 1);
+	if (!lst)
+		return(0);
+	*lst = create_token_list(input, lst);
+	i = ft_lstsize(*lst);
+	printf("%d\n", i);
 	free(lst);
 	return (0);
 }

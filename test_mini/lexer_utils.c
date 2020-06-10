@@ -56,26 +56,33 @@ int             lexe_space(char *input)
     return(i);
 }
 
-int             simple_cote(char  *input, int i)
+static int             lex_verif_simple_cote(char *input, int i)
 {
-    int cote;
-
-    cote = 39;
-    if (cote == input[i])
-        return (1);
-    return(0);
+    i++;
+    while(input[i] != '\0')
+    {
+        ++i;
+        if(input[i] == '\'')
+            break;
+    }
+    if (input[i + 1] == ' ')
+        while(input[i] == ' ')
+            i++;
+    return(i + 1);
 }
-
-
 int             lexer_verif_entre_cote(char *input, int i)
 {
-    while((input[++i] != '"' || simple_cote(input,i)) && (input[i] != '\0'))
-        ;
-    //i++;
-    //if(input[i] == '"' || simple_cote(input,i))
-    //    return(lexer_verif_entre_cote(input, i));
-    //if (input[i] == ' ')
-    //    while(input[i] == ' ')
-    //        i++;
-    return(i);
+    if(input[i] == '\'')
+        return(lex_verif_simple_cote(input, i));
+    i++;
+    while(input[i] != '"' && (input[i] != '\0'))
+    {
+        ++i;
+        if (input[i] == '\'')
+            break;
+    }
+    if (input[i + 1] == ' ')
+        while(input[i] == ' ')
+            i++;
+    return(i + 1);
 }
