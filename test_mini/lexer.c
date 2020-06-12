@@ -1,7 +1,5 @@
 
 #include "lexer.h"
-#include "parse/parse.h"
-
 
 int 			len_is_not_sep(char *input)
 {
@@ -10,6 +8,9 @@ int 			len_is_not_sep(char *input)
 	i = -1;
 	while(input[++i])
 	{
+		if (input[i] == '\\')
+			i++;
+
 		if (input[i] == '\\' && input[i + 1] == ' ')
 			i += 2;
 		if (lexer_sep(input[i]))
@@ -41,6 +42,8 @@ int				check_input(char *input)
 	int 				i;
 
 	i = 0;
+	if (input[i] == '\\')
+		i++;
 	if (lexer_sep(input[i]))
 	{
 		while(input[i] == input[i + 1])
@@ -60,7 +63,6 @@ int				check_input(char *input)
 }
 
 
-
 int 					check_input_out(char *input)
 {
 	int i;
@@ -73,9 +75,7 @@ int 					check_input_out(char *input)
 		j = 0;
 		j += len_is_not_sep(&input[i]);
 		if (j != 0)
-		{
 			return(j);
-		}
 		i += j;
 		j = check_input(&input[i]);
 		return(j);

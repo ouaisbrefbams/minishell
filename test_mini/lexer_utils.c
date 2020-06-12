@@ -10,7 +10,7 @@ enum e_token_tag                ret_token_sep_redir_append(char *input, int i)
 
 }
 
-enum e_token_tag                ret_token_sep(char *input, int  i)
+enum e_token_tag                ret_token(char *input, int  i)
 {
     if (input[i] == ';')
         return(LTAG_AND);
@@ -24,7 +24,10 @@ enum e_token_tag                ret_token_sep(char *input, int  i)
         return(ret_token_sep_redir_append(input,i));
     if (input[i] == '<')
         return(LTAG_REDIR_IN);
-
+    if (input[i] ==  '(')
+        return(LTAG_PARENT_OPEN);
+    if (input[i] == ')')
+        return(LTAG_PARENT_CLOSE);
     return(0);
 
 }
@@ -66,23 +69,20 @@ static int             lex_verif_simple_cote(char *input, int i)
             break;
     }
     if (input[i + 1] == ' ')
-        while(input[i] == ' ')
+        while(input[i + 1] == ' ')
             i++;
     return(i + 1);
 }
+
 int             lexer_verif_entre_cote(char *input, int i)
 {
     if(input[i] == '\'')
         return(lex_verif_simple_cote(input, i));
     i++;
     while(input[i] != '"' && (input[i] != '\0'))
-    {
         ++i;
-        if (input[i] == '\'')
-            break;
-    }
     if (input[i + 1] == ' ')
-        while(input[i] == ' ')
+        while(input[i + 1] == ' ')
             i++;
     return(i + 1);
 }

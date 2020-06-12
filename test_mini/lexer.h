@@ -19,6 +19,7 @@ enum                    e_token_tag
  LTAG_STR = 1 << 9,
  LTAG_STR_DOUBLE = 1 << 10,
  LTAG_STR_SINGLE = 1 << 11,
+ LTAG_STICK = 1 << 12,
 };
 
 typedef struct          s_token
@@ -29,9 +30,9 @@ typedef struct          s_token
 }                       t_token;
 
 t_ftlst                 *lexer(char *input);
-enum e_token_tag        ret_token_sep(char *input, int  i);
+enum e_token_tag        ret_token(char *input, int  i);
 enum e_token_tag        ret_token_sep_redir_append(char *input, int i);
 
-int         lexer_sep(char input);
-int         lexer_verif_entre_cote(char *input, int i);
-int             lexe_space(char *input);
+int                     lexer_sep(char input);
+int                     lexer_verif_entre_cote(char *input, int i);
+int                     lexe_space(char *input);
