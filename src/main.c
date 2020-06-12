@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/09 17:48:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/12 11:57:48 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,20 @@ int main(int argc, char **argv, char **envp)
 	ft_vecpush(v, token_new(LTAG_STR, "*/*.c$TERM"));
 	ft_vecpush(v, token_new(LTAG_STR, "src/*.c include/*.h"));
 	ft_vecpush(v, token_new(LTAG_STR, "$A$B"));
-	char **as = preprocess_argv(v, env);
+
+	ft_vecpush(v, token_new(LTAG_STR, "\\$TERM"));
+	ft_vecpush(v, token_new(LTAG_STR, "$TER\\M"));
+	ft_vecpush(v, token_new(LTAG_STR, "\\\\"));
+	ft_vecpush(v, token_new(LTAG_STR_SINGLE, "''''$TEST\\TEST"));
+	ft_vecpush(v, token_new(LTAG_STR_DOUBLE, ",$TEST,$B,"));
+
+	ft_vecpush(v, token_new(LTAG_STR_DOUBLE | LTAG_STICK, "$TEST"));
+	ft_vecpush(v, token_new(LTAG_STR_DOUBLE | LTAG_STICK, "$TEST"));
+	ft_vecpush(v, token_new(LTAG_STR_DOUBLE , "$TEST"));
+	ft_vecpush(v, token_new(LTAG_STR_DOUBLE | LTAG_STICK, "$TEST"));
+	ft_vecpush(v, token_new(LTAG_STR_SINGLE, "$TEST"));
+
+	char **as = preprocess(v, env);
 	char **tmp = as;
 
 	while (*as != NULL)

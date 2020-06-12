@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/06/09 10:51:41 by charles          ###   ########.fr        #
+#    Updated: 2020/06/12 09:17:28 by charles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,6 @@ JOBS = 4
 DOXYGEN = doxygen
 DOXYGEN_FILE = Doxyfile
 DOC_DIR = doc
-
-TESTEXEC = test.sh
 
 LIBFTDIR = libft
 INCLUDEDIR = include
@@ -43,10 +41,6 @@ all: libft_all prebuild
 
 .PHONY: allnopre
 allnopre: $(NAME)
-
-.PHONY: test
-test:
-	@./$(TESTEXEC)
 
 .PHONY: prebuild
 prebuild:

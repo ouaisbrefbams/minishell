@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/05 11:44:07 by charles           #+#    #+#             */
-/*   Updated: 2020/06/09 17:51:30 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/12 11:51:41 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,10 @@ char			*ms_glob(char *pattern)
 	}
 	return (join);
 }
+
+/*
+** \brief  Wrapper around `ms_glob` which free `pattern` for convinience
+*/
 
 char			*ms_globf(char *pattern)
 {

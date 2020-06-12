@@ -4,9 +4,10 @@
 //////////////////////////////////////
 enum e_token_tag
 {
-	LTAG_STR,
-	LTAG_STR_SINGLE,
-	LTAG_STR_DOUBLE,
+	LTAG_STR        = 1 << 0,
+	LTAG_STR_SINGLE = 1 << 1,
+	LTAG_STR_DOUBLE = 1 << 2,
+	LTAG_STICK      = 1 << 3,
 };
 
 typedef struct

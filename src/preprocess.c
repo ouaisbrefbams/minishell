@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/06/09 17:56:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/12 11:57:17 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 #include "ms_glob.h"
 #include "lexer.h"
 
-static char		*iterpolate(char *str, t_env env)
+static bool		st_escapable(char c, enum e_token_tag tag)
+{
+	if (tag & LTAG_STR)
+		return (true);
+	if ((tag & LTAG_STR_DOUBLE) && (c == '\\' || c == '"' || c == '$'))
+		return (true);
+	return (false);
+}
+
+static char		*st_iterpolate_env(char *str, enum e_token_tag tag, t_env env)
 {
 	size_t		i;
 	t_ftdstr	*dstr;
@@ -24,7 +33,9 @@ static char		*iterpolate(char *str, t_env env)
 		return (NULL);
 	i = -1;
 	while (++i < dstr->length)
-		if (dstr->str[i] == '$')
+		if (dstr->str[i] == '\\' && st_escapable(dstr->str[i + 1], tag))
+			ft_dstrerase(dstr, i, 1);
+		else if (dstr->str[i] == '$')
 		{
 			if ((match = env_search_first_match(env, dstr->str + i + 1)) == NULL)
 			{
@@ -44,7 +55,7 @@ static char		*iterpolate(char *str, t_env env)
 	return (ft_dstrunwrap(dstr));
 }
 
-static char		*iterpolate_globs(char *str)
+static char		*st_iterpolate_globs(char *str)
 {
 	char	**strs;
 	int		i;
@@ -65,7 +76,7 @@ static char		*iterpolate_globs(char *str)
 	return (ft_strsjoinf(strs, " "));
 }
 
-static int		splat_arg(t_ftvec *argv, int i)
+static int		st_splat_arg(t_ftvec *argv, int i)
 {
 	t_token	*splated;
 	char	**strs;
@@ -93,7 +104,7 @@ static int		splat_arg(t_ftvec *argv, int i)
 	return (i + j - 1);
 }
 
-void		iter_func_unwrap_token(void **addr)
+static void		st_iter_func_unwrap_token(void **addr)
 {
 	char	*content;
 
@@ -102,7 +113,7 @@ void		iter_func_unwrap_token(void **addr)
 	*(char**)addr = content;
 }
 
-char		**preprocess_argv(t_ftvec *argv, t_env env)
+char			**preprocess(t_ftvec *argv, t_env env)
 {
 	size_t	i;
 	t_token	*token;
@@ -111,18 +122,35 @@ char		**preprocess_argv(t_ftvec *argv, t_env env)
 	while (++i < argv->size)
 	{
 		token = argv->data[i];
-		if (token->tag == LTAG_STR_SINGLE)
+		if (token->tag & LTAG_STR_SINGLE)
 			continue ;
-		token->content = iterpolate(token->content, env);
-		if (token->tag == LTAG_STR)
+		token->content = st_iterpolate_env(token->content, token->tag, env);
+		if (token->tag & LTAG_STR)
 		{
 			if (ft_strchr(token->content, '*') != NULL)
-				token->content = iterpolate_globs(token->content);
-			if ((i = splat_arg(argv, i)) == (size_t)-1)
+				token->content = st_iterpolate_globs(token->content);
+			if ((i = st_splat_arg(argv, i)) == (size_t)-1)
 				return (NULL);
 		}
 	}
-	ft_veciter_addr(argv, iter_func_unwrap_token);
+
+	t_token *next;
+	i = -1;
+	while (++i < argv->size - 1)
+	{
+		token = argv->data[i];
+		while (token->tag & LTAG_STICK && i + 1 < argv->size)
+		{
+			next = argv->data[i + 1];
+			token->content = ft_strjoinf_fst(token->content, next->content);
+			if (token->content == NULL)
+				return (NULL);
+			token->tag &= next->tag;
+			ft_vecremove(argv, i + 1, (void (*)(void*))token_destroy);
+		}
+	}
+
+	ft_veciter_addr(argv, st_iter_func_unwrap_token);
 	ft_vecpush(argv, NULL);
 	return ((char**)ft_vecunwrap(argv));
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/09 14:05:36 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/12 11:57:36 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ int						builtin_exit(char **argv, t_env env);
 ** preprocess.c
 */
 
-char					*preprocess(char *input, t_env env);
-char					**preprocess_argv(t_ftvec *argv, t_env env);
+char					**preprocess(t_ftvec *argv, t_env env);
 
 #endif

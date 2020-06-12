@@ -1,4 +1,4 @@
-# minishell
+# minishell [![Build Status](https://travis-ci.com/HappyTramp/minishell.svg?token=ZspKVUuPUQ73ZVD6J2w4&branch=master)](https://travis-ci.com/HappyTramp/minishell)
 
 minishell project of school 42
 
