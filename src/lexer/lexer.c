@@ -94,8 +94,9 @@ enum e_token_tag token_verif_stick(t_token *lst_token)
 
 	i = ft_strlen(lst_token->content);
 
-	if (lst_token->content[i - 1] == ' ')
-		return(lst_token->tag);
+	if (i > 0)
+		if (lst_token->content[i - 1] == ' ')
+			return(lst_token->tag);
 	return(lst_token->tag | LTAG_STICK);
 }
 

@@ -12,9 +12,9 @@
 
 #include "lexer.h"
 
-t_token	*token_new(enum e_token_tag tag, char *content)
+t_token				*token_new(enum e_token_tag tag, char *content)
 {
-	t_token	*token;
+	t_token			*token;
 
 	if (content == NULL
 		|| (token = (t_token*)malloc(sizeof(t_token))) == NULL)
@@ -28,7 +28,7 @@ t_token	*token_new(enum e_token_tag tag, char *content)
 	return token;
 }
 
-void	token_destroy(t_token *token)
+void				token_destroy(t_token *token)
 {
 	free(token->content);
 	free(token);
