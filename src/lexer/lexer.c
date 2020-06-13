@@ -163,8 +163,8 @@ static t_ftlst				*create_token_list(char *input, t_ftlst **lst)
 
 t_ftlst        			*lexer(char *input)
 {
-	t_ftlst				**lst;
-	int 				i;
+	t_ftlst		**lst;
+	/* int			i; */
 
 	if (!input)
 		return (0);
@@ -172,7 +172,7 @@ t_ftlst        			*lexer(char *input)
 	if (!lst)
 		return(0);
 	*lst = create_token_list(input, lst);
-	i = ft_lstsize(*lst);
+	/* i = ft_lstsize(*lst); */
 	free(lst);
 	return (0);
 }

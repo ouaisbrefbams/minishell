@@ -19,6 +19,7 @@
 # include "libft_str.h"
 # include "libft_vec.h"
 # include "utils.h"
+# include <limits.h>
 
 struct		s_glob_param
 {
