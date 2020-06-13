@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ms_glob.h"
+#include <limits.h>
 
 /*
 ** \brief    Match vector start size

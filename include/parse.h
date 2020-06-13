@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/09 10:55:09 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/13 11:59:47 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 ** lexer.c
 */
 
-char				**lexer(char *input);
+// char				**lexer(char *input);
 
 /*
 ** parse.c

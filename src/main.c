@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/12 11:57:48 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/13 11:56:27 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,3 +123,23 @@ int main(int argc, char **argv, char **envp)
 	ft_vecdestroy(env, free);
 	return (0);
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// lexer main
+/////////////////////////////////////////////////////////////////////////////////////////
+
+#include "lexer.h"
+
+/* int         main(void) */
+/* { */
+/* 	char **out; */
+/*     int i = -1; */
+/*  */
+/* 	out = lexer("\"echo\" \"* login_x\"<<AUTHORS; echo && ; salut;\"echo\"\"* login_x\""); */
+/*     //out = lexer("echo       * login_x << AUTHORS&&cd Desktop"); */
+/*     while(out[++i]) */
+/*         printf("%s\n", out[i]);; */
+/*     exit(0); */
+/*     return (0); */
+/* } */
