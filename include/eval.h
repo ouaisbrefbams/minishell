@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/05/04 11:58:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 10:33:54 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char			*exec_search_path(t_path path, char *path_var, char *exec_name);
 ** pipe.c
 */
 
-int				pipe_setup_parent(t_cmd *cmd, int pipe_in[2], int pipe_out[2]);
-int				pipe_setup_child(int pipe_in[2], int pipe_out[2]);
+// int				pipe_setup_parent(t_cmd *cmd, int pipe_in[2], int pipe_out[2]);
+// int				pipe_setup_child(int pipe_in[2], int pipe_out[2]);
 
 #endif

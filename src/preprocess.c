@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/06/12 11:57:17 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 10:33:17 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 static bool		st_escapable(char c, enum e_token_tag tag)
 {
-	if (tag & LTAG_STR)
+	if (tag & TAG_STR)
 		return (true);
-	if ((tag & LTAG_STR_DOUBLE) && (c == '\\' || c == '"' || c == '$'))
+	if ((tag & TAG_STR_DOUBLE) && (c == '\\' || c == '"' || c == '$'))
 		return (true);
 	return (false);
 }
@@ -91,7 +91,7 @@ static int		st_splat_arg(t_ftvec *argv, int i)
 	j = 0;
 	while (strs[j] != NULL)
 	{
-		if (ft_vecinsert_safe(argv, i + j, token_new(LTAG_STR, strs[j])) == NULL)
+		if (ft_vecinsert_safe(argv, i + j, token_new(TAG_STR, strs[j])) == NULL)
 		{
 			token_destroy(splated);
 			ft_split_destroy(strs);
@@ -122,10 +122,10 @@ char			**preprocess(t_ftvec *argv, t_env env)
 	while (++i < argv->size)
 	{
 		token = argv->data[i];
-		if (token->tag & LTAG_STR_SINGLE)
+		if (token->tag & TAG_STR_SINGLE)
 			continue ;
 		token->content = st_iterpolate_env(token->content, token->tag, env);
-		if (token->tag & LTAG_STR)
+		if (token->tag & TAG_STR)
 		{
 			if (ft_strchr(token->content, '*') != NULL)
 				token->content = st_iterpolate_globs(token->content);
@@ -139,7 +139,7 @@ char			**preprocess(t_ftvec *argv, t_env env)
 	while (++i < argv->size - 1)
 	{
 		token = argv->data[i];
-		while (token->tag & LTAG_STICK && i + 1 < argv->size)
+		while (token->tag & TAG_STICK && i + 1 < argv->size)
 		{
 			next = argv->data[i + 1];
 			token->content = ft_strjoinf_fst(token->content, next->content);
