@@ -132,11 +132,12 @@ t_token			*push_token_enum_and_trim(t_token *lst_token)
 	enum e_token_tag 		tk;
 
 	tk = ret_token(lst_token->content, 0);
+
 	if (tk == 0)
-	{
 		lst_token->tag = token_str_or_cote(lst_token);
-	}
-	 //printf("%s-, %d\n",lst_token->content, (int)lst_token->tag);
+	else
+		lst_token->tag = tk;
+	//printf("%s-, %d\n",lst_token->content, lst_token->tag);
 	return (lst_token);
 }
 

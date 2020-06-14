@@ -40,10 +40,6 @@
 t_ret				*parse(t_ftlst *input);
 t_ast 				*parse_cmd(t_ast *ast, t_ftlst *ret);
 
-
-/*
-** cmd_parse.c
-*/
-int                 parse_cmd_str_true_fale(enum e_token_tag tag);
+int                 parse_cmd_str_true_false(enum e_token_tag tag);
 
 #endif

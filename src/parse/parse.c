@@ -8,31 +8,7 @@
 // stdio.h est deja include dans minishell.h temporairement
 // (comme ca on doit le retirer a un seul endroit a la fin)
 
-int                 parse_cmd_str_true_fale(enum e_token_tag tag)
-{
-    if (tag & TAG_STR || tag & TAG_STR_DOUBLE || tag & TAG_STR_SINGLE)
-        return (1);
-    return(0);
-}
 
-
-t_ast 				*parse_cmd(t_ast *ast, t_ftlst *rest)
-{
-    t_ftlst         *new;
-
-    new = rest->data;
-	if (ast == NULL)
-    {
-        ast = ast_new(AST_CMD);
-        ast->cmd_argv = ft_lstnew((t_token *)rest->data);
-    }
-    else
-    {
-        new = ft_lstnew(rest->data);
-        ft_lstpush_back(&ast->cmd_argv, (void *)new);
-    }
-    return (ast);
-}
 
 t_ret					*parse(t_ftlst *input)
 {
@@ -50,7 +26,10 @@ t_ret					*parse(t_ftlst *input)
 	while (ret->rest != NULL)
 	{
 		tag = ((t_token *)ret->rest->data)->tag;
-		if (parse_cmd_str_true_fale(tag))
+        printf("%d\n", tag);
+        if (parse_redir_true_false(tag))
+            ;
+		if (parse_cmd_str_true_false(tag))
 			ret->ast = parse_cmd(ret->ast, ret->rest);
 		ret->rest = ret->rest->next;
 	}
