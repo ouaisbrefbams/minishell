@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/12 11:57:36 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 16:03:25 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ struct					s_builtin_entry
 	t_builtin_func		func;
 };
 
-int						builtin_dispatch_run(char **argv, t_env env);
-bool					builtin_check_exec_name(char *exec_name);
+t_builtin_func			builtin_search_func(char *name);
+
 int						builtin_echo(char **argv, t_env env);
 int						builtin_cd(char **argv, t_env env);
 int						builtin_pwd(char **argv, t_env env);
@@ -109,6 +109,6 @@ int						builtin_exit(char **argv, t_env env);
 ** preprocess.c
 */
 
-char					**preprocess(t_ftvec *argv, t_env env);
+char					**preprocess(t_ftlst *tokens, t_env env);
 
 #endif

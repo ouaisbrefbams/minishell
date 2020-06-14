@@ -6,96 +6,17 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:21 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 10:34:11 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 10:42:37 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* #<{(| */
-/* ** \file   eval.c */
-/* ** \brief  Evaluation of an AST */
-/* |)}># */
-/*  */
+/*
+** \file   eval.c
+** \brief  Evaluation of an AST
+*/
+
 /* #include "eval.h" */
-/*  */
-/* #<{(| */
-/* ** \brief          Wrap a function in a fork */
-/* ** \param fd_in    fork input file descriptor */
-/* ** \param fd_out   fork output file descriptor */
-/* ** \param passed   param of the wrapped function */
-/* ** \param wrapped  function to wrap */
-/* |)}># */
-/*  */
-/* int			fork_wrap( */
-/* 	int	fd_in, */
-/* 	int fd_out, */
-/* 	void *passed, */
-/* 	int (*wrapped)(void *param)) */
-/* { */
-/* 	int		status; */
-/* 	pid_t	child_pid; */
-/*  */
-/* 	if ((child_pid = fork()) == -1) */
-/* 		return (-1); */
-/* 	if (child_pid == 0) */
-/* 	{ */
-/* 		if (dup2(STDIN_FILENO, fd_in) == -1 || */
-/* 			dup2(STDOUT_FILENO, fd_out) == -1) */
-/* 			exit(EXIT_FAILURE); */
-/* 		if ((status = wrapped(passed)) == -1) */
-/* 			exit(EXIT_FAILURE); */
-/* 		exit(status); */
-/* 	} */
-/* 	wait(&child_pid); */
-/* 	return (WEXITSTATUS(child_pid)); */
-/* } */
-/*  */
-/* int 		run_builtin(t_eval_state *state, char **argv) */
-/* { */
-/* 	return (builtin_dispatch_run(argv, state->env)); */
-/* } */
-/*  */
-/* #<{(| */
-/* ** \brief        execve syscall wrapper passed it to fork_wrap */
-/* ** \param param  function params */
-/* ** \return       execve return value */
-/* |)}># */
-/*  */
-/* int 		execve_wrapper(void *param) */
-/* { */
-/* 	return (execve( */
-/* 		((t_fork_param_execve*)param)->exec_path, */
-/* 		((t_fork_param_execve*)param)->argv, */
-/* 		((t_fork_param_execve*)param)->envp */
-/* 	)); */
-/* } */
-/*  */
-/* #<{(| */
-/* ** \brief        Evaluate a command */
-/* ** \param state  Evaluation state */
-/* ** \param cmd    Command to evaluate */
-/* ** \return       Executable status or -1 on error */
-/* |)}># */
-/*  */
-/* static int	eval_cmd(int fd_in, int fd_out, t_eval_state *state, t_cmd *cmd) */
-/* { */
-/* 	t_fork_param_execve	param; */
-/*  */
-/* 	if (builtin_check_exec_name(cmd->argv[0])) */
-/* 		return (run_builtin(state, cmd->argv)); */
-/* 	param.exec_path = exec_search_path( */
-/* 			state->path, env_search(state->env, "PATH"), cmd->argv[0]); */
-/* 	if (param.exec_path == NULL) */
-/* 		return (-1); */
-/* 	if (cmd->in != NULL && (fd_in = open(cmd->in, O_RDONLY)) == -1) */
-/* 		return (-1); */
-/* 	if (cmd->out != NULL && (fd_out = open(cmd->out, */
-/* 			(cmd->is_append ? O_APPEND : O_WRONLY) | O_CREAT)) == -1) */
-/* 		return (-1); */
-/* 	param.argv = cmd->argv; */
-/* 	param.envp = (char**)state->env->data; */
-/* 	return (fork_wrap(fd_in, fd_out, &param, &execve_wrapper)); */
-/* } */
-/*  */
+
 /* #<{(| */
 /* ** \brief        Evaluate a line */
 /* ** \param state  State of the evaluation */

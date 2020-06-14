@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 10:33:17 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 16:02:46 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,11 +113,14 @@ static void		st_iter_func_unwrap_token(void **addr)
 	*(char**)addr = content;
 }
 
-char			**preprocess(t_ftvec *argv, t_env env)
+char			**preprocess(t_ftlst *tokens, t_env env)
 {
 	size_t	i;
 	t_token	*token;
+	t_ftvec	*argv;
 
+	if ((argv = ft_vecfrom_lst(tokens)) == NULL)
+		return (NULL);
 	i = -1;
 	while (++i < argv->size)
 	{

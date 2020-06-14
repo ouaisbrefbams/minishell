@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:01 by charles           #+#    #+#             */
-/*   Updated: 2020/04/01 17:46:48 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 12:52:12 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,44 +31,16 @@ static struct s_builtin_entry	g_builtin_lookup[] = {
 	{"exit", builtin_exit},
 };
 
-/*
-** \brief       Call builtin function associated with command name
-** \param argv  Arguments to the builtin 'main',
-**              with argv[0] being the executable name
-** \param env   Environment Vector
-** \return      Builtin main return status
-*/
-
-int								builtin_dispatch_run(char **argv, t_env env)
+t_builtin_func					builtin_search_func(char *name)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < sizeof(g_builtin_lookup) / sizeof(struct s_builtin_entry))
 	{
-		if (ft_strcmp(g_builtin_lookup[i].name, argv[0]) == 0)
-			return (g_builtin_lookup[i].func(argv, env));
+		if (ft_strcmp(g_builtin_lookup[i].name, name) == 0)
+			return (g_builtin_lookup[i].func);
 		i++;
 	}
-	return (BUILTIN_NOT_FOUND);
-}
-
-/*
-** \brief            Check if executable name is a builtin
-** \param exec_name  Executable name
-** \return           True if executable name is a builtin
-*/
-
-bool							builtin_check_exec_name(char *exec_name)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < sizeof(g_builtin_lookup) / sizeof(struct s_builtin_entry))
-	{
-		if (ft_strcmp(g_builtin_lookup[i].name, exec_name) == 0)
-			return (true);
-		i++;
-	}
-	return (false);
+	return (NULL);
 }

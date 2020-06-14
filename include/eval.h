@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 10:33:54 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 12:52:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 
 typedef struct
 {
-	int			p[2];
 	t_path		path;
 	t_env		env;
 }				t_eval_state;
@@ -54,8 +53,9 @@ typedef struct
 {
 	char			*exec_path;
 	char			**argv;
-	char			**envp;
-}					t_fork_param_execve;
+	t_env			env;
+	t_builtin_func	builtin;
+}					t_fork_param_cmd;
 
 /*
 ** eval.c
@@ -71,11 +71,20 @@ bool			exec_is_path(char *path_str);
 bool			exec_is_valid(char *exec_path);
 char			*exec_search_path(t_path path, char *path_var, char *exec_name);
 
-/*
-** pipe.c
-*/
+enum			e_error
+{
+	ERROR_AMBIGUOUS_REDIR,
+	ERROR_OPEN,
+	ERROR_CMD_NOT_FOUND,
+	ERROR_SYNTAX,
+};
 
-// int				pipe_setup_parent(t_cmd *cmd, int pipe_in[2], int pipe_out[2]);
-// int				pipe_setup_child(int pipe_in[2], int pipe_out[2]);
+typedef struct
+{
+	enum e_error	id;
+	int				status;
+	char			*msg;       // if NULL call strerror
+	// char			*basename;
+}					t_error;
 
 #endif
