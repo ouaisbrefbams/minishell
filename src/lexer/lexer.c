@@ -109,8 +109,8 @@ enum e_token_tag token_str_or_cote(t_token *lst_token)
 	{
 		if(lst_token->content[i] == '\'')
 		{
-			lst_token->tag = TAG_STR_SINGLE;
-			return(token_verif_stick(lst_token));
+			return (lst_token->tag = TAG_STR_SINGLE);
+			//return(token_verif_stick(lst_token));
 		}
 		if(lst_token->content[i] == '"')
 		{
@@ -136,7 +136,7 @@ t_token			*push_token_enum_and_trim(t_token *lst_token)
 	{
 		lst_token->tag = token_str_or_cote(lst_token);
 	}
-	/* printf("%s-, %d\n",lst_token->content, (int)lst_token->tag); */
+	 //printf("%s-, %d\n",lst_token->content, (int)lst_token->tag);
 	return (lst_token);
 }
 
@@ -173,6 +173,5 @@ t_ftlst        			*lexer(char *input)
 		return(0);
 	*lst = create_token_list(input, lst);
 	/* i = ft_lstsize(*lst); */
-	free(lst);
-	return (0);
+	return (*lst);
 }
