@@ -4,15 +4,13 @@
 */
 
 #include "parse.h"
+#include <stdio.h>
 
-t_ast				*parse(char **input)
+t_ast				*parse(t_ftlst *lst)
 {
-	/* int i = 0; */
+	t_ret 		*ret;
 
-	(void)input;
-    /* while (input[i] != '\0') */
-    /* { */
-    /*  */
-    /* } */
+	ret->rest = lst;
+	ret = 
 	return NULL;
 }

@@ -101,6 +101,12 @@ typedef struct		s_ast
 	};
 }					t_ast;
 
+typedef struct		s_ret
+{
+	t_ast			*as;
+	t_ftlst			*rest;
+}
+
 t_ast				*ast_new(t_ast_tag tag, void *data);
 void				ast_destroy(t_ast *ast);
 

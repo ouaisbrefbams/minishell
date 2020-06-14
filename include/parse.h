@@ -43,6 +43,6 @@
 ** parse.c
 */
 
-t_ast				*parse(char **input);
+t_ast				*parse(t_ftlst *lst);
 
 #endif
