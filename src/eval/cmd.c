@@ -6,11 +6,13 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 12:52:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 21:23:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
+
+#define MS_NO_FD -2
 
 /*
 ** \brief          Wrap a function in a fork
@@ -33,8 +35,8 @@ int			fork_wrap(
 		return (-1);
 	if (child_pid == 0)
 	{
-		if (dup2(STDIN_FILENO, fd_in) == -1 ||
-			dup2(STDOUT_FILENO, fd_out) == -1)
+		if (dup2(fd_in, STDIN_FILENO) == -1 ||
+			dup2(fd_out, STDOUT_FILENO) == -1)
 			exit(EXIT_FAILURE);
 		if ((status = wrapped(passed)) == -1)
 			exit(EXIT_FAILURE);
@@ -62,49 +64,98 @@ int 		forked_cmd(void *void_param)
 		return (execve(param->exec_path, param->argv, (char**)param->env->data));
 }
 
-
-
-int	eval_cmd(t_env env, t_path path, t_ast *ast)
+int	open_redirection(t_ftlst *filename_tokens, t_env env, int oflag)
 {
-	t_fork_param_cmd	param;
-
 	// check in and out (single string)
 	// argv[0]: [string]: ambiguous redirect  code 1
 
 	// check in and out (exist)
 	// argv[0]: [string]: No such file or directory (probably from errno)
 
-	return (0);
-	/* if (in != NULL) */
-	/* { */
-	/* 	char **redir_in = preprocess(in); */
-	/* 	if (redir_in[1] != NULL) */
-	/* 		ambiguous; */
-	/* 	if ((fd_in = open(cmd->in, O_RDONLY)) == -1) */
-	/* 		file error; */
-	/* } */
-    /*  */
-	/* if (out != NULL) */
-	/* { */
-	/* 	char **redir_out = preprocess(out); */
-	/* 	if (redir_out[1] != NULL) */
-	/* 		ambiguous; */
-	/* 	if ((fd_out = open(cmd->out, (is_append ? O_APPEND : O_WRONLY) | O_CREAT)) == -1) */
-	/* 		file error; */
-	/* } */
-    /*  */
-	/* char **argv = preprocess(cmd_argv); */
-    /*  */
-	/* param.builtin = builtin_search_func(argv[0]); */
-	/* if (param.builtin) */
-	/* 	param.exec_path = exec_search_path(path, env_search(env, "PATH"), argv[0]); */
-    /*  */
-	/* // get cmd path */
-	/* // argv[0]: [string]: command not found   code 127 */
-	/* if (param.exec_path == NULL) */
-	/* 	not_found; */
-    /*  */
-	/* param.argv = argv; */
-	/* param.env = env; */
-	/* return (fork_wrap(fd_in, fd_out, &param, &execve_wrapper)); */
+	char	*filename;
+	int		fd;
+
+	if (filename_tokens == NULL)
+		return (MS_NO_FD);
+	if ((filename = preprocess_filename(filename_tokens, env)) == NULL)
+		return (-1);
+	if ((fd = open(filename, oflag)) == -1)
+		return (-1); //file error;
+	return (fd);
+}
+
+bool	redir_has_tag(t_ftlst *redir, enum e_token_tag tags)
+{
+	return (((t_token*)redir->data)->tag & tags);
+}
+
+bool	redir_extract(t_ftlst *redirs, t_env env, int *fd_in, int *fd_out)
+{
+	t_ftlst	*after;
+	t_ftlst	*curr;
+	char	*filename;
+
+	if (redirs == NULL)
+		return (true);
+	if (!redir_has_tag(redirs, TAG_REDIR_IN | TAG_REDIR_OUT | TAG_REDIR_APPEND)
+		|| redirs->next == NULL
+		|| !redir_has_tag(redirs->next, TAG_STR | TAG_STR_SINGLE | TAG_STR_DOUBLE))
+		return (false);
+	curr = redirs->next;
+	while (curr != NULL && redir_has_tag(curr, TAG_STR | TAG_STR_SINGLE | TAG_STR_DOUBLE))
+	{
+		if (curr->next == NULL || redir_has_tag(curr->next, TAG_REDIR_IN | TAG_REDIR_OUT | TAG_REDIR_APPEND))
+		{
+			after = curr->next;
+			curr->next = NULL;
+		}
+		curr = curr->next;
+	}
+	filename = preprocess_filename(redirs->next, env);
+	if (redir_has_tag(redirs, TAG_REDIR_IN))
+	{
+		if (*fd_in != STDIN_FILENO)
+			close(*fd_in);
+		if ((*fd_in = open(filename, O_RDONLY)) == -1)
+			return (false);
+	}
+	else if (redir_has_tag(redirs, TAG_REDIR_OUT | TAG_REDIR_APPEND))
+	{
+		if (*fd_out != STDOUT_FILENO)
+			close(*fd_out);
+		if ((*fd_out = open(filename,
+					(redir_has_tag(redirs, TAG_REDIR_APPEND) ? O_APPEND : O_WRONLY)
+					| O_CREAT | O_TRUNC, 0644)) == -1)
+			return (false);
+	}
+	return (redir_extract(after, env, fd_in, fd_out));
+}
+
+int	eval_cmd(t_env env, t_path path, t_ast *ast)
+{
+	t_fork_param_cmd	param;
+	int					fd_in;
+	int					fd_out;
+	char				**argv;
+
+	fd_in = STDIN_FILENO;
+	fd_out = STDOUT_FILENO;
+	if (!redir_extract(ast->redirs, env, &fd_in, &fd_out))
+		return (-1);
+
+	argv = preprocess(ast->cmd_argv, env);
+
+	param.builtin = builtin_search_func(argv[0]);
+	if (param.builtin == NULL)
+	{
+		param.exec_path = exec_search_path(path, env_search(env, "PATH"), argv[0]);
+		/* // get cmd path */
+		/* // argv[0]: [string]: command not found   code 127 */
+		if (param.exec_path == NULL)
+			return (-1); //not_found;
+	}
+
+	param.argv = argv;
+	param.env = env;
+	return (fork_wrap(fd_in, fd_out, &param, &forked_cmd));
 }

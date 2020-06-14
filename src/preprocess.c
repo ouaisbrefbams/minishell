@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 16:02:46 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 21:25:05 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ static void		st_iter_func_unwrap_token(void **addr)
 	*(char**)addr = content;
 }
 
+// need to free argv on error
 char			**preprocess(t_ftlst *tokens, t_env env)
 {
 	size_t	i;
@@ -156,4 +157,23 @@ char			**preprocess(t_ftlst *tokens, t_env env)
 	ft_veciter_addr(argv, st_iter_func_unwrap_token);
 	ft_vecpush(argv, NULL);
 	return ((char**)ft_vecunwrap(argv));
+}
+
+// need to free tokens
+char		*preprocess_filename(t_ftlst *tokens, t_env env)
+{
+	char	**strs;
+	char	*ret;
+
+	if ((strs = preprocess(tokens, env)) == NULL
+		|| strs[0] == NULL)
+		return (NULL);
+	if (strs[1] != NULL)
+	{
+		// ambiguous
+		return (NULL);
+	}
+	ret = strs[0];
+	free(strs);
+	return (ret);
 }

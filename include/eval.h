@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 12:52:45 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 20:47:28 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,12 @@ typedef struct
 	char			*msg;       // if NULL call strerror
 	// char			*basename;
 }					t_error;
+
+
+/*
+** cmd.c
+*/
+
+int	eval_cmd(t_env env, t_path path, t_ast *ast);
 
 #endif

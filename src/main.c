@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/14 16:04:41 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 21:21:01 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,21 @@
 
 #include "minishell.h"
 #include "ast.h"
-#include "lexer.h"
-#include "parser.h"
+/* #include "lexer.h" */
+/* #include "parser.h" */
+#include "eval.h"
 
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
 	/* (void)envp; */
-	/* t_path	path; */
+	t_path	path;
 	t_env	env;
 	/* char	*line; */
 	/* int		ret; */
 	env = env_from_array(envp);
-	/* path = path_update(NULL, env_search(env, "PATH")); */
+	path = path_update(NULL, env_search(env, "PATH"));
 	/*  */
 	/* t_ast *ast; */
 	/* t_line line; */
@@ -74,34 +75,58 @@ int main(int argc, char **argv, char **envp)
 	/* 	free(line); */
 	/* } */
 	/* free(line); */
-	/* ft_htdestroy(path, free); */
 	/* ms_glob("src#<{(|"); */
 	/* char *j = ms_glob("|)}>#*.c"); */
 	/* printf("%s\n", j); */
 	/* free(j); */
-	t_ftlst *l = NULL;
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "$TERM$LFS$TERM$TERM.")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "$$LFS$TERM$TERM.")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "*/*.c")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "src/*.c include/*.h")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "$A$B")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "\\$TERM")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "$TER\\M")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "\\\\")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_SINGLE, "''''$TEST\\TEST")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE, ",$TEST,$B,")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE | TAG_STICK, "$TEST")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE | TAG_STICK, "$TEST")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE , "$TEST")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE | TAG_STICK, "$TEST")));
-	ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_SINGLE, "$TEST")));
-	char **as = preprocess(l, env);
+
+	t_ftlst *args = NULL;
+	ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "echo")));
+	ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "bonjour")));
+	ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "je")));
+
+	/* ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "cat"))); */
+	/* ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "-e"))); */
+
+	/* ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "ls"))); */
+	/* ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "-a"))); */
+	/* ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "-l"))); */
+	/* ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "$$LFS$TERM$TERM."))); */
+	/* ft_lstpush_back(&args, ft_lstnew(token_new(TAG_STR, "|)}>#*.c"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "src#<{(|.c include#<{(|.h"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "$A$B"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "\\$TERM"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "$TER\\M"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR, "\\\\"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_SINGLE, "''''$TEST\\TEST"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE, ",$TEST,$B,"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE | TAG_STICK, "$TEST"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE | TAG_STICK, "$TEST"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE , "$TEST"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_DOUBLE | TAG_STICK, "$TEST"))); */
+	/* ft_lstpush_back(&l, ft_lstnew(token_new(TAG_STR_SINGLE, "$TEST"))); */
+
+	t_ftlst *redirs = NULL;
+	/* ft_lstpush_back(&redirs, ft_lstnew(token_new(TAG_REDIR_IN, NULL))); */
+	/* ft_lstpush_back(&redirs, ft_lstnew(token_new(TAG_STR, "bonjour"))); */
+	ft_lstpush_back(&redirs, ft_lstnew(token_new(TAG_REDIR_OUT, NULL)));
+	ft_lstpush_back(&redirs, ft_lstnew(token_new(TAG_STR, "yo")));
+
+	t_ast *ast = ast_new(AST_CMD);
+	ast->cmd_argv = args;
+	ast->redirs = redirs;
+
+	printf("eval %d\n", eval_cmd(env, path, ast));
+
+
+	/* char **as = preprocess(l, env); */
 	/* printf("%p\n", as); */
 	/* printf("%p\n", *as); */
-	char **tmp = as;
-	while (*as != NULL)
-		puts(*as++);
+	/* char **tmp = as; */
+	/* while (*as != NULL) */
+	/* 	puts(*as++); */
 	/* ft_split_destroy(tmp); */
+	ft_htdestroy(path, free);
 	ft_vecdestroy(env, free);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/14 16:03:25 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 16:22:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,6 @@ int						builtin_exit(char **argv, t_env env);
 */
 
 char					**preprocess(t_ftlst *tokens, t_env env);
+char					*preprocess_filename(t_ftlst *tokens, t_env env);
 
 #endif

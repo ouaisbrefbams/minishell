@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 10:28:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 17:47:10 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,7 @@ typedef struct			s_ast
 		t_line			line;
 		t_ftlst			*cmd_argv;
 	};
-	t_ftlst				*in;
-	t_ftlst				*out;
-	bool				is_append;
+	t_ftlst				*redirs;
 }						t_ast;
 
 typedef struct			s_ret

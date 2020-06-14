@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 10:29:21 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/14 20:22:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ t_ast			*ast_new(enum e_ast_tag tag)
 	if ((ast = (t_ast*)malloc(sizeof(t_ast))) == NULL)
 		return (NULL);
 	ast->tag = tag;
-	ast->in = NULL;
-	ast->out = NULL;
-	ast->is_append = false;
+	ast->redirs = NULL;
 	ast->line.left = NULL;
 	ast->line.right = NULL;
 	ast->cmd_argv = NULL;
@@ -48,12 +46,9 @@ void			ast_destroy(t_ast *ast)
 {
 	if (ast == NULL)
 		return ;
+	ft_lstdestroy(&ast->cmd_argv, (void (*)(void*))token_destroy);
 	if (ast->tag == AST_CMD)
-	{
-		ft_lstdestroy(&ast->cmd_argv, (void (*)(void*))token_destroy);
-		ft_lstdestroy(&ast->in, (void (*)(void*))token_destroy);
-		ft_lstdestroy(&ast->out, (void (*)(void*))token_destroy);
-	}
+		ft_lstdestroy(&ast->redirs, (void (*)(void*))token_destroy);
 	else if (ast->tag == AST_LINE)
 	{
 		ast_destroy(ast->line.left);
