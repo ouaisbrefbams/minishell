@@ -8,19 +8,19 @@
 
 enum                    e_token_tag
 {
-	LTAG_AND          = 1 << 0,
-	LTAG_END          = 1 << 1,
-	LTAG_OR           = 1 << 2,
-	LTAG_PIPE         = 1 << 3,
-	LTAG_REDIR_IN     = 1 << 4,
-	LTAG_REDIR_OUT    = 1 << 5,
-	LTAG_REDIR_APPEND = 1 << 6,
-	LTAG_PARENT_OPEN  = 1 << 7,
-	LTAG_PARENT_CLOSE = 1 << 8,
-	LTAG_STR          = 1 << 9,
-	LTAG_STR_DOUBLE   = 1 << 10,
-	LTAG_STR_SINGLE   = 1 << 11,
-	LTAG_STICK        = 1 << 12,
+	TAG_AND          = 1 << 0,
+	TAG_END          = 1 << 1,
+	TAG_OR           = 1 << 2,
+	TAG_PIPE         = 1 << 3,
+	TAG_REDIR_IN     = 1 << 4,
+	TAG_REDIR_OUT    = 1 << 5,
+	TAG_REDIR_APPEND = 1 << 6,
+	TAG_PARENT_OPEN  = 1 << 7,
+	TAG_PARENT_CLOSE = 1 << 8,
+	TAG_STR          = 1 << 9,
+	TAG_STR_DOUBLE   = 1 << 10,
+	TAG_STR_SINGLE   = 1 << 11,
+	TAG_STICK        = 1 << 12,
 };
 
 typedef struct

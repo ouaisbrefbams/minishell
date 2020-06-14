@@ -6,11 +6,14 @@
 #include "parse.h"
 #include <stdio.h>
 
-t_ast				*parse(t_ftlst *lst)
+
+
+t_ret				*parse(t_ftlst *lst)
 {
 	t_ret 		*ret;
 
+	if(!(ret = malloc(sizeof(t_ret) * 1)))
+		return(NULL);
 	ret->rest = lst;
-	ret = 
 	return NULL;
 }

@@ -97,7 +97,7 @@ enum e_token_tag token_verif_stick(t_token *lst_token)
 	if (i > 0)
 		if (lst_token->content[i - 1] == ' ')
 			return(lst_token->tag);
-	return(lst_token->tag | LTAG_STICK);
+	return(lst_token->tag | TAG_STICK);
 }
 
 enum e_token_tag token_str_or_cote(t_token *lst_token)
@@ -109,17 +109,17 @@ enum e_token_tag token_str_or_cote(t_token *lst_token)
 	{
 		if(lst_token->content[i] == '\'')
 		{
-			lst_token->tag = LTAG_STR_SINGLE;
+			lst_token->tag = TAG_STR_SINGLE;
 			return(token_verif_stick(lst_token));
 		}
 		if(lst_token->content[i] == '"')
 		{
-			lst_token->tag = LTAG_STR_DOUBLE;
+			lst_token->tag = TAG_STR_DOUBLE;
 			return(token_verif_stick(lst_token));
 		}
 		else
 		{
-			lst_token->tag = LTAG_STR;
+			lst_token->tag = TAG_STR;
 			return(token_verif_stick(lst_token));
 		}
 		i++;

@@ -3,29 +3,29 @@
 enum e_token_tag                ret_token_sep_redir_append(char *input, int i)
 {
     if (input[i + 1] ==  '>')
-        return(LTAG_REDIR_APPEND);
-    return (LTAG_REDIR_OUT);
+        return(TAG_REDIR_APPEND);
+    return (TAG_REDIR_OUT);
 
 }
 
 enum e_token_tag                ret_token(char *input, int  i)
 {
     if (input[i] == ';')
-        return(LTAG_AND);
+        return(TAG_AND);
     if (input[i] == '&')
-        return(LTAG_END);
+        return(TAG_END);
     if (input[i]  == '|' && input[i + 1] == '|')
-        return(LTAG_OR);
+        return(TAG_OR);
     if(input[i]  == '|')
-        return(LTAG_PIPE);
+        return(TAG_PIPE);
     if (input[i] == '>')
         return(ret_token_sep_redir_append(input,i));
     if (input[i] == '<')
-        return(LTAG_REDIR_IN);
+        return(TAG_REDIR_IN);
     if (input[i] ==  '(')
-        return(LTAG_PARENT_OPEN);
+        return(TAG_PARENT_OPEN);
     if (input[i] == ')')
-        return(LTAG_PARENT_CLOSE);
+        return(TAG_PARENT_CLOSE);
     return(0);
 
 }

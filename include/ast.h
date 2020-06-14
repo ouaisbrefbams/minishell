@@ -31,6 +31,12 @@
 ** \param SEP_OR     `||` Execute right if left status != 0
 */
 
+typedef enum e_bool
+{
+	TRUE,
+	FALSE,
+}			t_bool;
+
 typedef enum		e_sep
 {
 	SEP_END,
@@ -66,9 +72,9 @@ typedef struct		s_line
 
 typedef struct		s_cmd
 {
-	char			**argv; // change to t_ftvec of t_token
-	char			*in;    // change to t_token
-	char			*out;   // change to t_token
+	t_ftlst			*argv; // change to t_ftvec of t_token
+	t_token			*in;    // change to t_token
+	t_token			*out;   // change to t_token
 	bool			is_append;
 }					t_cmd;
 
@@ -103,9 +109,10 @@ typedef struct		s_ast
 
 typedef struct		s_ret
 {
+	t_bool 			failed;
 	t_ast			*as;
 	t_ftlst			*rest;
-}
+}					t_ret;
 
 t_ast				*ast_new(t_ast_tag tag, void *data);
 void				ast_destroy(t_ast *ast);
