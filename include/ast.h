@@ -58,7 +58,7 @@ typedef struct		s_line
 {
 	struct s_ast	*left;
 	struct s_ast	*right;
-	t_sep			sep;
+	e_token_tag		sep;
 }					t_line;
 
 /*
@@ -109,8 +109,8 @@ typedef struct		s_ast
 
 typedef struct		s_ret
 {
-	t_bool 			failed;
-	t_ast			*as;
+	t_token 		*unexpected;
+	t_ast			*ast;
 	t_ftlst			*rest;
 }					t_ret;
 
