@@ -8,7 +8,7 @@ int                 parse_redir_true_false(enum e_token_tag tag)
     return (0);
 }
 
-t_ast 				*parse_redir(t_ast *ast, t_ftlst *rest)
+t_ast 				*push_redir(t_ast *ast, t_ftlst *rest)
 {
     t_ftlst         *new;
 
