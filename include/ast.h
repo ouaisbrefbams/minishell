@@ -32,6 +32,7 @@ struct s_ast;
 ** \param sep        Type of separator
 */
 
+
 typedef struct			s_line
 {
 	struct s_ast		*left;

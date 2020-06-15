@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 20:22:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 13:01:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ void			ast_destroy(t_ast *ast)
 		return ;
 	ft_lstdestroy(&ast->cmd_argv, (void (*)(void*))token_destroy);
 	if (ast->tag == AST_CMD)
+	{
+		ft_lstdestroy(&ast->cmd_argv, (void (*)(void*))token_destroy);
 		ft_lstdestroy(&ast->redirs, (void (*)(void*))token_destroy);
+	}
 	else if (ast->tag == AST_LINE)
 	{
 		ast_destroy(ast->line.left);
