@@ -29,16 +29,16 @@ t_ret					*parse(t_ftlst *input)
 		tag = ((t_token *)ret->rest->data)->tag;
 		if (parse_cmd_str_true_false(tag))
 		{
-			ret->ast = parse_cmd(ret->ast, ret->rest);
+			ret->ast = push_cmd(ret->ast, ret->rest);
 			if (ret->rest != NULL)
 				ret->rest = ret->rest->next;
 		}
 		else if (parse_redir_true_false(tag))
 		{
-			ret->ast = parse_redir(ret->ast, ret->rest);
+			ret->ast = push_redir(ret->ast, ret->rest);
 			ret->rest = ret->rest->next;
 			if (ret->rest != NULL)
-				ret->ast = parse_redir(ret->ast, ret->rest);
+				ret->ast = push_redir(ret->ast, ret->rest);
 			tag = ((t_token *)ret->rest->data)->tag;
 			//while(tag & TAG_IS_STR && tag & TAG_STICK)
 		}

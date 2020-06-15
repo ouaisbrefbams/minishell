@@ -175,5 +175,5 @@ t_ftlst        			*lexer(char *input)
 	*lst = NULL;
 	*lst = create_token_list(input, lst);
 	/* i = ft_lstsize(*lst); */
-	return (*lst);
+	return (lexe_trim_out(lst));
 }
