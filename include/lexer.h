@@ -21,6 +21,9 @@ enum                    e_token_tag
 	TAG_STR_DOUBLE   = 1 << 10,
 	TAG_STR_SINGLE   = 1 << 11,
 	TAG_STICK        = 1 << 12,
+
+	TAG_IS_STR       = TAG_STR | TAG_STR_SINGLE | TAG_STR_DOUBLE,
+	TAG_IS_REDIR     = TAG_REDIR_IN | TAG_REDIR_OUT | TAG_REDIR_APPEND,
 };
 
 typedef struct
@@ -39,5 +42,7 @@ int                     lexe_space(char *input);
 
 t_token					*token_new(enum e_token_tag tag, char *content);
 void					token_destroy(t_token *token);
+void					token_destroy_lst(t_ftlst *tokens);
+void					token_destroy_lst2(t_ftlst *tokens1, t_ftlst *tokens2);
 
 #endif

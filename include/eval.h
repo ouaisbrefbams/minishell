@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 10:31:06 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 11:09:49 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ typedef struct
 	t_builtin_func	builtin;
 }					t_fork_param_cmd;
 
+#define MS_NO_FD -2
+
 /*
 ** eval.c
 */
@@ -97,6 +99,12 @@ void			error_eval_put(enum e_error id, char *unexpected);
 ** cmd.c
 */
 
-int	eval_cmd(t_env env, t_path path, t_ast *ast);
+int				eval_cmd(t_env env, t_path path, t_ast *ast);
+
+/*
+** redir.c
+*/
+
+bool			redir_extract(t_ftlst *redirs, t_env env, int *fd_in, int *fd_out);
 
 #endif
