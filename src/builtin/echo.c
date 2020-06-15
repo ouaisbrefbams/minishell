@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:47 by charles           #+#    #+#             */
-/*   Updated: 2020/04/02 11:18:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 10:12:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ int	builtin_echo(char **argv, t_env env)
 	bool	newline;
 
 	(void)env;
+	if (argv[1] == NULL)
+	{
+		ft_putchar('\n');
+		return (0);
+	}
 	newline = !ft_strcmp(argv[1], "-n") == 0;
 	if (!newline)
 		argv++;

@@ -6,13 +6,14 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 21:25:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 10:47:24 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "ms_glob.h"
 #include "lexer.h"
+#include "eval.h"
 
 static bool		st_escapable(char c, enum e_token_tag tag)
 {
@@ -114,14 +115,18 @@ static void		st_iter_func_unwrap_token(void **addr)
 }
 
 // need to free argv on error
-char			**preprocess(t_ftlst *tokens, t_env env)
+char			**preprocess(t_ftlst **tokens, t_env env)
 {
 	size_t	i;
 	t_token	*token;
 	t_ftvec	*argv;
 
-	if ((argv = ft_vecfrom_lst(tokens)) == NULL)
+	if ((argv = ft_vecfrom_lst(*tokens)) == NULL)
+	{
+		ft_lstdestroy(tokens, NULL);
 		return (NULL);
+	}
+	ft_lstdestroy(tokens, NULL);
 	i = -1;
 	while (++i < argv->size)
 	{
@@ -160,7 +165,7 @@ char			**preprocess(t_ftlst *tokens, t_env env)
 }
 
 // need to free tokens
-char		*preprocess_filename(t_ftlst *tokens, t_env env)
+char		*preprocess_filename(t_ftlst **tokens, t_env env)
 {
 	char	**strs;
 	char	*ret;
@@ -170,7 +175,9 @@ char		*preprocess_filename(t_ftlst *tokens, t_env env)
 		return (NULL);
 	if (strs[1] != NULL)
 	{
-		// ambiguous
+		// save tokens
+		error_eval_put(ERROR_AMBIGUOUS_REDIR, strs[1]);
+		ft_split_destroy(strs);
 		return (NULL);
 	}
 	ret = strs[0];

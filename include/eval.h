@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 20:47:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 10:31:06 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,11 @@ typedef struct
 	// char			*basename;
 }					t_error;
 
+/*
+** error.c
+*/
+
+void			error_eval_put(enum e_error id, char *unexpected);
 
 /*
 ** cmd.c
