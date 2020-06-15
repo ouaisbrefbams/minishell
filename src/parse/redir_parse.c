@@ -12,7 +12,7 @@ t_ast 				*parse_redir(t_ast *ast, t_ftlst *rest)
 {
     t_ftlst         *new;
 
-    new = rest->data;
+    /* new = rest->data; */
 	if (ast == NULL)
     {
         ast = ast_new(AST_CMD);
@@ -21,7 +21,7 @@ t_ast 				*parse_redir(t_ast *ast, t_ftlst *rest)
     else
     {
         new = ft_lstnew((t_token *)rest->data);
-        ft_lstpush_back(&ast->redirs, (void *)new);
+        ft_lstpush_back(&ast->redirs, new);
     }
     return (ast);
 }

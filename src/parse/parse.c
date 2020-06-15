@@ -13,7 +13,7 @@
 t_ret					*parse(t_ftlst *input)
 {
 	t_ret 				*ret;
-	/* t_ret 				*first; */
+	t_ret 				*first;
 	enum e_token_tag 	tag;
 	int 				i = 0;
 
@@ -22,7 +22,7 @@ t_ret					*parse(t_ftlst *input)
 	ret->rest = input;
 	ret->ast = NULL;
 	ret->unexpected = NULL;
-	/* first = ret; */
+	first = ret;
 
 	while (ret->rest != NULL)
 	{
@@ -49,22 +49,23 @@ t_ret					*parse(t_ftlst *input)
 		if (ret->rest != NULL)
 			ret->rest = ret->rest->next;
 	}
-    while(ret->ast->cmd_argv != NULL)
-     {
-		 /* printf("%s\n", ((t_token *)ret->ast->cmd_argv->data)->content); */
-         ret->ast->cmd_argv = ret->ast->cmd_argv->next;
-     }
-	 while(ret->ast->redirs != NULL)
-	 {
-		 if (i == 0)
-		 {
-			 /* printf("redir"); */
-			 i++;
-		 }
-		 /* printf("%s\n", ((t_token *)ret->ast->redirs->data)->content); */
-		 ret->ast->redirs = ret->ast->redirs->next;
-	 }
+
+	/* while(ret->ast->cmd_argv != NULL) */
+	/* { */
+		/* printf("%s\n", ((t_token *)ret->ast->cmd_argv->data)->content); */
+	/* 	ret->ast->cmd_argv = ret->ast->cmd_argv->next; */
+	/* } */
+	/* while(ret->ast->redirs != NULL) */
+	/* { */
+	/* 	if (i == 0) */
+	/* 	{ */
+			/* printf("redir"); */
+		/* 	i++; */
+		/* } */
+		/* printf("%s\n", ((t_token *)ret->ast->redirs->data)->content); */
+	/* 	ret->ast->redirs = ret->ast->redirs->next; */
+	/* } */
 	/* ast_destroy(ret->ast); */
 	/* ft_lstdestroy(&ret->rest, (void (*)(void*))token_destroy); */
-	return NULL;
+	return first;
 }

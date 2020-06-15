@@ -172,6 +172,7 @@ t_ftlst        			*lexer(char *input)
 	lst = malloc(sizeof(t_ftlst *) * 1);
 	if (!lst)
 		return(0);
+	*lst = NULL;
 	*lst = create_token_list(input, lst);
 	/* i = ft_lstsize(*lst); */
 	return (*lst);

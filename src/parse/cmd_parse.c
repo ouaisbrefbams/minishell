@@ -15,17 +15,16 @@ t_ast 				*parse_cmd(t_ast *ast, t_ftlst *rest)
 {
     t_ftlst         *new;
 
-    new = rest->data;
+    /* new = rest->data; */
 	if (ast == NULL)
     {
-
         ast = ast_new(AST_CMD);
         ast->cmd_argv = ft_lstnew((t_token *)rest->data);
     }
     else
     {
         new = ft_lstnew((t_token *)rest->data);
-        ft_lstpush_back(&ast->cmd_argv, (void *)new);
+        ft_lstpush_back(&ast->cmd_argv, new);
     }
     return (ast);
 }

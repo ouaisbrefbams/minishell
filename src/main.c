@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/15 13:12:21 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 13:43:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@
 #include "parser.h"
 #include "eval.h"
 
+void token_debug(void *v)
+{
+	t_token *t;
+
+	t= v;
+	printf("[%4d] (%s)\n", t->tag, t->content);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_path	path;
@@ -29,11 +37,19 @@ int main(int argc, char **argv, char **envp)
 	env = env_from_array(envp);
 	path = path_update(NULL, env_search(env, "PATH"));
 
+
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
-		t_ftlst *lex_out = lexer(argv[2]);
+		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
+
+		ft_lstiter(lex_out, token_debug);
 
 		t_ret *parser_out = parse(lex_out);
+
+		printf("%p\n", parser_out->ast->cmd_argv);
+		printf("%p\n", parser_out->ast->redirs);
+
+		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
 
 		int eval_out = eval_cmd(env, path, parser_out->ast);
 		(void)eval_out;
