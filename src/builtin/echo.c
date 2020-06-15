@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:47 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 10:12:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 14:26:30 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	builtin_echo(char **argv, t_env env)
 		ft_putchar('\n');
 		return (0);
 	}
-	newline = !ft_strcmp(argv[1], "-n") == 0;
+	newline = !(ft_strcmp(argv[1], "-n") == 0);
 	if (!newline)
 		argv++;
 	while (*++argv != NULL)

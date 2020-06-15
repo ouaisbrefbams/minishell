@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 11:44:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 16:00:40 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ bool					redir_extract(
 		|| !(st_lst_tag(redirs->next) & TAG_IS_STR))
 		return (false);
 	curr = redirs->next;
+	after = NULL;
 	while (curr != NULL && st_lst_tag(curr) & TAG_IS_STR)
 	{
 		if (curr->next == NULL || st_lst_tag(curr->next) & TAG_IS_REDIR)

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/15 13:43:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/15 17:27:21 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,15 @@ int main(int argc, char **argv, char **envp)
 	{
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		ft_lstiter(lex_out, token_debug);
+		/* ft_lstiter(lex_out, token_debug); */
 
 		t_ret *parser_out = parse(lex_out);
 
-		printf("%p\n", parser_out->ast->cmd_argv);
-		printf("%p\n", parser_out->ast->redirs);
+		/* printf("%p\n", parser_out->ast->cmd_argv); */
+		/* printf("%p\n", parser_out->ast->redirs); */
 
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
+		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
 		int eval_out = eval_cmd(env, path, parser_out->ast);
 		(void)eval_out;

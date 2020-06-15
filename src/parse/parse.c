@@ -15,7 +15,7 @@ t_ret					*parse(t_ftlst *input)
 	t_ret 				*ret;
 	t_ret 				*first;
 	enum e_token_tag 	tag;
-	int 				i = 0;
+	/* int 				i = 0; */
 
 	if(!(ret = malloc(sizeof(t_ret) * 1)))
 		return(NULL);
@@ -42,7 +42,7 @@ t_ret					*parse(t_ftlst *input)
 			if (ret->rest != NULL)
 			{
 				tag = ((t_token *)ret->rest->data)->tag;
-				if(tag & TAG_IS_STR & TAG_STICK)
+				if ((tag & TAG_IS_STR) && (tag & TAG_STICK))
 					ret->ast = parse_redir(ret->ast, ret->rest);
 			}
 		}
