@@ -26,7 +26,7 @@ void token_debug(void *v)
 	t_token *t;
 
 	t= v;
-	//printf("[%4d] (%s)\n", t->tag, t->content);
+	printf("[%4d] (%s)\n", t->tag, t->content);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -44,7 +44,7 @@ int main(int argc, char **argv, char **envp)
 
 		ft_lstiter(lex_out, token_debug);
 
-		t_ret *parser_out = parse(lex_out);
+		//t_ret *parser_out = parse(lex_out);
 
 		// printf("%s\n", ((t_token *)parser_out->ast->cmd_argv->data)->content);
 		// printf("%s\n", ((t_token *)parser_out->ast->redirs->data)->content);
