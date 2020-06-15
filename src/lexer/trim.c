@@ -1,20 +1,24 @@
 
 #include "lexer.h"
 
-char                *del_space(char *str)
+char                *del_space(t_token *tk)
 {
     int             i;
     char            *s;
 
     i = 0;
-    while(str[++i] != '\0')
+    while(tk->content[++i] != '\0')
     {
-        if(str[i] == '\\' && str[i + 1] == ' ')
+        if(tk->content[i] == '\\' && tk->content[i + 1] == ' ')
+        {
             i += 2;
-        if(str[i] == ' ')
+            if (tk->content[i] == '\0')
+                tk->tag = tk->tag | TAG_STICK;
+        }
+        if(tk->content[i] == ' ')
             break;
     }
-    s = ft_strsubf(str, 0, i);
+    s = ft_strsubf(tk->content, 0, i);
     return(s);
 }
 
@@ -49,7 +53,7 @@ t_ftlst             *lexe_trim_out(t_ftlst *lst)
         }
         else
         {
-            tk->content = del_space(tk->content);
+            tk->content = del_space(tk);
             if(lst->next == NULL)
                 if (tk->tag & TAG_STICK)
                     tk->tag -= TAG_STICK;
