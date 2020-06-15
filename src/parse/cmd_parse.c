@@ -18,12 +18,13 @@ t_ast 				*parse_cmd(t_ast *ast, t_ftlst *rest)
     new = rest->data;
 	if (ast == NULL)
     {
+
         ast = ast_new(AST_CMD);
         ast->cmd_argv = ft_lstnew((t_token *)rest->data);
     }
     else
     {
-        new = ft_lstnew(rest->data);
+        new = ft_lstnew((t_token *)rest->data);
         ft_lstpush_back(&ast->cmd_argv, (void *)new);
     }
     return (ast);

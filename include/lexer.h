@@ -21,6 +21,8 @@ enum                    e_token_tag
 	TAG_STR_DOUBLE   = 1 << 10,
 	TAG_STR_SINGLE   = 1 << 11,
 	TAG_STICK        = 1 << 12,
+	TAG_IS_STR       = TAG_STR | TAG_STR_SINGLE | TAG_STR_DOUBLE,
+    TAG_IS_REDIR     = TAG_REDIR_IN | TAG_REDIR_OUT | TAG_REDIR_APPEND,
 };
 
 typedef struct

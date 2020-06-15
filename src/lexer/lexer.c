@@ -110,7 +110,7 @@ enum e_token_tag token_str_or_cote(t_token *lst_token)
 		if(lst_token->content[i] == '\'')
 		{
 			return (lst_token->tag = TAG_STR_SINGLE);
-			//return(token_verif_stick(lst_token));
+			return(token_verif_stick(lst_token));
 		}
 		if(lst_token->content[i] == '"')
 		{

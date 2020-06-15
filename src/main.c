@@ -120,7 +120,7 @@ int         main(int argc, char **argv)
     ft_strlcpy(input, argv[1], ft_strlen(argv[1]) + 1);
 
     lst = lexer(input);
-	//parse(lst);
+	parse(lst);
     free(input);
 	exit(0);
     return (0);

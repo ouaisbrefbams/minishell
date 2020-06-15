@@ -32,6 +32,7 @@ struct s_ast;
 ** \param sep        Type of separator
 */
 
+
 typedef struct			s_line
 {
 	struct s_ast		*left;
@@ -69,9 +70,7 @@ typedef struct			s_ast
 		t_line			line;
 		t_ftlst			*cmd_argv;
 	};
-	t_ftlst				*in;
-	t_ftlst				*out;
-	bool				is_append;
+	t_ftlst				*redirs;
 }						t_ast;
 
 typedef struct			s_ret
