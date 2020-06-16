@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 13:30:04 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/16 13:49:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ char			**preprocess(t_ftlst **tokens, t_env env)
 	while (++i < argv->size)
 	{
 		token = argv->data[i];
+		/* printf("|%s| %d\n", token->content, token->tag & TAG_STICK); */
 		if (token->tag & TAG_STR_SINGLE)
 			continue ;
 		token->content = st_iterpolate_env(token->content, token->tag, env);
@@ -138,18 +139,26 @@ char			**preprocess(t_ftlst **tokens, t_env env)
 		{
 			if (ft_strchr(token->content, '*') != NULL)
 				token->content = st_iterpolate_globs(token->content);
-			if ((i = st_splat_arg(argv, i)) == (size_t)-1)
-				return (NULL);
+			if (ft_strchr(token->content, ' ') != NULL)
+			{
+				if ((i = st_splat_arg(argv, i)) == (size_t)-1)
+					return (NULL);
+				if (token->tag & TAG_STICK)   // FIXME temporary will not work with `echo *''`
+					((t_token*)argv->data[i])->tag |= TAG_STICK;
+			}
 		}
 	}
 
+	/* printf("-------\n"); */
 	t_token *next;
 	i = -1;
 	while (++i < argv->size - 1)
 	{
 		token = argv->data[i];
+		/* printf("|%s| %d\n", token->content, token->tag & TAG_STICK); */
 		while (token->tag & TAG_STICK && i + 1 < argv->size)
 		{
+			/* printf("2|%s|\n", token->content); */
 			next = argv->data[i + 1];
 			token->content = ft_strjoinf_fst(token->content, next->content);
 			if (token->content == NULL)
@@ -175,7 +184,7 @@ char		*preprocess_filename(t_ftlst **tokens, t_env env)
 		return (NULL);
 	if (strs[1] != NULL)
 	{
-		// save tokens
+		/* save tokens */
 		error_eval_put(ERROR_AMBIGUOUS_REDIR, strs[1]);
 		ft_split_destroy(strs);
 		return (NULL);

@@ -43,21 +43,24 @@ t_ret					*parse(t_ftlst *input)
 				if (tag & TAG_IS_STR && tag & TAG_STICK)
 					ret->rest = ret->rest->next;
 				else
+				{
+					ret->rest = ret->rest->next;
 					break;
+				}
 			}
 		}
 	}
-    while(ret->ast->cmd_argv != NULL)
-     {
-		 printf("[%s]\n", ((t_token *)ret->ast->cmd_argv->data)->content);
-         ret->ast->cmd_argv = ret->ast->cmd_argv->next;
-     }
-	 while(ret->ast->redirs != NULL)
-	 {
-		 printf("[%s]\n", ((t_token *)ret->ast->redirs->data)->content);
-		 ret->ast->redirs = ret->ast->redirs->next;
-	 }
-	ast_destroy(ret->ast);
-	ft_lstdestroy(&ret->rest, (void (*)(void*))token_destroy);
+    /* while(ret->ast->cmd_argv != NULL) */
+    /*  { */
+	/* 	 printf("[%s]\n", ((t_token *)ret->ast->cmd_argv->data)->content); */
+    /*      ret->ast->cmd_argv = ret->ast->cmd_argv->next; */
+    /*  } */
+	/*  while(ret->ast->redirs != NULL) */
+	/*  { */
+	/* 	 printf("[%s]\n", ((t_token *)ret->ast->redirs->data)->content); */
+	/* 	 ret->ast->redirs = ret->ast->redirs->next; */
+	/*  } */
+	/* ast_destroy(ret->ast); */
+	/* ft_lstdestroy(&ret->rest, (void (*)(void*))token_destroy); */
 	return first;
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/16 10:11:30 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/16 13:47:30 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void token_debug(void *v)
 	t_token *t;
 
 	t= v;
-	printf("[%4d] (%s)\n", t->tag, t->content);
+	printf("[%4d %d] (%s)\n", t->tag, !!(t->tag & TAG_STICK), t->content);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -36,24 +36,23 @@ int main(int argc, char **argv, char **envp)
 
 	env = env_from_array(envp);
 	path = path_update(NULL, env_search(env, "PATH"));
-
+	/* printf("%s\n", argv[2]); */
 
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		 ft_lstiter(lex_out, token_debug);
+		 /* ft_lstiter(lex_out, token_debug); */
 
 		t_ret *parser_out = parse(lex_out);
 
-		/* printf("%p\n", parser_out->ast->cmd_argv); */
-		/* printf("%p\n", parser_out->ast->redirs); */
-
+		/* printf("===cmd_argv===\n"); */
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
+		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		//int eval_out = eval_cmd(env, path, parser_out->ast);
-		//(void)eval_out;
+		int eval_out = eval_cmd(env, path, parser_out->ast);
+		(void)eval_out;
 	}
 
 	ft_htdestroy(path, free);
