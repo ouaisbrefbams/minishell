@@ -84,6 +84,7 @@ t_token 						*lexer_lst_token_str(char *input, int i, int j)
 		free(lst_token);
 		return(0);
 	}
+
 	return (lst_token);
 }
 

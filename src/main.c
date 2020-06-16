@@ -42,7 +42,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		/* ft_lstiter(lex_out, token_debug); */
+		 ft_lstiter(lex_out, token_debug);
 
 		t_ret *parser_out = parse(lex_out);
 
@@ -52,8 +52,8 @@ int main(int argc, char **argv, char **envp)
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		int eval_out = eval_cmd(env, path, parser_out->ast);
-		(void)eval_out;
+		//int eval_out = eval_cmd(env, path, parser_out->ast);
+		//(void)eval_out;
 	}
 
 	ft_htdestroy(path, free);

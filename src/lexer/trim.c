@@ -44,8 +44,9 @@ t_ftlst             *lexe_trim_out(t_ftlst *lst)
     while(lst != NULL)
     {
         tk = lst->data;
-        if (tk->tag >= TAG_STR_DOUBLE || tk->tag >= TAG_STR_SINGLE)
+        if (tk->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
         {
+            //printf("%s\n",tk->content );
             tk->content = del_quote(tk->content);
             if(lst->next == NULL)
                 if (tk->tag & TAG_STICK)
