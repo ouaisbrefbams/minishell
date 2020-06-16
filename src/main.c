@@ -43,30 +43,18 @@ int main(int argc, char **argv, char **envp)
 		//printf("%s\n", argv[2]);
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		 ft_lstiter(lex_out, token_debug);
+		 //ft_lstiter(lex_out, token_debug);
 
-		 t_ret *ret = parse(lex_out);
+		 t_ret *parser_out = parse(lex_out);
 
-		printf("===========cmd=============\n");
-		while(ret->ast->cmd_argv != NULL)
-	     {
-			 printf("[%s]\n", ((t_token *)ret->ast->cmd_argv->data)->content);
-	         ret->ast->cmd_argv = ret->ast->cmd_argv->next;
-	     }
-		printf("=========redir============\n");
-		while(ret->ast->redirs != NULL)
-		{
-			printf("[%s]\n", ((t_token *)ret->ast->redirs->data)->content);
-			ret->ast->redirs = ret->ast->redirs->next;
-		}
 		/* printf("%p\n", parser_out->ast->cmd_argv); */
 		/* printf("%p\n", parser_out->ast->redirs); */
 
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		//int eval_out = eval_cmd(env, path, parser_out->ast);
-		//(void)eval_out;
+		int eval_out = eval_cmd(env, path, parser_out->ast);
+		(void)eval_out;
 	}
 
 	ft_htdestroy(path, free);
