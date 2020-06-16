@@ -4,6 +4,6 @@ git:
   submodules: true
 
 python:
-  - "3.5"
+  - "3.7"
 
 script: make all && cd minishell_test && python3 main.py
