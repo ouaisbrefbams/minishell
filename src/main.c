@@ -44,8 +44,20 @@ int main(int argc, char **argv, char **envp)
 
 		 ft_lstiter(lex_out, token_debug);
 
-		t_ret *parser_out = parse(lex_out);
+		t_ret *ret = parse(lex_out);
 
+		printf("===========cmd=============\n");
+		while(ret->ast->cmd_argv != NULL)
+	     {
+			 printf("[%s]\n", ((t_token *)ret->ast->cmd_argv->data)->content);
+	         ret->ast->cmd_argv = ret->ast->cmd_argv->next;
+	     }
+		printf("=========redir============\n");
+		while(ret->ast->redirs != NULL)
+		{
+			printf("[%s]\n", ((t_token *)ret->ast->redirs->data)->content);
+			ret->ast->redirs = ret->ast->redirs->next;
+		}
 		/* printf("%p\n", parser_out->ast->cmd_argv); */
 		/* printf("%p\n", parser_out->ast->redirs); */
 
