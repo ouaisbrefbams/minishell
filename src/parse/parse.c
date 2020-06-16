@@ -29,26 +29,25 @@ t_ret					*parse(t_ftlst *input)
 		if (parse_cmd_str_true_false(tag))
 		{
 			ret->ast = push_cmd(ret->ast, ret->rest);
-			if (ret->rest != NULL)
-				ret->rest = ret->rest->next;
 		}
 		else if (parse_redir_true_false(tag))
 		{
 			while(ret->rest != NULL)
 			{
 				ret->ast = push_redir(ret->ast, ret->rest);
-				ret->rest = ret->rest->next;
-				ret->ast = push_redir(ret->ast, ret->rest);
-				tag = ((t_token *)ret->rest->data)->tag;
-				if ((tag & TAG_IS_STR && tag & TAG_STICK) || tag == TAG_IS_REDIR)
+				if (tag & TAG_IS_STR && tag & TAG_STICK)
+					ret->rest = ret->rest->next;
+				else if (tag & TAG_IS_REDIR)
 					ret->rest = ret->rest->next;
 				else
 				{
-					ret->rest = ret->rest->next;
+					//ret->rest = ret->rest->next;
 					break;
 				}
+				tag = ((t_token *)ret->rest->data)->tag;
 			}
 		}
+		ret->rest = ret->rest->next;
 	}
 	// printf("===========cmd=============\n");
     // while(ret->ast->cmd_argv != NULL)

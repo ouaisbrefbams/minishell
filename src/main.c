@@ -40,11 +40,12 @@ int main(int argc, char **argv, char **envp)
 
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
+		//printf("%s\n", argv[2]);
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		 //ft_lstiter(lex_out, token_debug);
+		 ft_lstiter(lex_out, token_debug);
 
-		t_ret *ret = parse(lex_out);
+		 t_ret *ret = parse(lex_out);
 
 		printf("===========cmd=============\n");
 		while(ret->ast->cmd_argv != NULL)
