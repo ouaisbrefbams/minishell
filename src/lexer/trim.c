@@ -27,10 +27,14 @@ char                *del_quote(char *str)
     int             i;
     char            *s;
 
-    i = 1;
-    while(str[++i] != '\0')
+    i = 0;
+    while(str[i++] != '\0')
+    {
+        if(str[i] == '\\')
+            i+=2;
         if (str[i] == '\'' || str[i] == '"')
             break;
+    }
     s = ft_strsubf(str, 1, i - 1);
     return (s);
 }
@@ -46,7 +50,6 @@ t_ftlst             *lexe_trim_out(t_ftlst *lst)
         tk = lst->data;
         if (tk->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
         {
-            //printf("%s\n",tk->content );
             tk->content = del_quote(tk->content);
             if(lst->next == NULL)
                 if (tk->tag & TAG_STICK)
