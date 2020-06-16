@@ -84,7 +84,6 @@ t_token 						*lexer_lst_token_str(char *input, int i, int j)
 		free(lst_token);
 		return(0);
 	}
-	//printf("%s-\n", lst_token->content);
 	return (lst_token);
 }
 
@@ -93,7 +92,6 @@ enum e_token_tag token_verif_stick(t_token *lst_token)
 	int i;
 
 	i = ft_strlen(lst_token->content);
-
 	if (i > 0)
 		if (lst_token->content[i - 1] == ' ')
 			return(lst_token->tag);
@@ -109,7 +107,7 @@ enum e_token_tag token_str_or_cote(t_token *lst_token)
 	{
 		if(lst_token->content[i] == '\'')
 		{
-			return (lst_token->tag = TAG_STR_SINGLE);
+			lst_token->tag = TAG_STR_SINGLE;
 			return(token_verif_stick(lst_token));
 		}
 		if(lst_token->content[i] == '"')
@@ -127,7 +125,7 @@ enum e_token_tag token_str_or_cote(t_token *lst_token)
 	return(0);
 }
 
-t_token			*push_token_enum_and_trim(t_token *lst_token)
+t_token			*push_token_enum(t_token *lst_token)
 {
 	enum e_token_tag 		tk;
 
@@ -137,7 +135,6 @@ t_token			*push_token_enum_and_trim(t_token *lst_token)
 		lst_token->tag = token_str_or_cote(lst_token);
 	else
 		lst_token->tag = tk;
-	//printf("%s-, %d\n",lst_token->content, lst_token->tag);
 	return (lst_token);
 }
 
@@ -154,7 +151,7 @@ static t_ftlst				*create_token_list(char *input, t_ftlst **lst)
 		j = 0;
 		j += check_input(&input[i]);
 		lst_token = lexer_lst_token_str(input,i,j);
-		lst_token = push_token_enum_and_trim(lst_token);
+		lst_token = push_token_enum(lst_token);
 		new = ft_lstnew((void *) lst_token);
 		ft_lstpush_back(lst, new);
 		i += j;
@@ -164,16 +161,15 @@ static t_ftlst				*create_token_list(char *input, t_ftlst **lst)
 
 t_ftlst        			*lexer(char *input)
 {
-	t_ftlst		**lst;
-	/* int			i; */
+	t_ftlst		*lst;
 
 	if (!input)
 		return (0);
-	lst = malloc(sizeof(t_ftlst *) * 1);
+	lst = malloc(sizeof(t_ftlst ) * 1);
 	if (!lst)
 		return(0);
-	*lst = NULL;
-	*lst = create_token_list(input, lst);
-	/* i = ft_lstsize(*lst); */
-	return (*lst);
+	lst = NULL;
+	lst = create_token_list(input, &lst);
+	lst = lexe_trim_out(lst);
+	return (lst);
 }

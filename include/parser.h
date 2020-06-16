@@ -38,8 +38,8 @@
 */
 
 t_ret				*parse(t_ftlst *input);
-t_ast 				*parse_cmd(t_ast *ast, t_ftlst *ret);
-t_ast 				*parse_redir(t_ast *ast, t_ftlst *rest);
+t_ast 				*push_cmd(t_ast *ast, t_ftlst *ret);
+t_ast 				*push_redir(t_ast *ast, t_ftlst *rest);
 
 int                 parse_cmd_str_true_false(enum e_token_tag tag);
 int                 parse_redir_true_false(enum e_token_tag tag);

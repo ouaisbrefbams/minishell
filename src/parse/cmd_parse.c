@@ -11,7 +11,7 @@ int                 parse_cmd_str_true_false(enum e_token_tag tag)
 }
 
 
-t_ast 				*parse_cmd(t_ast *ast, t_ftlst *rest)
+t_ast 				*push_cmd(t_ast *ast, t_ftlst *rest)
 {
     t_ftlst         *new;
 

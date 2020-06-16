@@ -44,5 +44,8 @@ t_token					*token_new(enum e_token_tag tag, char *content);
 void					token_destroy(t_token *token);
 void					token_destroy_lst(t_ftlst *tokens);
 void					token_destroy_lst2(t_ftlst *tokens1, t_ftlst *tokens2);
+t_token					*push_token_enum(t_token *lst_token);
+
+t_ftlst             	*lexe_trim_out(t_ftlst *lst);
 
 #endif
