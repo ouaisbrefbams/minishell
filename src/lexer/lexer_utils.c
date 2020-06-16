@@ -62,6 +62,8 @@ static int             lex_verif_simple_cote(char *input, int i)
     while(input[i] != '\0')
     {
         ++i;
+        if(input[i] == '\\')
+            i+=2;
         if(input[i] == '\'')
             break;
     }
@@ -77,7 +79,11 @@ int             		lexer_verif_entre_cote(char *input, int i)
         return(lex_verif_simple_cote(input, i));
     i++;
     while(input[i] != '"' && (input[i] != '\0'))
+    {
+        if (input[i] == '\\')
+            i += 2;
         ++i;
+    }
     if (input[i + 1] == ' ')
         while(input[i + 1] == ' ')
             i++;

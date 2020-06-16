@@ -34,16 +34,19 @@ t_ret					*parse(t_ftlst *input)
 		}
 		else if (parse_redir_true_false(tag))
 		{
-			ret->ast = push_redir(ret->ast, ret->rest);
-			ret->rest = ret->rest->next;
 			while(ret->rest != NULL)
 			{
 				ret->ast = push_redir(ret->ast, ret->rest);
+				ret->rest = ret->rest->next;
+				ret->ast = push_redir(ret->ast, ret->rest);
 				tag = ((t_token *)ret->rest->data)->tag;
-				if (tag & TAG_IS_STR && tag & TAG_STICK)
+				if ((tag & TAG_IS_STR && tag & TAG_STICK) || tag == TAG_IS_REDIR)
 					ret->rest = ret->rest->next;
 				else
+				{
+					ret->rest = ret->rest->next;
 					break;
+				}
 			}
 		}
 	}

@@ -42,7 +42,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		 ft_lstiter(lex_out, token_debug);
+		 //ft_lstiter(lex_out, token_debug);
 
 		t_ret *ret = parse(lex_out);
 
