@@ -7,6 +7,7 @@
 #include "lexer.h"
 // stdio.h est deja include dans minishell.h temporairement
 // (comme ca on doit le retirer a un seul endroit a la fin)
+// oui je sais maintenant tu peux effacer se petit commantaire ;)
 
 
 
@@ -27,9 +28,7 @@ t_ret					*parse(t_ftlst *input)
 	{
 		tag = ((t_token *)ret->rest->data)->tag;
 		if (parse_cmd_str_true_false(tag))
-		{
 			ret->ast = push_cmd(ret->ast, ret->rest);
-		}
 		else if (parse_redir_true_false(tag))
 		{
 			while(ret->rest != NULL)
@@ -40,10 +39,7 @@ t_ret					*parse(t_ftlst *input)
 				else if (tag & TAG_IS_REDIR)
 					ret->rest = ret->rest->next;
 				else
-				{
-					//ret->rest = ret->rest->next;
 					break;
-				}
 				tag = ((t_token *)ret->rest->data)->tag;
 			}
 		}
