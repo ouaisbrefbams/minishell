@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/15 09:47:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 16:10:31 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,6 @@
 */
 
 # define PIPE_CLOSED -1
-
-/*
-** \brief  Pipe write index
-*/
-
-# define PIPE_WRITE 1
-
-/*
-** \brief  Pipe read index
-*/
-
-# define PIPE_READ 0
 
 # define BUILTIN_NOT_FOUND -2
 

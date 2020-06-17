@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 16:00:40 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 16:17:43 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ static bool				st_open_replace(int *fd, char *filename, int oflag)
 bool					redir_extract(
 		t_ftlst *redirs,
 		t_env env,
-		int *fd_in,
-		int *fd_out)
+		int fds[2])
 {
 	t_ftlst	*after;
 	t_ftlst	*curr;
@@ -66,16 +65,16 @@ bool					redir_extract(
 		return (false);
 	}
 	if ((st_lst_tag(redirs) == TAG_REDIR_IN
-			&& !st_open_replace(fd_in, filename, O_RDONLY))
+			&& !st_open_replace(&fds[FDS_READ], filename, O_RDONLY))
 		|| (st_lst_tag(redirs) == TAG_REDIR_OUT
-			&& !st_open_replace(fd_out, filename, O_WRONLY | O_CREAT | O_TRUNC))
+			&& !st_open_replace(&fds[FDS_WRITE], filename, O_WRONLY | O_CREAT | O_TRUNC))
 		|| (st_lst_tag(redirs) == TAG_REDIR_APPEND
-			&& !st_open_replace(fd_out, filename, O_WRONLY | O_CREAT | O_APPEND)))
+			&& !st_open_replace(&fds[FDS_WRITE], filename, O_WRONLY | O_CREAT | O_APPEND)))
 	{
 		token_destroy_lst2(redirs, after);
 		return (false);
 	}
 	token_destroy_lst(redirs);
 	free(filename);
-	return (redir_extract(after, env, fd_in, fd_out));
+	return (redir_extract(after, env, fds));
 }

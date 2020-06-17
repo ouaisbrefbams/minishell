@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 11:09:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 17:02:07 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 */
 
 int			fork_wrap(
-				int	fd_in,
-				int fd_out,
+				int fds[2],
 				void *passed,
 				int (*wrapped)(void *param))
 {
@@ -33,14 +32,16 @@ int			fork_wrap(
 		return (-1);
 	if (child_pid == 0)
 	{
-		if ((fd_in != MS_NO_FD && dup2(fd_in, STDIN_FILENO) == -1) ||
-			(fd_out != MS_NO_FD && dup2(fd_out, STDOUT_FILENO) == -1))
+		if ((fds[FDS_READ] != MS_NO_FD && dup2(fds[FDS_READ], STDIN_FILENO) == -1) ||
+			(fds[FDS_WRITE] != MS_NO_FD && dup2(fds[FDS_WRITE], STDOUT_FILENO) == -1))
 			exit(EXIT_FAILURE);
 		if ((status = wrapped(passed)) == -1)
 			exit(EXIT_FAILURE);
 		exit(status);
 	}
 	wait(&child_pid);
+	close(fds[FDS_WRITE]);
+	// also read end?
 	return (WEXITSTATUS(child_pid));
 }
 
@@ -56,16 +57,12 @@ int 		forked_cmd(void *void_param)
 		return (execve(param->exec_path, param->argv, (char**)param->env->data));
 }
 
-int		eval_cmd(t_env env, t_path path, t_ast *ast)
+int		eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 {
 	t_fork_param_cmd	param;
-	int					fd_in;
-	int					fd_out;
 	char				**argv;
 
-	fd_in = MS_NO_FD;
-	fd_out = MS_NO_FD;
-	if (!redir_extract(ast->redirs, env, &fd_in, &fd_out))
+	if (!redir_extract(ast->redirs, env, fds))
 	{
 		ast->redirs = NULL;
 		return (-1);
@@ -92,7 +89,7 @@ int		eval_cmd(t_env env, t_path path, t_ast *ast)
 
 	param.argv = argv;
 	param.env = env;
-	int ret = fork_wrap(fd_in, fd_out, &param, &forked_cmd);
+	int ret = fork_wrap(fds, &param, &forked_cmd);
 	ft_split_destroy(argv);
 	return (ret);
 }

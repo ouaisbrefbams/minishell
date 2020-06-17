@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 13:01:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 16:00:58 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ t_ast			*ast_new(enum e_ast_tag tag)
 		return (NULL);
 	ast->tag = tag;
 	ast->redirs = NULL;
-	ast->line.left = NULL;
-	ast->line.right = NULL;
+	ast->op.left = NULL;
+	ast->op.right = NULL;
 	ast->cmd_argv = NULL;
 	return (ast);
 }
@@ -52,10 +52,10 @@ void			ast_destroy(t_ast *ast)
 		ft_lstdestroy(&ast->cmd_argv, (void (*)(void*))token_destroy);
 		ft_lstdestroy(&ast->redirs, (void (*)(void*))token_destroy);
 	}
-	else if (ast->tag == AST_LINE)
+	else if (ast->tag == AST_OP)
 	{
-		ast_destroy(ast->line.left);
-		ast_destroy(ast->line.right);
+		ast_destroy(ast->op.left);
+		ast_destroy(ast->op.right);
 	}
 	free(ast);
 }
