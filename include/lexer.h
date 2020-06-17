@@ -24,6 +24,7 @@ enum                    e_token_tag
 
 	TAG_IS_STR       = TAG_STR | TAG_STR_SINGLE | TAG_STR_DOUBLE,
     TAG_IS_REDIR     = TAG_REDIR_IN | TAG_REDIR_OUT | TAG_REDIR_APPEND,
+    TAG_IS_SEP       = TAG_AND | TAG_END | TAG_OR | TAG_PIPE,
 };
 
 typedef struct

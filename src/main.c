@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/17 15:50:33 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/06/17 20:46:39 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,43 @@ void token_debug(void *v)
 	printf("[%4d %d] (%s)\n", t->tag, !!(t->tag & TAG_STICK), t->content);
 }
 
+void token_put(void *v)
+{
+	t_token *t;
+
+	t= v;
+	printf("%s ", t->content);
+}
+
+void print_level(int level)
+{
+	while (level-- > 0)
+		printf("  ");
+}
+
+void ast_print(int level, t_ast *ast)
+{
+	if (ast->tag == AST_CMD)
+	{
+		print_level(level);
+		ft_lstiter(ast->cmd_argv, token_put);
+	}
+	else
+	{
+		print_level(level);
+		printf("SEP: %d\n", ast->op.sep);
+
+		print_level(level);
+		printf("left:\n");
+		ast_print(level + 1, ast->op.left);
+
+		printf("\n");
+		print_level(level);
+		printf("right:\n");
+		ast_print(level + 1, ast->op.right);
+	}
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_path	path;
@@ -46,6 +83,7 @@ int main(int argc, char **argv, char **envp)
 		 //ft_lstiter(lex_out, token_debug);
 
 		 t_ret *parser_out = parse(lex_out);
+		 ast_print(0, parser_out->ast);
 
 		/* printf("===cmd_argv===\n"); */
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
