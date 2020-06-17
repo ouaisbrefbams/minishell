@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/12 10:51:10 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 12:50:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,18 @@ t_env	env_from_array(char **envp)
 	return (ft_vecpush(env, NULL));
 }
 
+int		env_keycmp(char *var, char *key)
+{
+	size_t	key_len;
+
+	key_len = ft_strlen(key);
+	if (ft_strncmp(var, key, key_len) == 0
+		&& ft_strlen(var) > key_len
+		&& var[key_len] == '=')
+		return (0);
+	return (1);
+}
+
 /**
 ** \brief      Search a key in environment
 ** \param env  Search environment
@@ -50,16 +62,15 @@ t_env	env_from_array(char **envp)
 ** \return     Value after '=' in environment variable array or NULL if not found
 */
 
-// could be a wrapper around ft_lfind
 char	*env_search(t_env env, char *key)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < env->size)
+	while (i < env->size - 1)
 	{
-		if (ft_strncmp((char*)env->data[i], key, ft_strlen(key)) == 0)
-			return (ft_strchr((char*)env->data[i], '=') + 1);
+		if (env_keycmp(env->data[i], key))
+			return (ft_strchr(env->data[i], '=') + 1);
 		i++;
 	}
 	return (NULL);
@@ -88,4 +99,33 @@ char	*env_search_first_match(t_env env, const char *haystack)
 			return (ft_strchr(env->data[i], '=') + 1);
 	}
 	return (NULL);
+}
+
+char	*env_export(t_env env, char *key, char *value)
+{
+	char	*joined;
+	size_t	i;
+
+	if ((joined = ft_strjoin3(key, "=", value)) == NULL)
+		return (NULL);
+	if (env_search(env, key) == NULL)
+	{
+		if (ft_vecinsert(env, env->size - 1, joined) == NULL)
+			return (NULL);
+	}
+	else
+	{
+		i = 0;
+		while (i < env->size - 1)
+		{
+			if (env_keycmp(env->data[i], key) == 0)
+			{
+				free(env->data[i]);
+				env->data[i] = joined;
+				break;
+			}
+			i++;
+		}
+	}
+	return (joined);
 }
