@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/06/17 20:39:25 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 23:00:29 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ t_ret		*parse_op(t_ftlst *input)
 	left_ret = parse_cmd(input);
 	input = left_ret->rest;
 
-	if (input == NULL)//((t_token*)input->data)->tag & TAG_IS_SEP)
+	if (input == NULL) //((t_token*)input->data)->tag & TAG_IS_SEP)
 		return ret_wrap_ast(left_ret->ast, input);
 
 	sep_tag = ((t_token*)input->data)->tag;
@@ -101,6 +101,29 @@ t_ret		*parse_op(t_ftlst *input)
 	ast->op.right = right_ret->ast;
 	ast->op.sep = sep_tag;
 	return ret_wrap_ast(ast, right_ret->rest);
+}
+
+t_ret		*parse_expr(t_ftlst *input)
+{
+	t_ret	*tmp;
+	enum e_token_tag	tag;
+
+	tag = input->data->tag;
+	if (tag == TAG_PARENT_OPEN)
+	{
+		tmp = parse_expr(input->next);
+		input = tmp->rest;
+		tag = input->data->tag;
+		if (tag != TAG_PARENT_CLOSE)
+			return (NULL);
+		input = input->next;
+		tmp->rest = input;
+		return tmp;
+	}
+	tmp = parse_op(input);
+	if (tmp->unexpected != NULL)
+		return tmp;
+	return parse_cmd(input);
 }
 
 t_ret		*parse(t_ftlst *input)
@@ -143,7 +166,7 @@ t_ret		*parse(t_ftlst *input)
 /* 	} */
 /* 	return ast; */
 /* } */
-/*  */
+
 /* t_ret					*parse(t_ftlst *input) */
 /* { */
 /* 	t_ret 				*ret; */

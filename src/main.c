@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/17 20:46:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 22:11:31 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ void ast_print(int level, t_ast *ast)
 	if (ast->tag == AST_CMD)
 	{
 		print_level(level);
+		printf("[ ");
 		ft_lstiter(ast->cmd_argv, token_put);
+		printf(" ]");
 	}
 	else
 	{
@@ -80,7 +82,7 @@ int main(int argc, char **argv, char **envp)
 		//printf("%s\n", argv[2]);
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		 //ft_lstiter(lex_out, token_debug);
+		 ft_lstiter(lex_out, token_debug);
 
 		 t_ret *parser_out = parse(lex_out);
 		 ast_print(0, parser_out->ast);
@@ -90,8 +92,8 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		//int eval_out = eval_cmd(env, path, parser_out->ast);
-		//(void)eval_out;
+		/* int eval_out = eval_cmd(env, path, parser_out->ast); */
+		/* (void)eval_out; */
 	}
 
 	ft_htdestroy(path, free);

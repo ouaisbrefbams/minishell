@@ -2,7 +2,6 @@
 
 #include "parser.h"
 
-
 int                 parse_cmd_str_true_false(enum e_token_tag tag)
 {
     if (tag & TAG_STR || tag & TAG_STR_DOUBLE || tag & TAG_STR_SINGLE)
