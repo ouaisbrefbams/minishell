@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   eval.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 11:09:49 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 15:49:49 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct	s_eval_status
 typedef struct
 {
 	t_eval_state	*state;
-	t_line			*line;
+	t_op			*op;
 	int fd_in;
 	int fd_out;
 }					t_fork_param_line;

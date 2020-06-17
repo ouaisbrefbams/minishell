@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/16 14:49:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 15:50:33 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		int eval_out = eval_cmd(env, path, parser_out->ast);
-		(void)eval_out;
+		//int eval_out = eval_cmd(env, path, parser_out->ast);
+		//(void)eval_out;
 	}
 
 	ft_htdestroy(path, free);

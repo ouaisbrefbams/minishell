@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/14 10:31:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 18:03:33 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 */
 
 t_ret				*parse(t_ftlst *input);
+t_ret				*parse_c(t_ftlst *input);
 t_ast 				*push_cmd(t_ast *ast, t_ftlst *ret);
 t_ast 				*push_redir(t_ast *ast, t_ftlst *rest);
 

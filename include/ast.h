@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/06/14 17:47:10 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 16:43:12 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ struct s_ast;
 */
 
 
-typedef struct			s_line
+typedef struct			s_op
 {
 	struct s_ast		*left;
 	struct s_ast		*right;
 	enum e_token_tag	sep;
-}						t_line;
+}						t_op;
 
 /*
 ** \brief            AST node tag (type)
@@ -49,7 +49,8 @@ typedef struct			s_line
 enum			e_ast_tag
 {
 	AST_CMD,
-	AST_LINE,
+	AST_OP,
+	AST_OP_PARENT,
 };
 
 /*
@@ -67,7 +68,7 @@ typedef struct			s_ast
 	enum e_ast_tag		tag;
 	union
 	{
-		t_line			line;
+		t_op			op;
 		t_ftlst			*cmd_argv;
 	};
 	t_ftlst				*redirs;
