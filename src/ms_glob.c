@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/05 11:44:07 by charles           #+#    #+#             */
-/*   Updated: 2020/06/12 11:51:41 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 14:39:52 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,23 +111,46 @@ t_ftvec			*glob_matches(char *pattern)
 {
 	char				dirname[PATH_MAX];
 	struct s_glob_param	param;
+	bool				absolute;
+	size_t				i;
 
 	if (getcwd(dirname, PATH_MAX) == NULL)
 		return (NULL);
+	absolute = *pattern == '/';
+	if (*pattern == '/')
+		pattern++;
 	if ((param.pattern = ft_strdup(pattern)) == NULL ||
 		(param.matches = ft_vecnew(MATCHES_VEC_START_SIZE)) == NULL)
 	{
 		free(param.pattern);
 		return (NULL);
 	}
-	if (utils_directory_iter(dirname, &param,
+	if (absolute)
+		chdir("/");
+	if (utils_directory_iter(absolute ? "/" : dirname, &param,
 					(t_directory_iter_func)glob_iter) == -1)
 	{
+		chdir(dirname);
 		free(param.pattern);
 		ft_vecdestroy(param.matches, free);
 		return (NULL);
 	}
+	chdir(dirname);
 	free(param.pattern);
+	if (absolute)
+	{
+		i = 0;
+		while (i < param.matches->size)
+		{
+			param.matches->data[i] = ft_strjoinf("/", param.matches->data[i], FT_STRJOINF_SND);
+			if (param.matches->data[i] == NULL)
+			{
+				ft_vecdestroy(param.matches, free);
+				return (NULL);
+			}
+			i++;
+		}
+	}
 	return (param.matches);
 }
 
