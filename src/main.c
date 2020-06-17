@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/16 14:49:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/17 12:46:04 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int main(int argc, char **argv, char **envp)
 		//printf("%s\n", argv[2]);
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		 //ft_lstiter(lex_out, token_debug);
+		 /* ft_lstiter(lex_out, token_debug); */
 
 		 t_ret *parser_out = parse(lex_out);
 
