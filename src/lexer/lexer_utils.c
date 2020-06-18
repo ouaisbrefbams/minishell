@@ -1,5 +1,6 @@
 #include "lexer.h"
 
+// check for append tag
 enum e_token_tag                ret_token_sep_redir_append(char *input, int i)
 {
     if (input[i + 1] ==  '>')
@@ -8,13 +9,14 @@ enum e_token_tag                ret_token_sep_redir_append(char *input, int i)
 
 }
 
+// return token tag corresponding to string id
 enum e_token_tag                ret_token(char *input, int  i)
 {
     if (input[i] == ';')
-        return(TAG_AND);
-    if (input[i] == '&')
         return(TAG_END);
-    if (input[i]  == '|' && input[i + 1] == '|')
+    if (input[i] == '&')
+        return(TAG_AND);
+    if (input[i] == '|' && input[i + 1] == '|')
         return(TAG_OR);
     if(input[i]  == '|')
         return(TAG_PIPE);
@@ -30,6 +32,8 @@ enum e_token_tag                ret_token(char *input, int  i)
 
 }
 
+// check is char is separator
+// ft_strchr(";&|><()", input)
 int                 	lexer_sep(char input)
 {
     char            *sep;
@@ -46,6 +50,7 @@ int                 	lexer_sep(char input)
     return (0);
 }
 
+// skip spaces
 int             		lexe_space(char *input)
 {
     int i;

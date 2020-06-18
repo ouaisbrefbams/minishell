@@ -2,7 +2,6 @@
 
 #include "parser.h"
 
-
 int                 parse_cmd_str_true_false(enum e_token_tag tag)
 {
     if (tag & TAG_STR || tag & TAG_STR_DOUBLE || tag & TAG_STR_SINGLE)
@@ -10,12 +9,10 @@ int                 parse_cmd_str_true_false(enum e_token_tag tag)
     return(0);
 }
 
-
 t_ast 				*push_cmd(t_ast *ast, t_ftlst *rest)
 {
     t_ftlst         *new;
 
-    /* new = rest->data; */
 	if (ast == NULL)
     {
         ast = ast_new(AST_CMD);

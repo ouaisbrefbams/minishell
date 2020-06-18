@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/17 17:10:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/18 13:43:58 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,53 @@
 /* 	ft_vecdestroy(env, free); */
 /* 	return (0); */
 /* } */
+
+void token_put(void *v)
+{
+	t_token *t;
+
+	t= v;
+	printf("%s ", t->content);
+}
+
+void print_level(int level)
+{
+	while (level-- > 0)
+		printf("  ");
+}
+
+void ast_print(int level, t_ast *ast)
+{
+	if (ast->tag == AST_CMD)
+	{
+		print_level(level);
+		printf("cmd: [ ");
+		ft_lstiter(ast->cmd_argv, token_put);
+		printf(" ] redirs: [");
+		ft_lstiter(ast->redirs, token_put);
+		printf(" ]");
+	}
+	else
+	{
+		/* print_level(level); */
+		/* printf("SEP: %d\n", ast->op.sep); */
+		print_level(level);
+		printf("{\n");
+
+		print_level(level);
+		printf(" left:\n");
+		ast_print(level + 1, ast->op.left);
+
+		printf("\n");
+		print_level(level);
+		printf(" right:\n");
+		ast_print(level + 1, ast->op.right);
+
+		printf("\n");
+		print_level(level);
+		printf("}\n");
+	}
+}
 
 int main(int argc, char **argv, char **envp)
 {

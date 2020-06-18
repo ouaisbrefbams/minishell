@@ -12,7 +12,6 @@ t_ast 				*push_redir(t_ast *ast, t_ftlst *rest)
 {
     t_ftlst         *new;
 
-    /* new = rest->data; */
 	if (ast == NULL)
     {
         ast = ast_new(AST_CMD);

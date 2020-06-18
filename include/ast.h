@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/06/17 16:34:45 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/18 13:35:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ enum			e_ast_tag
 {
 	AST_CMD,
 	AST_OP,
+	AST_OP_PARENT,
 };
 
 /*
@@ -65,11 +66,11 @@ enum			e_ast_tag
 typedef struct			s_ast
 {
 	enum e_ast_tag		tag;
-	// union
-	// {
+	union
+	{
 		t_op			op;
 		t_ftlst			*cmd_argv;
-	// };
+	};
 	t_ftlst				*redirs;
 }						t_ast;
 

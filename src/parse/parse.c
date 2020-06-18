@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
+/*   Updated: 2020/06/18 12:48:20 by nahaddac         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 /*
 ** \file   parse.c
 ** \brief  Parser
@@ -5,61 +17,114 @@
 
 #include "parser.h"
 #include "lexer.h"
-// stdio.h est deja include dans minishell.h temporairement
-// (comme ca on doit le retirer a un seul endroit a la fin)
 
 
-
-t_ret					*parse(t_ftlst *input)
+t_ftlst					*push_token(t_ftlst **tokens, t_token *pushed)
 {
-	t_ret 				*ret;
-	t_ret 				*first;
-	enum e_token_tag 	tag;
+	t_ftlst *tmp;
 
-	if(!(ret = malloc(sizeof(t_ret) * 1)))
-		return(NULL);
-	ret->rest = input;
-	ret->ast = NULL;
+	if ((tmp = ft_lstnew(pushed)) == NULL)
+		return (NULL);
+	ft_lstpush_back(tokens, tmp);
+	return (tmp);
+}
+
+t_ret					*ret_wrap_ast(t_ast *ast, t_ftlst *rest)
+{
+	t_ret	*ret;
+
+	if ((ret = malloc(sizeof(t_ret))) == NULL)
+		return (NULL);
 	ret->unexpected = NULL;
-	first = ret;
+	ret->rest = rest;
+	ret->ast = ast;
+	return ret;
+}
 
-	while (ret->rest != NULL)
+t_ret                   *parse_cmd(t_ftlst *input)
+{
+	enum e_token_tag    tag;
+	t_ast               *ast;
+
+	ast = ast_new(AST_CMD);
+	while (input != NULL)
 	{
-		tag = ((t_token *)ret->rest->data)->tag;
-		if (parse_cmd_str_true_false(tag))
+		tag = ((t_token *)input->data)->tag;
+		if (tag & TAG_IS_STR)
 		{
-			ret->ast = push_cmd(ret->ast, ret->rest);
+			push_token(&ast->cmd_argv, input->data);
 		}
-		else if (parse_redir_true_false(tag))
+		else if (tag & TAG_IS_REDIR)
 		{
-			while(ret->rest != NULL)
+			while(input != NULL)
 			{
-				ret->ast = push_redir(ret->ast, ret->rest);
+				push_token(&ast->redirs, input->data);
 				if (tag & TAG_IS_STR && tag & TAG_STICK)
-					ret->rest = ret->rest->next;
+					input = input->next;
 				else if (tag & TAG_IS_REDIR)
-					ret->rest = ret->rest->next;
+					input = input->next;
 				else
-				{
-					//ret->rest = ret->rest->next;
 					break;
-				}
-				tag = ((t_token *)ret->rest->data)->tag;
+				tag = ((t_token *)input->data)->tag;
 			}
 		}
-		ret->rest = ret->rest->next;
+		else
+			return ret_wrap_ast(ast, input);
+		input = input->next;
 	}
-    /* while(ret->ast->cmd_argv != NULL) */
-    /*  { */
-	/* 	 printf("[%s]\n", ((t_token *)ret->ast->cmd_argv->data)->content); */
-    /*      ret->ast->cmd_argv = ret->ast->cmd_argv->next; */
-    /*  } */
-	/*  while(ret->ast->redirs != NULL) */
-	/*  { */
-	/* 	 printf("[%s]\n", ((t_token *)ret->ast->redirs->data)->content); */
-	/* 	 ret->ast->redirs = ret->ast->redirs->next; */
-	/*  } */
-	/* ast_destroy(ret->ast); */
-	/* ft_lstdestroy(&ret->rest, (void (*)(void*))token_destroy); */
-	return first;
+	return ret_wrap_ast(ast, input);
+}
+
+// <cmd>  ::= (<string> | <redir>)+
+// <op>   ::= <expr> <sep> <op> | <expr>
+// <expr> ::= '(' <op> ')' | <cmd>
+
+t_ret		*parse_op(t_ftlst *input)
+{
+	t_ast			*ast;
+	t_ret			*left_ret;
+	t_ret			*right_ret;
+	enum e_token_tag sep_tag;
+
+	left_ret = parse_expr(input);
+	input = left_ret->rest;
+
+	if (input == NULL || ((t_token*)input->data)->tag == TAG_PARENT_CLOSE)
+		return ret_wrap_ast(left_ret->ast, input);
+
+	sep_tag = ((t_token*)input->data)->tag;
+	input = input->next;
+
+	right_ret = parse_op(input);
+
+	ast = ast_new(AST_OP);
+	ast->op.left = left_ret->ast;
+	ast->op.right = right_ret->ast;
+	ast->op.sep = sep_tag;
+	return ret_wrap_ast(ast, right_ret->rest);
+}
+
+t_ret		*parse_expr(t_ftlst *input)
+{
+	t_ret				*tmp;
+	enum e_token_tag	tag;
+
+	tag = ((t_token*)input->data)->tag;
+	if (tag == TAG_PARENT_OPEN)
+	{
+		tmp = parse_op(input->next);
+		input = tmp->rest;
+		tag = ((t_token*)input->data)->tag;
+		if (tag != TAG_PARENT_CLOSE)
+			return (NULL);
+		input = input->next;
+		tmp->rest = input;
+		return tmp;
+	}
+	return parse_cmd(input);
+}
+
+t_ret		*parse(t_ftlst *input)
+{
+	return parse_op(input);
 }
