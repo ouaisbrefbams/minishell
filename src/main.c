@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/17 22:11:31 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/18 11:26:02 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,23 +48,31 @@ void ast_print(int level, t_ast *ast)
 	if (ast->tag == AST_CMD)
 	{
 		print_level(level);
-		printf("[ ");
+		printf("cmd: [ ");
 		ft_lstiter(ast->cmd_argv, token_put);
+		printf(" ] redirs: [");
+		ft_lstiter(ast->redirs, token_put);
 		printf(" ]");
 	}
 	else
 	{
+		/* print_level(level); */
+		/* printf("SEP: %d\n", ast->op.sep); */
 		print_level(level);
-		printf("SEP: %d\n", ast->op.sep);
+		printf("{\n");
 
 		print_level(level);
-		printf("left:\n");
+		printf(" left:\n");
 		ast_print(level + 1, ast->op.left);
 
 		printf("\n");
 		print_level(level);
-		printf("right:\n");
+		printf(" right:\n");
 		ast_print(level + 1, ast->op.right);
+
+		printf("\n");
+		print_level(level);
+		printf("}\n");
 	}
 }
 
@@ -82,7 +90,7 @@ int main(int argc, char **argv, char **envp)
 		//printf("%s\n", argv[2]);
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 
-		 ft_lstiter(lex_out, token_debug);
+		 /* ft_lstiter(lex_out, token_debug); */
 
 		 t_ret *parser_out = parse(lex_out);
 		 ast_print(0, parser_out->ast);
