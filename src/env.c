@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/17 12:50:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/18 14:33:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*env_search(t_env env, char *key)
 	i = 0;
 	while (i < env->size - 1)
 	{
-		if (env_keycmp(env->data[i], key))
+		if (env_keycmp(env->data[i], key) == 0)
 			return (ft_strchr(env->data[i], '=') + 1);
 		i++;
 	}
