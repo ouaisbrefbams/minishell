@@ -9,9 +9,9 @@ int 			len_is_not_sep(char *input)
 	{
 		if (lexer_sep(input[i]))
 		{
-			if (input[i + 1] == ' ')
-				while(input[++i] == ' ')
-					;
+			//if (input[i + 1] == ' ')
+			//	while(input[++i] == ' ')
+			//		;
 			return(i);
 		}
 		if (input[i] == '\'' || input[i] == '"')

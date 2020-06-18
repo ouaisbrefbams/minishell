@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/06/18 12:40:23 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/06/18 12:48:20 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,6 @@ t_ret                   *parse_cmd(t_ftlst *input)
 // <cmd>  ::= (<string> | <redir>)+
 // <op>   ::= <expr> <sep> <op> | <expr>
 // <expr> ::= '(' <op> ')' | <cmd>
-
-t_ret		*parse_expr(t_ftlst *input);
 
 t_ret		*parse_op(t_ftlst *input)
 {
