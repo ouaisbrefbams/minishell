@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/06/17 16:43:12 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/06/18 13:35:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 struct s_ast;
 
 /*
-** \brief            Line struct
+** \brief            Operation struct
 ** \param left       AST to the left of separator
 ** \param right      AST to the right of separator
 ** \param sep        Type of separator
@@ -43,7 +43,7 @@ typedef struct			s_op
 /*
 ** \brief            AST node tag (type)
 ** \param TAG_CMD    Command AST node
-** \param TAG_LINE   Line AST node
+** \param TAG_OP     Operation AST node
 */
 
 enum			e_ast_tag
@@ -56,7 +56,7 @@ enum			e_ast_tag
 /*
 ** \brief             AST node struct
 ** \param tag         Node tag
-** \param line        Line struct
+** \param op          Operation struct
 ** \param cmd_argv    Array of string tokens
 ** \param in          STDIN redirection string tokens
 ** \param out         STDOUT redirection string tokens

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/17 15:49:49 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/06/18 13:38:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 */
 
 # include "minishell.h"
+# include "lexer.h"
 # include "ast.h"
 
 /*
@@ -47,7 +48,7 @@ typedef struct
 	t_op			*op;
 	int fd_in;
 	int fd_out;
-}					t_fork_param_line;
+}					t_fork_param_op;
 
 typedef struct
 {
@@ -57,21 +58,16 @@ typedef struct
 	t_builtin_func	builtin;
 }					t_fork_param_cmd;
 
-#define MS_NO_FD -2
+# define MS_NO_FD -2
+# define FDS_WRITE 1
+# define FDS_READ 0
 
 /*
-** eval.c
+** op.c
 */
 
-int				eval(int fd_in, int fd_out, t_eval_state *state, t_ast *ast);
-
-/*
-** exec.c
-*/
-
-bool			exec_is_path(char *path_str);
-bool			exec_is_valid(char *exec_path);
-char			*exec_search_path(t_path path, char *path_var, char *exec_name);
+int			eval_op(int fds[2], t_env env, t_path path, t_op *op);
+int			eval(int fds[2], t_env env, t_path path, t_ast *ast);
 
 enum			e_error
 {
@@ -99,12 +95,21 @@ void			error_eval_put(enum e_error id, char *unexpected);
 ** cmd.c
 */
 
-int				eval_cmd(t_env env, t_path path, t_ast *ast);
+int				fork_wrap(int fds[2], void *passed, int (*wrapped)(void *param));
+int				eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast);
 
 /*
 ** redir.c
 */
 
-bool			redir_extract(t_ftlst *redirs, t_env env, int *fd_in, int *fd_out);
+bool			redir_extract(t_ftlst *redirs, t_env env, int fds[2]);
+
+/*
+** exec.c
+*/
+
+bool	exec_is_path(char *exec_name);
+bool	exec_is_valid(char *exec_path);
+char	*exec_search_path(t_path path, char *path_var, char *exec_name);
 
 #endif

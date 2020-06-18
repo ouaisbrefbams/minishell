@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/18 12:40:22 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/06/18 14:04:07 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 
 
 t_ret				*parse(t_ftlst *input);
-t_ret		        *parse_op(t_ftlst *input)
+t_ret		        *parse_op(t_ftlst *input);
 t_ret		        *parse_expr(t_ftlst *input);
 t_ret               *parse_cmd(t_ftlst *input);
 

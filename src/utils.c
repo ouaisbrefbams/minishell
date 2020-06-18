@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/09 15:49:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/18 13:46:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		utils_directory_iter(
 	DIR				*dir;
 	struct dirent	*entry;
 
-	if ((dir = opendir(dirname)) == NULL)
+	if ((dir = opendir(dirname)) == NULL)  // add fail safe
 		return (-1);
 	while ((entry = readdir(dir)) != NULL)
 		if (f(dirname, entry, param) == -1)
