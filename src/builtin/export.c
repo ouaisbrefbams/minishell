@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/04/03 12:11:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/18 13:50:47 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,35 @@
 ** \brief  `export` builtin
 */
 
+// modify existing
+// set with no string without '='
+// TODO: multiple exported variable (e.g export A=a B=b C=c)
+
 #include "minishell.h"
 
 int	builtin_export(char **argv, t_env env)
 {
-	char	*tmp;
+	char	*temp;
+	size_t  i;
 
-	// modify existing
-	// set with no string without '='
-	if (ft_strchr(argv[1], '=') == NULL)
-		return (1);
-	if ((tmp = ft_strdup(argv[1])) == NULL)
-		return (2);
-	if (ft_vecinsert(env, env->size - 1, tmp) == NULL)
-		return (2); // internal error code
-	return (0);
+	(void)env;
+	if (argv[1] == NULL)
+		return (4);
+	if(ft_isdigit(argv[1][0]))
+		return(0);
+	i = 0;
+	temp = argv[1];
+	while(temp[i] != '\0')
+	{
+		if(temp[i] == ' ' || ft_isalnum(temp[i]) == 0)
+			return(2);
+		if (temp[i] == '=')
+		{
+			temp[i] = '\0';
+			env_export(env, temp, argv[1][i + 1]);
+			return(0);
+		}
+		i++;
+	}
+	return (3);
 }
