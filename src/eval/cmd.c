@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/06/17 17:02:07 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 12:03:13 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int		eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 		return (-1);
 	}
 
+	// can have no command (e.g `< file`)
 	param.builtin = builtin_search_func(argv[0]);
 	if (param.builtin == NULL)
 	{

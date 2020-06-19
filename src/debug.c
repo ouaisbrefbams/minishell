@@ -38,9 +38,11 @@ void ast_print(int level, t_ast *ast)
 	}
 	else
 	{
-		/* print_level(level); */
 		/* printf("SEP: %d\n", ast->op.sep); */
 		print_level(level);
+		printf("redirs: [");
+		ft_lstiter(ast->redirs, token_put);
+		printf(" ] ");
 		printf("{\n");
 
 		print_level(level);

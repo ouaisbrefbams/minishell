@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/18 13:38:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 12:18:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,13 @@
 # include "lexer.h"
 # include "ast.h"
 
-/*
-** \brief        Evaluation state struct
-*/
-
 typedef struct
 {
 	t_path		path;
 	t_env		env;
-}				t_eval_state;
-
-/*
-** \brief      Evaluation status struct
-*/
-
-typedef struct	s_eval_status
-{
-	char		*err;
-	int			status;
-}				t_eval_status;
-
-typedef struct
-{
-	t_eval_state	*state;
-	t_op			*op;
-	int fd_in;
-	int fd_out;
-}					t_fork_param_op;
+	t_ast		*ast;
+	int			fds[2];
+}					t_fork_param_parent;
 
 typedef struct
 {
@@ -66,7 +46,7 @@ typedef struct
 ** op.c
 */
 
-int			eval_op(int fds[2], t_env env, t_path path, t_op *op);
+int			eval_op(int fds[2], t_env env, t_path path, t_ast *ast);
 int			eval(int fds[2], t_env env, t_path path, t_ast *ast);
 
 enum			e_error

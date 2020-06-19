@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/06/18 13:35:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 10:40:34 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ typedef struct			s_op
 
 enum			e_ast_tag
 {
-	AST_CMD,
-	AST_OP,
-	AST_OP_PARENT,
+	AST_CMD    = 1 << 0,
+	AST_OP     = 1 << 1,
+	AST_PARENT = 1 << 2,
 };
 
 /*

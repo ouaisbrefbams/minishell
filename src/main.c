@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/18 14:38:24 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 12:16:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,16 @@ int main(int argc, char **argv, char **envp)
 	{
 		//printf("%s\n", argv[2]);
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
+		if (lex_out == NULL)
+			return (1);
 
 		 //ft_lstiter(lex_out, token_debug);
 
 		 t_ret *parser_out = parse(lex_out);
+		 if (parser_out == NULL || parser_out->unexpected != NULL)
+			 return (1);
+
+		 /* ast_print(0, parser_out->ast); */
 
 		/* printf("===cmd_argv===\n"); */
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
@@ -58,6 +64,12 @@ int main(int argc, char **argv, char **envp)
 	ft_vecdestroy(env, free);
 	return (0);
 }
+
+
+
+/////////////////////////////////////////////////////////////
+// eval
+/////////////////////////////////////////////////////////////
 
 /* int main(int argc, char **argv, char **envp) */
 /* { */
