@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/19 13:30:40 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 13:37:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,16 @@ int main(int argc, char **argv, char **envp)
 		 if (parser_out == NULL || parser_out->unexpected != NULL)
 			 return (1);
 
-		 /* ast_print(0, parser_out->ast); */
+		 ast_print(0, parser_out->ast);
 
 		/* printf("===cmd_argv===\n"); */
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		int fds[2] = {MS_NO_FD, MS_NO_FD};
-		int eval_out = eval(fds, env, path, parser_out->ast);
-		(void)eval_out;
+		/* int fds[2] = {MS_NO_FD, MS_NO_FD}; */
+		/* int eval_out = eval(fds, env, path, parser_out->ast); */
+		/* (void)eval_out; */
 	}
 
 	ft_htdestroy(path, free);

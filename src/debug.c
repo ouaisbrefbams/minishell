@@ -27,6 +27,15 @@ void print_level(int level)
 
 void ast_print(int level, t_ast *ast)
 {
+	if (ast->tag == AST_PARENT)
+	{
+		print_level(level);
+		printf("parent: redir [ ");
+		ft_lstiter(ast->redirs, token_put);
+		printf(" ]\n");
+		ast_print(level + 1, ast->parent_ast);
+
+	}
 	if (ast->tag == AST_CMD)
 	{
 		print_level(level);
@@ -40,9 +49,9 @@ void ast_print(int level, t_ast *ast)
 	{
 		/* printf("SEP: %d\n", ast->op.sep); */
 		print_level(level);
-		printf("redirs: [");
-		ft_lstiter(ast->redirs, token_put);
-		printf(" ] ");
+		/* printf("redirs: ["); */
+		/* ft_lstiter(ast->redirs, token_put); */
+		/* printf(" ] "); */
 		printf("{\n");
 
 		print_level(level);
