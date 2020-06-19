@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/19 17:46:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 19:12:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int main(int argc, char **argv, char **envp)
 
 		/* ft_lstiter(lex_out, token_debug); */
 		t_ret *parser_out = parse(lex_out);
-
 
 		/* t_ret *parser_out = parse(lex_out); */
 		/* if (parser_out == NULL || parser_out->unexpected != NULL) */

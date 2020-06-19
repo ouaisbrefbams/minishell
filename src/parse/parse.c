@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/06/19 16:03:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 19:12:25 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,28 @@ t_ret					*ret_wrap_ast(t_ast *ast, t_ftlst *rest)
 	return ret;
 }
 
+t_ftlst					*parse_redir(t_ftlst *input, t_ftlst **redirs)
+{
+	enum e_token_tag    tag;
+
+	push_token(redirs, input->data);
+	input = input->next;
+	tag = ((t_token *)input->data)->tag;
+	while(input != NULL
+			&& input->next != NULL
+			&& (((t_token*)input->next->data)->tag & TAG_IS_STR)
+			&& tag & TAG_IS_STR && tag & TAG_STICK)
+	{
+		push_token(redirs, input->data);
+		input = input->next;
+		tag = ((t_token *)input->data)->tag;
+	}
+	if (!(tag & TAG_IS_STR))
+		return (NULL);
+	push_token(redirs, input->data);
+	return (input);
+}
+
 t_ret                   *parse_cmd(t_ftlst *input)
 {
 	enum e_token_tag    tag;
@@ -51,30 +73,15 @@ t_ret                   *parse_cmd(t_ftlst *input)
 	{
 		tag = ((t_token *)input->data)->tag;
 		if (tag & TAG_IS_STR)
-		{
 			push_token(&ast->cmd_argv, input->data);
-		}
 		else if (tag & TAG_IS_REDIR)
 		{
-			while(input != NULL)
-			{
-				push_token(&ast->redirs, input->data);
-				if (tag & TAG_IS_STR && tag & TAG_STICK)
-				{
-					input = input->next;
-					tag = ((t_token *)input->data)->tag;
-					if (!(tag & TAG_IS_STR) || !(tag & TAG_IS_REDIR))
-						return ret_wrap_ast(ast, input);
-				}
-				else if (tag & TAG_IS_REDIR)
-					input = input->next;
-				else
-					break;
-				tag = ((t_token *)input->data)->tag;
-			}
+			input = parse_redir(input, &ast->redirs);
 		}
 		else
-			return ret_wrap_ast(ast, input);
+			break;
+		if (input == NULL)
+			break;
 		input = input->next;
 	}
 	return ret_wrap_ast(ast, input);
@@ -92,6 +99,7 @@ t_ret		*parse_op(t_ftlst *input)
 	enum e_token_tag tag;
 
 	left_ret = parse_expr(input);
+	/* printf("%p\n", left_ret); */
 	input = left_ret->rest;
 
 	if (input == NULL || ((t_token*)input->data)->tag == TAG_PARENT_CLOSE)
@@ -130,8 +138,9 @@ t_ret       *parse_expr(t_ftlst *input)
 		if (input == NULL)
 			return tmp;
 
+		// could reuse parse_redir instead
 		tag = ((t_token*)input->data)->tag;
-		if (tag & TAG_IS_REDIR)
+		while (tag & TAG_IS_REDIR)
 		{
 			while(input != NULL)
 			{
@@ -145,6 +154,9 @@ t_ret       *parse_expr(t_ftlst *input)
 					break;
 			}
 			input = input->next;
+			if (input == NULL)
+				break;
+			tag = ((t_token*)input->data)->tag;
 		}
 		/* token_debug(input->data); */
 
