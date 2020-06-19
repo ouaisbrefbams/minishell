@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/06/19 13:38:23 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 16:03:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,12 @@ t_ret                   *parse_cmd(t_ftlst *input)
 			{
 				push_token(&ast->redirs, input->data);
 				if (tag & TAG_IS_STR && tag & TAG_STICK)
+				{
 					input = input->next;
+					tag = ((t_token *)input->data)->tag;
+					if (!(tag & TAG_IS_STR) || !(tag & TAG_IS_REDIR))
+						return ret_wrap_ast(ast, input);
+				}
 				else if (tag & TAG_IS_REDIR)
 					input = input->next;
 				else
@@ -84,7 +89,7 @@ t_ret		*parse_op(t_ftlst *input)
 	t_ast			*ast;
 	t_ret			*left_ret;
 	t_ret			*right_ret;
-	enum e_token_tag sep_tag;
+	enum e_token_tag tag;
 
 	left_ret = parse_expr(input);
 	input = left_ret->rest;
@@ -92,7 +97,7 @@ t_ret		*parse_op(t_ftlst *input)
 	if (input == NULL || ((t_token*)input->data)->tag == TAG_PARENT_CLOSE)
 		return ret_wrap_ast(left_ret->ast, input);
 
-	sep_tag = ((t_token*)input->data)->tag;
+	tag = ((t_token*)input->data)->tag;
 	input = input->next;
 
 	right_ret = parse_op(input);
@@ -100,7 +105,7 @@ t_ret		*parse_op(t_ftlst *input)
 	ast = ast_new(AST_OP);
 	ast->op.left = left_ret->ast;
 	ast->op.right = right_ret->ast;
-	ast->op.sep = sep_tag;
+	ast->op.sep = tag;
 	return ret_wrap_ast(ast, right_ret->rest);
 }
 
@@ -108,6 +113,7 @@ t_ret       *parse_expr(t_ftlst *input)
 {
     t_ret               *tmp;
     enum e_token_tag    tag;
+
     tag = ((t_token*)input->data)->tag;
     if (tag == TAG_PARENT_OPEN)
     {
@@ -117,13 +123,19 @@ t_ret       *parse_expr(t_ftlst *input)
         if (tag != TAG_PARENT_CLOSE)
             return (NULL);
         input = input->next;
+
         t_ast *new_ast = ast_new(AST_PARENT);
         new_ast->parent_ast = tmp->ast;
         tmp->ast = new_ast;
+		if (input == NULL)
+			return tmp;
+
+		tag = ((t_token*)input->data)->tag;
 		if (tag & TAG_IS_REDIR)
 		{
 			while(input != NULL)
 			{
+				tag = ((t_token *)input->data)->tag;
 				push_token(&tmp->ast->redirs, input->data);
 				if (tag & TAG_IS_STR && tag & TAG_STICK)
 					input = input->next;
@@ -131,9 +143,11 @@ t_ret       *parse_expr(t_ftlst *input)
 					input = input->next;
 				else
 					break;
-				tag = ((t_token *)input->data)->tag;
 			}
+			input = input->next;
 		}
+		/* token_debug(input->data); */
+
         tmp->rest = input;
         return tmp;
     }

@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/06/19 13:34:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/19 17:32:43 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ int			eval_parent(int fds[2], t_env env, t_path path, t_ast *ast)
 	param.env = env;
 	param.path = path;
 	ast->tag ^= AST_PARENT;
-	param.ast = ast;
+	param.ast = ast->parent_ast;
 	return (fork_wrap(fds, &param, wrapped_eval));
 }
 
 int			eval(int fds[2], t_env env, t_path path, t_ast *ast)
 {
-	if (ast->tag & AST_PARENT)
+	if (ast->tag == AST_PARENT)
 		return (eval_parent(fds, env, path, ast));
 	if (ast->tag == AST_OP)
 		return (eval_op(fds, env, path, ast));
