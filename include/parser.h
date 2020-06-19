@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/18 14:04:07 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/06/18 16:34:18 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSE_H
 
 # include "minishell.h"
+#include "libft_str.h"
 # include "ast.h"
 
 /*
@@ -53,5 +54,8 @@ t_ast 				*push_cmd(t_ast *ast, t_ftlst *ret);
 t_ast 				*push_redir(t_ast *ast, t_ftlst *rest);
 int                 parse_cmd_str_true_false(enum e_token_tag tag);
 int                 parse_redir_true_false(enum e_token_tag tag);
+
+// error
+t_token                 *error_syntax_simple(t_ftlst *in);
 
 #endif
