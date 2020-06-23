@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/06/19 19:12:25 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/23 08:35:29 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ t_ret       *parse_expr(t_ftlst *input)
 t_ret		*parse(t_ftlst *input)
 {
 	t_ret *ret;
-	t_ftlst *in_f;
+	/* t_ftlst *in_f; */
 
 	/* in_f = input; */
 	/* if (input == NULL) */

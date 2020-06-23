@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/09 13:38:08 by charles           #+#    #+#             */
-/*   Updated: 2020/06/15 11:38:24 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/23 08:55:32 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,22 @@
 
 t_token				*token_new(enum e_token_tag tag, char *content)
 {
+	size_t	len;
+
+	if (content != NULL)
+		len = ft_strlen(content);
+	return (token_new_until(tag, content, len));
+}
+
+t_token				*token_new_until(enum e_token_tag tag, char *content, int n)
+{
 	t_token			*token;
 
 	if ((token = (t_token*)malloc(sizeof(t_token))) == NULL)
 		return (NULL);
 	if (content == NULL)
 		token->content = NULL;
-	else if ((token->content = ft_strdup(content)) == NULL)
+	else if ((token->content = ft_strndup(content, n)) == NULL)
 	{
 		free(token);
 		return (NULL);

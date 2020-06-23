@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/18 13:45:27 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/23 08:32:46 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,14 @@ typedef int	(*t_builtin_func)(char **argv, t_env env);
 ** \param func  Associated function
 */
 
-struct					s_builtin_entry
+typedef struct
 {
 	char				*name;
 	t_builtin_func		func;
-};
+	bool				child_process;
+}						t_builtin_entry;
 
-t_builtin_func			builtin_search_func(char *name);
+t_builtin_entry			*builtin_search_func(char *name);
 
 int						builtin_echo(char **argv, t_env env);
 int						builtin_cd(char **argv, t_env env);

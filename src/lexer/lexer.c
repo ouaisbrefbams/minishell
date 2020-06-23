@@ -69,24 +69,24 @@ int 					check_input_out(char *input)
 	return(0);
 }
 
-t_token 						*lexer_lst_token_str(char *input, int i, int j)
-{
-	t_token 					*lst_token;
-
-	if (!(lst_token = malloc(sizeof(t_token) * 1)))
-		return (NULL);
-	lst_token->tag = 0;
-	lst_token->content = NULL;
-	if (!(lst_token->content = malloc(sizeof(char) * j + 1)))
-		return(0);
-	if (!(ft_strlcpy(lst_token->content, &input[i], j + 1)))
-	{
-		free(lst_token);
-		return(0);
-	}
-
-	return (lst_token);
-}
+/* t_token 						*lexer_lst_token_str(char *input, int i, int j) */
+/* { */
+/* 	t_token 					*lst_token; */
+/*  */
+/* 	if (!(lst_token = malloc(sizeof(t_token) * 1))) */
+/* 		return (NULL); */
+/* 	lst_token->tag = 0; */
+/* 	lst_token->content = NULL; */
+/* 	if (!(lst_token->content = malloc(sizeof(char) * j + 1))) */
+/* 		return(0); */
+/* 	if (!(ft_strlcpy(lst_token->content, &input[i], j + 1))) */
+/* 	{ */
+/* 		free(lst_token); */
+/* 		return(0); */
+/* 	} */
+/*  */
+/* 	return (lst_token); */
+/* } */
 
 enum e_token_tag token_verif_stick(t_token *lst_token)
 {
@@ -151,9 +151,10 @@ static t_ftlst				*create_token_list(char *input, t_ftlst **lst)
 	{
 		j = 0;
 		j += check_input(&input[i]);
-		lst_token = lexer_lst_token_str(input,i,j);
+		/* lst_token = lexer_lst_token_str(input,i,j); */
+		lst_token = token_new_until(0, input + i, j);
 		lst_token = push_token_enum(lst_token);
-		new = ft_lstnew((void *) lst_token);
+		new = ft_lstnew(lst_token);
 		ft_lstpush_back(lst, new);
 		i += j;
 	}
@@ -165,10 +166,7 @@ t_ftlst        			*lexer(char *input)
 	t_ftlst		*lst;
 
 	if (!input)
-		return (0);
-	lst = malloc(sizeof(t_ftlst ) * 1);
-	if (!lst)
-		return(0);
+		return (NULL);
 	lst = NULL;
 	lst = create_token_list(input, &lst);
 	lst = lexe_trim_out(lst);

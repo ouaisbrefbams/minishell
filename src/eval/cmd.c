@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/06/19 12:03:13 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/23 09:04:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,13 @@ int 		forked_cmd(void *void_param)
 	t_fork_param_cmd	*param;
 
 	param = void_param;
-
 	if (param->builtin != NULL)
-		return (param->builtin(param->argv, param->env));
+		return (param->builtin->func(param->argv, param->env));
 	else
 		return (execve(param->exec_path, param->argv, (char**)param->env->data));
 }
 
-int		eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
+int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 {
 	t_fork_param_cmd	param;
 	char				**argv;
@@ -76,6 +75,8 @@ int		eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	}
 
 	// can have no command (e.g `< file`)
+	if (argv[0] == NULL)
+		return (0);
 	param.builtin = builtin_search_func(argv[0]);
 	if (param.builtin == NULL)
 	{
@@ -87,6 +88,8 @@ int		eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 			return (-1); // return error status
 		}
 	}
+	else if (!param.builtin->child_process)
+		return (param.builtin->func(argv, env));
 
 	param.argv = argv;
 	param.env = env;

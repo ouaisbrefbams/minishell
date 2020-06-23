@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/06/19 10:51:30 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/06/23 08:55:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int                     lexer_verif_entre_cote(char *input, int i);
 int                     lexe_space(char *input);
 
 t_token					*token_new(enum e_token_tag tag, char *content);
+t_token					*token_new_until(enum e_token_tag tag, char *content, int n);
 void					token_destroy(t_token *token);
 void					token_destroy_lst(t_ftlst *tokens);
 void					token_destroy_lst2(t_ftlst *tokens1, t_ftlst *tokens2);

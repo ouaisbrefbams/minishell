@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/19 12:18:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/06/23 08:33:02 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct
 	char			*exec_path;
 	char			**argv;
 	t_env			env;
-	t_builtin_func	builtin;
+	t_builtin_entry	*builtin;
 }					t_fork_param_cmd;
 
 # define MS_NO_FD -2
