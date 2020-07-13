@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/06/23 08:33:02 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/13 09:54:40 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ typedef struct
 # define MS_NO_FD -2
 # define FDS_WRITE 1
 # define FDS_READ 0
+
+extern pid_t	g_child_pid;
 
 /*
 ** op.c
