@@ -14,7 +14,7 @@ enum e_token_tag                ret_token(char *input, int  i)
 {
     if (input[i] == ';')
         return(TAG_END);
-    if (input[i] == '&')
+    if (input[i] == '&' && input[i + 1] == '&')
         return(TAG_AND);
     if (input[i] == '|' && input[i + 1] == '|')
         return(TAG_OR);
@@ -66,11 +66,11 @@ static int             lex_verif_simple_cote(char *input, int i)
     i++;
     while(input[i] != '\0')
     {
-        ++i;
         if(input[i] == '\\')
             i+=1;
         if(input[i] == '\'')
             break;
+        ++i;
     }
     if (input[i + 1] == ' ')
         while(input[i + 1] == ' ')

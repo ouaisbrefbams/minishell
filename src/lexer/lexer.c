@@ -8,12 +8,7 @@ int 			len_is_not_sep(char *input)
 	while(input[++i])
 	{
 		if (lexer_sep(input[i]))
-		{
-			//if (input[i + 1] == ' ')
-			//	while(input[++i] == ' ')
-			//		;
 			return(i);
-		}
 		if (input[i] == '\'' || input[i] == '"')
 			return(i);
 		if (input[i] == ' ')
@@ -31,8 +26,8 @@ int				check_input(char *input)
 	int 				i;
 
 	i = 0;
-	/* if (input[i] == '(' || input[i] == ')') */
-	/* 	return (i + 1); */
+	if (input[i] == '(' || input[i] == ')')
+		return (i + 1);
 	if (lexer_sep(input[i]))
 	{
 		while(input[i] == input[i + 1])

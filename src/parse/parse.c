@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/06/23 08:35:29 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/13 14:54:37 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 
 #include "parser.h"
 #include "lexer.h"
-
 
 t_ftlst					*push_token(t_ftlst **tokens, t_token *pushed)
 {
@@ -99,10 +98,8 @@ t_ret		*parse_op(t_ftlst *input)
 	enum e_token_tag tag;
 
 	left_ret = parse_expr(input);
-	/* printf("%p\n", left_ret); */
 	input = left_ret->rest;
-
-	if (input == NULL || ((t_token*)input->data)->tag == TAG_PARENT_CLOSE)
+	if (input == NULL || ((t_token*)input->data)->tag & TAG_PARENT_CLOSE)
 		return ret_wrap_ast(left_ret->ast, input);
 
 	tag = ((t_token*)input->data)->tag;
@@ -121,18 +118,19 @@ t_ret       *parse_expr(t_ftlst *input)
 {
     t_ret               *tmp;
     enum e_token_tag    tag;
+	t_ast 				*new_ast;
 
     tag = ((t_token*)input->data)->tag;
-    if (tag == TAG_PARENT_OPEN)
+    if (tag & TAG_PARENT_OPEN)
     {
         tmp = parse_op(input->next);
         input = tmp->rest;
         tag = ((t_token*)input->data)->tag;
-        if (tag != TAG_PARENT_CLOSE)
+        if (!(tag & TAG_PARENT_CLOSE))
             return (NULL);
         input = input->next;
 
-        t_ast *new_ast = ast_new(AST_PARENT);
+        new_ast = ast_new(AST_PARENT);
         new_ast->parent_ast = tmp->ast;
         tmp->ast = new_ast;
 		if (input == NULL)
@@ -158,8 +156,6 @@ t_ret       *parse_expr(t_ftlst *input)
 				break;
 			tag = ((t_token*)input->data)->tag;
 		}
-		/* token_debug(input->data); */
-
         tmp->rest = input;
         return tmp;
     }
@@ -169,19 +165,21 @@ t_ret       *parse_expr(t_ftlst *input)
 t_ret		*parse(t_ftlst *input)
 {
 	t_ret *ret;
-	/* t_ftlst *in_f; */
+	t_ftlst *in_f;
 
-	/* in_f = input; */
-	/* if (input == NULL) */
-	/* 	return NULL; */
-	/* if (!(ret = malloc(sizeof(t_ret) * 1))) */
-	/* 	return (NULL); */
-	/* ret->ast = NULL; */
-	/* ret->rest = NULL; */
-	/* if((ret->unexpected = error_syntax_simple(input)) != NULL) */
-	/* 	printf("%s\n", ret->unexpected->content); */
+	in_f = input;
+	if (input == NULL)
+		return NULL;
+	if (!(ret = malloc(sizeof(t_ret) * 1)))
+		return (NULL);
+	ret->ast = NULL;
+	ret->rest = NULL;
+
+	if((ret->unexpected = error_syntax_simple(input)))
+		return (ret);
+	printf("%s\n",((t_token *)ret->unexpected)->content);
 	ret = parse_op(input);
-	/* ast_destroy(ret->ast); */
-	/* ft_lstdestroy(&ret->rest, (void (*)(void*))token_destroy); */
+	//ast_destroy(ret->ast);
+	//ft_lstdestroy(&ret->rest, (void (*)(void*))token_destroy);
 	return (ret);
 }

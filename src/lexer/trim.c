@@ -1,25 +1,6 @@
 
 #include "lexer.h"
 
-t_ftlst                *stick_parent(t_ftlst *lst)
-{
-    t_ftlst *first;
-    t_token *tk;
-
-    first = lst;
-    while (lst != NULL)
-    {
-        tk = lst->data;
-        if (tk->tag & TAG_PARENT_OPEN || tk->tag & TAG_PARENT_CLOSE)
-        {
-            if (ft_strlen(tk->content) >= 2)
-                tk->tag = tk->tag | TAG_STICK;
-        }
-        lst = lst->next;
-    }
-    return (first);
-}
-
 char                *del_space(t_token *tk)
 {
     int             i;
@@ -83,5 +64,5 @@ t_ftlst             *lexe_trim_out(t_ftlst *lst)
         }
         lst = lst->next;
     }
-    return (stick_parent(first));
+    return (first);
 }
