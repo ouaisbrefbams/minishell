@@ -6,11 +6,13 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/06/23 09:04:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/13 09:54:12 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
+
+pid_t	g_child_pid = -1;
 
 /*
 ** \brief          Wrap a function in a fork
@@ -39,6 +41,7 @@ int			fork_wrap(
 			exit(EXIT_FAILURE);
 		exit(status);
 	}
+	g_child_pid = child_pid;
 	wait(&child_pid);
 	close(fds[FDS_WRITE]);
 	// also read end?

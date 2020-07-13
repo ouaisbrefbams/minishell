@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/19 19:12:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/13 10:35:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,37 @@ void token_put(void *v);
 void print_level(int level);
 void ast_print(int level, t_ast *ast);
 
+void print_prompt(void)
+{
+	printf("\033[0;32m%s\033[0m$ ", getcwd(NULL, 0));
+	fflush(stdout);
+}
+
+void signal_sigint(int signum)
+{
+	(void)signum;
+	if (g_child_pid != -1)
+	{
+		kill(g_child_pid, SIGINT);
+		ft_putchar('\n');
+	}
+	else
+	{
+		ft_putchar('\n');
+		print_prompt();
+	}
+}
+
+void signal_sigquit(int signum)
+{
+	(void)signum;
+	if (g_child_pid != -1)
+	{
+		kill(g_child_pid, SIGQUIT);
+		ft_putstr("Quit (core dumped)\n");
+	}
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_path	path;
@@ -34,6 +65,9 @@ int main(int argc, char **argv, char **envp)
 	env = env_from_array(envp);
 	path = path_update(NULL, env_search(env, "PATH"));
 	/* printf("%s\n", argv[2]); */
+
+	signal(SIGINT, signal_sigint);
+	signal(SIGQUIT, signal_sigquit);
 
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
@@ -68,10 +102,14 @@ int main(int argc, char **argv, char **envp)
 		int		ret;
 		char	*line;
 
-		printf("> ");
-		fflush(stdout);
+		print_prompt();
 		while ((ret = ft_getline(STDOUT_FILENO, &line)) == FTGL_OK)
 		{
+			if (*line == '\0')
+			{
+				print_prompt();
+				continue;
+			}
 			t_ftlst *lex_out = lexer(line);
 			if (lex_out == NULL)
 				return (1);
@@ -81,8 +119,7 @@ int main(int argc, char **argv, char **envp)
 			int fds[2] = {MS_NO_FD, MS_NO_FD};
 			int eval_out = eval(fds, env, path, parser_out->ast);
 			(void)eval_out;
-			printf("> ");
-			fflush(stdout);
+			print_prompt();
 		}
 	}
 

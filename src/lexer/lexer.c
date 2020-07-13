@@ -31,6 +31,8 @@ int				check_input(char *input)
 	int 				i;
 
 	i = 0;
+	/* if (input[i] == '(' || input[i] == ')') */
+	/* 	return (i + 1); */
 	if (lexer_sep(input[i]))
 	{
 		while(input[i] == input[i + 1])
