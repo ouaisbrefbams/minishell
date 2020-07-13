@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/13 10:46:50 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/13 10:54:54 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,24 @@ int main(int argc, char **argv, char **envp)
 	signal(SIGINT, signal_sigint);
 	signal(SIGQUIT, signal_sigquit);
 
-	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
+	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
-		//printf("%s\n", argv[2]);
+		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
+		if (lex_out == NULL)
+			return (1);
+		ft_lstiter(lex_out, token_debug);
+	}
+	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
+	{
 		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
 		if (lex_out == NULL)
 			return (1);
 
-		ft_lstiter(lex_out, token_debug);
-		//t_ret *parser_out = parse(lex_out);
+		/* ft_lstiter(lex_out, token_debug); */
 
-		//t_ret *parser_out = parse(lex_out);
-		/* if (parser_out == NULL || parser_out->unexpected != NULL) */
-		/*  return (1); */
+		t_ret *parser_out = parse(lex_out);
+		if (parser_out == NULL || parser_out->unexpected != NULL)
+		 return (1);
 
 		/* ast_print(0, parser_out->ast); */
 		/* printf("\n"); */
@@ -93,9 +98,9 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		//int fds[2] = {MS_NO_FD, MS_NO_FD};
-		//int eval_out = eval(fds, env, path, parser_out->ast);
-		//(void)eval_out;
+		int fds[2] = {MS_NO_FD, MS_NO_FD};
+		int eval_out = eval(fds, env, path, parser_out->ast);
+		(void)eval_out;
 	}
 	else
 	{
