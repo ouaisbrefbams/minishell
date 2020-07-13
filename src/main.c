@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/19 19:12:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/13 09:58:46 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ int main(int argc, char **argv, char **envp)
 		if (lex_out == NULL)
 			return (1);
 
-		/* ft_lstiter(lex_out, token_debug); */
-		t_ret *parser_out = parse(lex_out);
+		ft_lstiter(lex_out, token_debug);
+		//t_ret *parser_out = parse(lex_out);
 
-		/* t_ret *parser_out = parse(lex_out); */
+		//t_ret *parser_out = parse(lex_out);
 		/* if (parser_out == NULL || parser_out->unexpected != NULL) */
 		/*  return (1); */
 
@@ -59,37 +59,38 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 
-		int fds[2] = {MS_NO_FD, MS_NO_FD};
-		int eval_out = eval(fds, env, path, parser_out->ast);
-		(void)eval_out;
+		//int fds[2] = {MS_NO_FD, MS_NO_FD};
+		//int eval_out = eval(fds, env, path, parser_out->ast);
+		//(void)eval_out;
 	}
-	else
-	{
-		int		ret;
-		char	*line;
-
-		printf("> ");
-		fflush(stdout);
-		while ((ret = ft_getline(STDOUT_FILENO, &line)) == FTGL_OK)
-		{
-			t_ftlst *lex_out = lexer(line);
-			if (lex_out == NULL)
-				return (1);
-
-			t_ret *parser_out = parse(lex_out);
-
-			int fds[2] = {MS_NO_FD, MS_NO_FD};
-			int eval_out = eval(fds, env, path, parser_out->ast);
-			(void)eval_out;
-			printf("> ");
-			fflush(stdout);
-		}
-	}
-
-	ft_htdestroy(path, free);
-	ft_vecdestroy(env, free);
-	return (0);
 }
+// 	else
+// 	{
+// 		int		ret;
+// 		char	*line;
+//
+// 		printf("> ");
+// 		fflush(stdout);
+// 		while ((ret = ft_getline(STDOUT_FILENO, &line)) == FTGL_OK)
+// 		{
+// 			t_ftlst *lex_out = lexer(line);
+// 			if (lex_out == NULL)
+// 				return (1);
+//
+// 			t_ret *parser_out = parse(lex_out);
+//
+// 			int fds[2] = {MS_NO_FD, MS_NO_FD};
+// 			int eval_out = eval(fds, env, path, parser_out->ast);
+// 			(void)eval_out;
+// 			printf("> ");
+// 			fflush(stdout);
+// 		}
+// 	}
+//
+// 	ft_htdestroy(path, free);
+// 	ft_vecdestroy(env, free);
+// 	return (0);
+// }
 
 
 
