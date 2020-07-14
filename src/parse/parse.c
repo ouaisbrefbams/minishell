@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/13 14:54:37 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/14 09:43:41 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,12 +174,8 @@ t_ret		*parse(t_ftlst *input)
 		return (NULL);
 	ret->ast = NULL;
 	ret->rest = NULL;
-
 	if((ret->unexpected = error_syntax_simple(input)))
 		return (ret);
-	printf("%s\n",((t_token *)ret->unexpected)->content);
 	ret = parse_op(input);
-	//ast_destroy(ret->ast);
-	//ft_lstdestroy(&ret->rest, (void (*)(void*))token_destroy);
 	return (ret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/18 13:46:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 09:42:14 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int		utils_directory_iter(
 	struct dirent	*entry;
 
 	if ((dir = opendir(dirname)) == NULL)  // add fail safe
-		return (-1);
+		return (0);
 	while ((entry = readdir(dir)) != NULL)
 		if (f(dirname, entry, param) == -1)
 		{

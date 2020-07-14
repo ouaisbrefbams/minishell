@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 15:09:48 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/13 14:30:39 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/14 09:43:35 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,15 @@ t_token                 *error_syntax_simple(t_ftlst *in)
                 tk = in->next->data;
                 i = ft_strlen(tk->content);
                 if (i >= 3)
-                    tk->content[3] = '\0';
+                    tk->content[2] = '\0';
                 tk->content =
                 ft_strjoin3("minishell:  syntax error near unexpected token `",
                             tk->content, "'");
+                printf("%s\n",tk->content );
                 return(tk);
             }
         }
         in = in->next;
     }
-    return first;
-
+    return 0;
 }
