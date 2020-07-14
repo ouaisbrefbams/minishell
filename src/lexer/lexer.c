@@ -24,14 +24,19 @@ int 			len_is_not_sep(char *input)
 int				check_input(char *input)
 {
 	int 				i;
+	int 				op;
 
 	i = 0;
+	op = 1;
 	if (input[i] == '(' || input[i] == ')')
 		return (i + 1);
 	if (lexer_sep(input[i]))
 	{
-		while(input[i] == input[i + 1])
+		while(input[i] == input[i + 1] && op < 2)
+		{
 			i++;
+			op++;
+		}
 		i += lexe_space(&input[i + 1]);
 		return (i + 1);
 	}

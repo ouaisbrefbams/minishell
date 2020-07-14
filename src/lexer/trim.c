@@ -35,6 +35,9 @@ char                *del_quote(char *str)
         if (str[i] == '\'' || str[i] == '"')
             break;
     }
+
+    if(str[i] != '\'' && str[i] != '"')
+        return str;
     s = ft_strsubf(str, 1, i - 1);
     return (s);
 }

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/14 10:03:00 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 11:48:42 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ t_ret		*parse_op(t_ftlst *input)
 		return ret_wrap_ast(left_ret->ast, input);
 
 	tag = ((t_token*)input->data)->tag;
+	/* les sep  */
 	input = input->next;
 
 	right_ret = parse_op(input);
@@ -135,7 +136,6 @@ t_ret       *parse_expr(t_ftlst *input)
         tmp->ast = new_ast;
 		if (input == NULL)
 			return tmp;
-
 		// could reuse parse_redir instead
 		tag = ((t_token*)input->data)->tag;
 		while (tag & TAG_IS_REDIR)
@@ -172,8 +172,10 @@ t_ret		*parse(t_ftlst *input)
 		return (NULL);
 	ret->ast = NULL;
 	ret->rest = NULL;
-	/* if((ret->unexpected = error_syntax_simple(input))) */
-	/* 	return (ret); */
+	ret->syntax_error = false;
+	// ret = error_syntax_simple(input, ret);
+	// if (ret->syntax_error == TRUE)
+	// 	return ret;
 	ret = parse_op(input);
 	return (ret);
 }

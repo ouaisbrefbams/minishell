@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/07/14 09:23:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 11:10:12 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ static t_error	g_errors[] =
 	{ERROR_AMBIGUOUS_REDIR, 1, "ambiguous redirect"},
 	{ERROR_OPEN, 1, NULL},
 	{ERROR_CMD_NOT_FOUND, 127, "command not found"},
-	/* {ERROR_CMD_FOUND_ERROR, 126, NULL}, */
-	{ERROR_SYNTAX, 2, "syntax error near unexpected token "},
 };
 
 t_error			*st_error_get(enum e_error id)
