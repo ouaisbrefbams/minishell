@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:16 by charles           #+#    #+#             */
-/*   Updated: 2020/06/23 10:03:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/13 15:35:44 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	builtin_exit(char **argv, t_env env)
 
 	(void)env;
 	if (argv[1] == NULL)
-		status = 0;
+		status = g_last_status_code;
 	else if (argv[2] != NULL)
 	{
 		// replace with minishell error system

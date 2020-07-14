@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:38 by charles           #+#    #+#             */
-/*   Updated: 2020/06/19 13:29:27 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 09:57:43 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef struct			s_ast
 
 typedef struct			s_ret
 {
-	t_token 			*unexpected;
+	bool				syntax_error;
 	t_ast				*ast;
 	t_ftlst				*rest;
 }						t_ret;

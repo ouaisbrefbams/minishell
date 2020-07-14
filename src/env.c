@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/18 14:33:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/13 11:09:39 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 */
 
 #include "minishell.h"
+#include "eval.h"
 
 #define ENV_VEC_DEFAULT_SIZE 64
 
@@ -87,6 +88,8 @@ char	*env_search_first_match(t_env env, const char *haystack)
 	len = 0;
 	while (ft_isalnum(haystack[len]) || haystack[len] == '_')
 		len++;
+	if (haystack[0] == '?')
+		return (ft_itoa(g_last_status_code)); // FIXME leak
 	if (len == 0)
 		return (NULL);
 	i = -1;

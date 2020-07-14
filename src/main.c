@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/14 09:41:42 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/14 10:03:35 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,23 @@ void signal_sigquit(int signum)
 	}
 }
 
+void signal_sigterm(int signum)
+{
+	(void)signum;
+}
+
+
+/*
+** TODO
+** $?
+** syntax error
+** signal
+** pipeline
+** cmd are path
+** interpolation order
+** PATH with no permission
+*/
+
 int main(int argc, char **argv, char **envp)
 {
 	t_path	path;
@@ -68,6 +85,7 @@ int main(int argc, char **argv, char **envp)
 
 	signal(SIGINT, signal_sigint);
 	signal(SIGQUIT, signal_sigquit);
+	signal(SIGTERM, signal_sigterm);
 
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
@@ -85,8 +103,8 @@ int main(int argc, char **argv, char **envp)
 		/* ft_lstiter(lex_out, token_debug); */
 
 		t_ret *parser_out = parse(lex_out);
-		if (parser_out == NULL || parser_out->unexpected != NULL)
-		 return (1);
+		if (parser_out == NULL || parser_out->syntax_error)
+			return (1);
 
 		/* ast_print(0, parser_out->ast); */
 		/* printf("\n"); */
@@ -119,11 +137,8 @@ int main(int argc, char **argv, char **envp)
 				return (1);
 
 			t_ret *parser_out = parse(lex_out);
-			if (parser_out == NULL || parser_out->unexpected != NULL)
-			{
-				printf("%s\n",((t_token *)parser_out->unexpected)->content);
+			if (parser_out == NULL || parser_out->syntax_error)
 				return (1);
-			}
 
 			int fds[2] = {MS_NO_FD, MS_NO_FD};
 			int eval_out = eval(fds, env, path, parser_out->ast);
@@ -134,7 +149,7 @@ int main(int argc, char **argv, char **envp)
 
 	ft_htdestroy(path, free);
 	ft_vecdestroy(env, free);
-	return (0);
+	return (g_last_status_code);
 }
 // 	else
 // 	{

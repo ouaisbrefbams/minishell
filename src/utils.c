@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/14 09:42:14 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/14 10:00:16 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ size_t	utils_var_end(char *name)
 {
 	size_t	i;
 
+	if (*name == '?')
+		return (2);
 	if (ft_isdigit(*name))
 		return (0);
 	i = 0;

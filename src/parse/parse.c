@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/14 09:43:41 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/14 10:03:00 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_ret					*ret_wrap_ast(t_ast *ast, t_ftlst *rest)
 
 	if ((ret = malloc(sizeof(t_ret))) == NULL)
 		return (NULL);
-	ret->unexpected = NULL;
+	ret->syntax_error = false;
 	ret->rest = rest;
 	ret->ast = ast;
 	return ret;
@@ -165,17 +165,15 @@ t_ret       *parse_expr(t_ftlst *input)
 t_ret		*parse(t_ftlst *input)
 {
 	t_ret *ret;
-	t_ftlst *in_f;
 
-	in_f = input;
 	if (input == NULL)
 		return NULL;
 	if (!(ret = malloc(sizeof(t_ret) * 1)))
 		return (NULL);
 	ret->ast = NULL;
 	ret->rest = NULL;
-	if((ret->unexpected = error_syntax_simple(input)))
-		return (ret);
+	/* if((ret->unexpected = error_syntax_simple(input))) */
+	/* 	return (ret); */
 	ret = parse_op(input);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/06/23 08:32:46 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 09:35:14 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@
 
 typedef t_ftht*			t_path;
 typedef t_ftvec*		t_env;
+
+extern int		g_last_status_code;
 
 /*
 ** path.c
@@ -102,5 +104,28 @@ int						builtin_exit(char **argv, t_env env);
 
 char					**preprocess(t_ftlst **tokens, t_env env);
 char					*preprocess_filename(t_ftlst **tokens, t_env env);
+
+/*
+** error.c
+*/
+
+enum					e_error
+{
+	ERROR_AMBIGUOUS_REDIR,
+	ERROR_OPEN,
+	ERROR_CMD_NOT_FOUND,
+	ERROR_SYNTAX,
+	ERROR_CMD_FOUND_ERROR,
+};
+
+typedef struct
+{
+	enum e_error		id;
+	int					status;
+	char				*msg;       // if NULL call strerror
+	// char				basename;
+}						t_error;
+
+void					error_eval_put(enum e_error id, char *unexpected);
 
 #endif
