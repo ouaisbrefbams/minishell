@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/15 13:03:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/15 18:16:27 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ int 		forked_cmd(void *void_param)
 	t_fork_param_cmd	*param;
 
 	param = void_param;
+	if (ft_vecswallow_at(param->env, param->env->size - 1, param->env_local) == NULL)
+	{
+		ft_vecdestroy(param->env_local, free);
+		return (-1);
+	}
 	if (param->builtin != NULL)
 		return (param->builtin->func(param->argv, param->env));
 	else
@@ -71,12 +76,38 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 		return (-1);
 	}
 	ast->redirs = NULL;
+	if ((param.env_local = env_from_array((char*[]){NULL})) == NULL)
+		return (-1);
+	while (ast->cmd_argv != NULL
+		&& ((t_token*)ast->cmd_argv->data)->tag & TAG_IS_STR
+		&& utils_start_with_valid_identifier(((t_token*)ast->cmd_argv->data)->content))
+	{
+		if (ft_vecpush(param.env_local, ((t_token*)ast->cmd_argv->data)->content) == NULL)
+			return (-1);
+		ft_lstpop_front(&ast->cmd_argv, NULL);
+	}
+	/* printf("[\n"); */
+	/* ft_veciter(param.env_local, ft_putendl); */
+	/* printf("]\n"); */
+	if (ast->cmd_argv == NULL)
+	{
+		/* printf("--\n"); */
+		if (ft_vecswallow_at(env, env->size - 1, param.env_local) == NULL)
+		{
+			/* printf("hyo\n"); */
+			ft_vecdestroy(param.env_local, free);
+			return (-1);
+		}
+		g_last_status_code = 0;
+		return (0);
+	}
 
 	if ((argv = preprocess(&ast->cmd_argv, env)) == NULL)
 	{
 		ast->cmd_argv = NULL;
 		return (-1);
 	}
+	/* puts(*argv); */
 
 	// can have no command (e.g `< file`)
 	if (argv[0] == NULL)
@@ -84,21 +115,27 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	param.builtin = builtin_search_func(argv[0]);
 	if (param.builtin == NULL)
 	{
+		// check env local for PATH
 		param.exec_path = exec_search_path(path, env_search(env, "PATH"), argv[0]);
 		if (param.exec_path == NULL)
 		{
+			g_last_status_code = 127;
 			error_eval_put(ERROR_CMD_NOT_FOUND, argv[0]);
 			ft_split_destroy(argv);
 			return (-1); // return error status
 		}
 	}
 	else// solved with pipeline
-		return (param.builtin->func(argv, env));
+	{
+		g_last_status_code = param.builtin->func(argv, env);
+		return (g_last_status_code);
+	}
 
 	param.argv = argv;
 	param.env = env;
 	int ret = fork_wrap(fds, &param, &forked_cmd);
 	g_last_status_code = ret;
 	ft_split_destroy(argv);
+	ft_vecdestroy(param.env_local, free);
 	return (ret);
 }

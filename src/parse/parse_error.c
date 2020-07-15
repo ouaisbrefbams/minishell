@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/18 15:09:48 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/14 11:49:48 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/15 18:31:51 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ t_token                 *error_syntax_simple(t_ftlst *in)
 {
     t_token             *tk;
     size_t              i;
-    t_ftlst             *first;
+    /* t_ftlst             *first; */
 
     tk = in->data;
-    first = in;
+    /* first = in; */
     if(tk->tag & TAG_IS_SEP || (tk->tag & TAG_IS_REDIR))
     {
         if (out_error_first(tk))

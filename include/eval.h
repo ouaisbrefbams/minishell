@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/07/14 09:35:17 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/15 17:03:05 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct
 	char			*exec_path;
 	char			**argv;
 	t_env			env;
+	t_env			env_local;
 	t_builtin_entry	*builtin;
 }					t_fork_param_cmd;
 

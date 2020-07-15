@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/15 12:54:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/15 17:57:09 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,18 @@ bool	utils_valid_identifier(char *name)
 		name++;
 	}
 	return (true);
+}
+
+bool	utils_start_with_valid_identifier(char *name)
+{
+	char	*equal_ptr;
+	bool	ret;
+
+	equal_ptr = ft_strchr(name, '=');
+	if (equal_ptr == NULL)
+		return (false);
+	*equal_ptr = '\0';
+	ret = utils_valid_identifier(name);
+	*equal_ptr = '=';
+	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/14 11:34:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/15 15:30:40 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void signal_sigterm(int signum)
 ** syntax error
 ** signal
 ** pipeline
-** cmd are path
 ** cmd variable
 ** interpolation order
 ** PATH with no permission, link and other file system fun stuff
