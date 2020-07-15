@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/14 10:40:59 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/15 12:54:28 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,17 @@ size_t	utils_var_end(char *name)
 	while (ft_isalnum(name[i]) || name[i] == '_')
 		i++;
 	return (i + 1);
+}
+
+bool	utils_valid_identifier(char *name)
+{
+	if (ft_isdigit(*name) || *name == '\0')
+		return (false);
+	while (*name != '\0')
+	{
+		if (!ft_isalnum(*name) && *name != '_')
+			return (false);
+		name++;
+	}
+	return (true);
 }

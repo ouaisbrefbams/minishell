@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/07/14 11:10:12 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/15 13:11:13 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,14 @@ void			error_eval_put(enum e_error id, char *unexpected)
 int				error_status(enum e_error id)
 {
 	return (st_error_get(id)->status);
+}
+
+void			error_put_invalid_identifier(char *prefix, char *identifier)
+{
+	ft_putstr_fd(g_basename, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(prefix, STDERR_FILENO);
+	ft_putstr_fd(": `", STDERR_FILENO);
+	ft_putstr_fd(identifier, STDERR_FILENO);
+	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/14 11:06:50 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/15 13:11:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,11 @@ t_path					path_update(t_path path, char *path_var);
 ** env.c
 */
 
+// FIXME refactor env code
 t_env					env_from_array(char **envp);
 int						env_keycmp(char *var, char *key);
 char					*env_search(t_env env, char *key);
+int						env_search_index(t_env env, char *key);
 char					*env_search_first_match(t_env env, const char *haystack);
 char					*env_export(t_env env, char *key, char *value);
 
@@ -133,5 +135,21 @@ typedef struct
 }						t_error;
 
 void					error_eval_put(enum e_error id, char *content);
+void					error_put_invalid_identifier(char *prefix, char *identifier);
+
+/*
+** utils.c
+*/
+
+typedef int	(*t_directory_iter_func)(char*, struct dirent*, void*);
+
+int		utils_directory_iter(
+	char *dirname,
+	void *param,
+	t_directory_iter_func f
+);
+
+size_t	utils_var_end(char *name);
+bool	utils_valid_identifier(char *name);
 
 #endif

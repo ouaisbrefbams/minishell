@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/04/05 12:09:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/15 12:11:48 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 */
 
 #include "minishell.h"
-#include "utils.h"
 
 /*
 ** \brief  Number of buckets of a path hash table

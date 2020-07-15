@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/13 11:09:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/15 13:02:04 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,20 @@ char	*env_search(t_env env, char *key)
 	return (NULL);
 }
 
+int		env_search_index(t_env env, char *key)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < env->size - 1)
+	{
+		if (env_keycmp(env->data[i], key) == 0)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
 char	*env_search_first_match(t_env env, const char *haystack)
 {
 	size_t	len;
@@ -107,28 +121,20 @@ char	*env_search_first_match(t_env env, const char *haystack)
 char	*env_export(t_env env, char *key, char *value)
 {
 	char	*joined;
-	size_t	i;
+	int		i;
 
 	if ((joined = ft_strjoin3(key, "=", value)) == NULL)
 		return (NULL);
-	if (env_search(env, key) == NULL)
+	i = env_search_index(env, key);
+	if (i == -1)
 	{
 		if (ft_vecinsert(env, env->size - 1, joined) == NULL)
 			return (NULL);
 	}
 	else
 	{
-		i = 0;
-		while (i < env->size - 1)
-		{
-			if (env_keycmp(env->data[i], key) == 0)
-			{
-				free(env->data[i]);
-				env->data[i] = joined;
-				break;
-			}
-			i++;
-		}
+		free(env->data[i]);
+		env->data[i] = joined;
 	}
 	return (joined);
 }
