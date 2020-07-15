@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/14 09:35:14 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 11:06:50 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef t_ftht*			t_path;
 typedef t_ftvec*		t_env;
 
 extern int		g_last_status_code;
+extern char		*g_basename;
 
 /*
 ** path.c
@@ -85,7 +86,6 @@ typedef struct
 {
 	char				*name;
 	t_builtin_func		func;
-	bool				child_process;
 }						t_builtin_entry;
 
 t_builtin_entry			*builtin_search_func(char *name);
@@ -118,14 +118,20 @@ enum					e_error
 	ERROR_CMD_FOUND_ERROR,
 };
 
+/*
+** \brief         Error specification
+** \param id      Error type
+** \param status  Status code returned
+** \param msg     Error message to print, if is NULL, use strerror as a msg
+*/
+
 typedef struct
 {
 	enum e_error		id;
 	int					status;
-	char				*msg;       // if NULL call strerror
-	// char				basename;
+	char				*msg;
 }						t_error;
 
-void					error_eval_put(enum e_error id, char *unexpected);
+void					error_eval_put(enum e_error id, char *content);
 
 #endif

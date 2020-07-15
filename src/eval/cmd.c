@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/13 11:03:09 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 11:07:00 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 			return (-1); // return error status
 		}
 	}
-	else if (!param.builtin->child_process)
-		return (param.builtin->func(argv, env));
+	/* else if (!param.builtin->child_process) // solved with pipeline */
+	/* 	return (param.builtin->func(argv, env)); */
 
 	param.argv = argv;
 	param.env = env;

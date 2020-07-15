@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:01 by charles           #+#    #+#             */
-/*   Updated: 2020/06/23 08:35:15 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 11:06:37 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@
 */
 
 static t_builtin_entry	g_builtin_lookup[] = {
-	{"echo", builtin_echo, true},
-	{"cd", builtin_cd, false},
-	{"pwd", builtin_pwd, true},
-	{"export", builtin_export, false},
-	{"unset", builtin_unset, false},
-	{"env", builtin_env, true},
-	{"exit", builtin_exit, false},
+	{"echo", builtin_echo},
+	{"cd", builtin_cd},
+	{"pwd", builtin_pwd},
+	{"export", builtin_export},
+	{"unset", builtin_unset},
+	{"env", builtin_env},
+	{"exit", builtin_exit},
 };
 
 t_builtin_entry			*builtin_search_func(char *name)

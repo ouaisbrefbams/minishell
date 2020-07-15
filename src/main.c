@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/14 10:03:35 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/14 11:34:18 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void signal_sigterm(int signum)
 	(void)signum;
 }
 
-
 /*
 ** TODO
 ** $?
@@ -70,9 +69,12 @@ void signal_sigterm(int signum)
 ** signal
 ** pipeline
 ** cmd are path
+** cmd variable
 ** interpolation order
-** PATH with no permission
+** PATH with no permission, link and other file system fun stuff
 */
+
+char	*g_basename = "minishell";
 
 int main(int argc, char **argv, char **envp)
 {
@@ -81,11 +83,16 @@ int main(int argc, char **argv, char **envp)
 
 	env = env_from_array(envp);
 	path = path_update(NULL, env_search(env, "PATH"));
-	/* printf("%s\n", argv[2]); */
 
 	signal(SIGINT, signal_sigint);
 	signal(SIGQUIT, signal_sigquit);
 	signal(SIGTERM, signal_sigterm);
+
+	char *last_slash = ft_strrchr(argv[0], '/');
+	if (last_slash == NULL)
+		g_basename = argv[0];
+	else
+		g_basename = last_slash + 1;
 
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
