@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
+/*   Updated: 2020/07/16 10:34:46 by nahaddac         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lexer.h"
 
 int 			len_is_not_sep(char *input)
@@ -8,7 +20,7 @@ int 			len_is_not_sep(char *input)
 	while(input[++i])
 	{
 		if (input[i] == '\\')
-			i += 1;
+			i += 2;
 		if (lexer_sep(input[i]))
 			return(i);
 		if (input[i] == '\'' || input[i] == '"')
