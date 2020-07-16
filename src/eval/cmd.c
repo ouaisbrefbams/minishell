@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/15 18:16:27 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/16 09:12:02 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int 		forked_cmd(void *void_param)
 	t_fork_param_cmd	*param;
 
 	param = void_param;
+	ft_vecpop(param->env_local, NULL);
 	if (ft_vecswallow_at(param->env, param->env->size - 1, param->env_local) == NULL)
 	{
 		ft_vecdestroy(param->env_local, free);
@@ -78,20 +79,18 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	ast->redirs = NULL;
 	if ((param.env_local = env_from_array((char*[]){NULL})) == NULL)
 		return (-1);
+	// TODO generate token list after `=` for variable value preprocessing
 	while (ast->cmd_argv != NULL
 		&& ((t_token*)ast->cmd_argv->data)->tag & TAG_IS_STR
 		&& utils_start_with_valid_identifier(((t_token*)ast->cmd_argv->data)->content))
 	{
-		if (ft_vecpush(param.env_local, ((t_token*)ast->cmd_argv->data)->content) == NULL)
+		if (env_export_full(param.env_local, ((t_token*)ast->cmd_argv->data)->content) == NULL)
 			return (-1);
-		ft_lstpop_front(&ast->cmd_argv, NULL);
+		ft_lstpop_front(&ast->cmd_argv, (void (*)(void*))token_destroy);
 	}
-	/* printf("[\n"); */
-	/* ft_veciter(param.env_local, ft_putendl); */
-	/* printf("]\n"); */
 	if (ast->cmd_argv == NULL)
 	{
-		/* printf("--\n"); */
+		ft_vecpop(param.env_local, NULL);
 		if (ft_vecswallow_at(env, env->size - 1, param.env_local) == NULL)
 		{
 			/* printf("hyo\n"); */
@@ -107,7 +106,6 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 		ast->cmd_argv = NULL;
 		return (-1);
 	}
-	/* puts(*argv); */
 
 	// can have no command (e.g `< file`)
 	if (argv[0] == NULL)

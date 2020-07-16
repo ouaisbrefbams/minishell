@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/15 17:30:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/16 08:44:28 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,4 +137,19 @@ char	*env_export(t_env env, char *key, char *value)
 		env->data[i] = joined;
 	}
 	return (joined);
+}
+
+char	*env_export_full(t_env env, char *variable)
+{
+	char	*key;
+	char	*value;
+
+	key = variable;
+	value = ft_strchr(variable, '=');
+	if (value == NULL)
+		return (NULL);
+	*value = '\0';
+	key = env_export(env, key, value + 1);
+	*value = '=';
+	return (key);
 }

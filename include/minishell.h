@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/15 17:00:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/16 09:17:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ char					*env_search(t_env env, char *key);
 int						env_search_index(t_env env, char *key);
 char					*env_search_first_match(t_env env, const char *haystack);
 char					*env_export(t_env env, char *key, char *value);
+char					*env_export_full(t_env env, char *variable);
 
 /*
 ** builtin*.c - directory with all builtin commands
@@ -138,6 +139,14 @@ void					error_eval_put(enum e_error id, char *content);
 void					error_put_invalid_identifier(char *prefix, char *identifier);
 
 /*
+** signal.c
+*/
+
+void signal_sigint(int signum);
+void signal_sigquit(int signum);
+void signal_sigterm(int signum);
+
+/*
 ** utils.c
 */
 
@@ -152,5 +161,7 @@ int		utils_directory_iter(
 size_t	utils_var_end(char *name);
 bool	utils_valid_identifier(char *name);
 bool	utils_start_with_valid_identifier(char *name);
+
+void print_prompt(void);
 
 #endif
