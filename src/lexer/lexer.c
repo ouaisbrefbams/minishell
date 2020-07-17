@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/17 13:06:17 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/17 13:08:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int 			len_is_not_sep(char *input)
 			i +=2;
 			if (input[i] == '\\')
 				i += len_is_not_sep(&input[i]);
-	
+
 		}
 		if (lexer_sep(input[i]))
 			return(i);

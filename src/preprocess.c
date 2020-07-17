@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/07/13 11:08:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/17 11:20:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static char		*st_iterpolate_env(char *str, enum e_token_tag tag, t_env env)
 	while (++i < dstr->length)
 		if (dstr->str[i] == '\\' && st_escapable(dstr->str[i + 1], tag))
 			ft_dstrerase(dstr, i, 1);
+		else if (dstr->str[i] == '$' && !ft_isalnum(dstr->str[i + 1]) && dstr->str[i + 1] != '_') // $ alone
+			continue;
 		else if (dstr->str[i] == '$')
 		{
 			if ((match = env_search_first_match(env, dstr->str + i + 1)) == NULL)

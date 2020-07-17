@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/16 09:12:02 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/17 11:43:59 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 			return (-1);
 		ft_lstpop_front(&ast->cmd_argv, (void (*)(void*))token_destroy);
 	}
-	if (ast->cmd_argv == NULL)
+	if (ast->cmd_argv == NULL) // FIXME special env not passed to child processes
 	{
 		ft_vecpop(param.env_local, NULL);
 		if (ft_vecswallow_at(env, env->size - 1, param.env_local) == NULL)
@@ -123,7 +123,7 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 			return (-1); // return error status
 		}
 	}
-	else// solved with pipeline
+	else if (!param.builtin->forked)
 	{
 		g_last_status_code = param.builtin->func(argv, env);
 		return (g_last_status_code);

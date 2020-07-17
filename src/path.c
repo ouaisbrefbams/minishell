@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/15 12:11:48 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/17 10:48:31 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static int			st_add_file(char *dirname, struct dirent *entry, void *path)
 ** \return          The updated/created path hash table or NULL on error
 */
 
+// TODO check nullstring path == current directory
+// i.e ./ not needed before executable
 t_path					path_update(t_path path, char *path_var)
 {
 	int		i;

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/16 09:19:58 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/17 13:39:05 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,15 @@ void ast_print(int level, t_ast *ast);
 /*
 ** TODO
 ** $?
-** syntax error
-** signal
 ** pipeline
-** cmd variable
-** interpolation order
+** cmd variable preprocess
 ** PATH with no permission, link and other file system fun stuff
+** escape lexer
+** escape split preprocessing
+** signal on whole line instead of single command
+** parsing error
+** env local to current minishell process
+** exit
 */
 
 char	*g_basename = "minishell";
@@ -47,6 +50,7 @@ int main(int argc, char **argv, char **envp)
 	env = env_from_array(envp);
 	path = path_update(NULL, env_search(env, "PATH"));
 
+	g_last_status_code = 0;
 	signal(SIGINT, signal_sigint);
 	signal(SIGQUIT, signal_sigquit);
 	signal(SIGTERM, signal_sigterm);

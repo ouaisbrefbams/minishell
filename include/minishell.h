@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/16 09:17:45 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/17 11:17:16 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct
 {
 	char				*name;
 	t_builtin_func		func;
+	bool				forked;
 }						t_builtin_entry;
 
 t_builtin_entry			*builtin_search_func(char *name);
