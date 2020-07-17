@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/17 13:39:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/18 08:58:52 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv, char **envp)
 		if (parser_out == NULL || parser_out->syntax_error)
 			return (1);
 
-		/* ast_print(0, parser_out->ast); */
+		 //ast_print(0, parser_out->ast);
 
 		/* printf("===cmd_argv===\n"); */
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
@@ -108,8 +108,13 @@ int main(int argc, char **argv, char **envp)
 				return (1);
 
 			t_ret *parser_out = parse(lex_out);
-			if (parser_out == NULL || parser_out->syntax_error)
+			if (parser_out == NULL)
 				return (1);
+			if (parser_out->syntax_error)
+			{
+				print_prompt();
+				continue;
+			}
 
 			int fds[2] = {MS_NO_FD, MS_NO_FD};
 			int eval_out = eval(fds, env, path, parser_out->ast);

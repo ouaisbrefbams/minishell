@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/17 13:08:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/18 08:58:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int 			len_is_not_sep(char *input)
 			i +=2;
 			if (input[i] == '\\')
 				i += len_is_not_sep(&input[i]);
-
 		}
 		if (lexer_sep(input[i]))
 			return(i);
@@ -50,9 +49,17 @@ int				check_input(char *input)
 	if (input[i] == '\\' && lexer_sep(input[i + 1]))
 		i += 2;
 	if (input[i] == '(' || input[i] == ')')
-		return (i + 1);
+	{
+		i +=1;
+		if(input[i] == ' ')
+			while(input[i++] != ' ')
+				;
+		return (i);
+	}
 	if (lexer_sep(input[i]))
 	{
+		if (input[i] == ';')
+			return (i += lexe_space(&input[i + 1]) + 1);
 		while(input[i] == input[i + 1] && op < 2)
 		{
 			i++;
