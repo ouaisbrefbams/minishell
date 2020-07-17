@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/16 11:39:11 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/17 13:06:17 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int 			len_is_not_sep(char *input)
 			i +=2;
 			if (input[i] == '\\')
 				i += len_is_not_sep(&input[i]);
+	
 		}
 		if (lexer_sep(input[i]))
 			return(i);
@@ -47,9 +48,7 @@ int				check_input(char *input)
 	i = 0;
 	op = 1;
 	if (input[i] == '\\' && lexer_sep(input[i + 1]))
-	{
 		i += 2;
-	}
 	if (input[i] == '(' || input[i] == ')')
 		return (i + 1);
 	if (lexer_sep(input[i]))
@@ -173,6 +172,6 @@ t_ftlst        			*lexer(char *input)
 		return (NULL);
 	lst = NULL;
 	lst = create_token_list(input, &lst);
-	//lst = lexe_trim_out(lst);
+	lst = lexe_trim_out(lst);
 	return (lst);
 }

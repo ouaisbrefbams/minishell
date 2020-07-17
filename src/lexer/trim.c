@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/16 10:28:57 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/17 10:18:51 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,13 @@ char                *del_space(t_token *tk)
     char            *s;
 
     i = 0;
-    while(tk->content[++i] != '\0')
+    while(tk->content[i] != '\0')
     {
-        if(tk->content[i] == '\\' && tk->content[i + 1] == ' ')
-        {
-            i += 2;
-            if (tk->content[i] == '\0')
-                tk->tag = tk->tag | TAG_STICK;
-        }
+        if(tk->content[i] == '\\')
+            return tk->content;
         if(tk->content[i] == ' ')
             break;
+        i++;
     }
     s = ft_strsubf(tk->content, 0, i);
     return(s);
