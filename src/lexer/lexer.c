@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/18 08:58:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 16:08:40 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int				check_input(char *input)
 	{
 		while(input[++i] == ' ')
 			;
-		return (i);
+		 return (i);
 	}
 	return(len_is_not_sep(&input[i]));
 }
@@ -142,7 +142,6 @@ t_token			*push_token_enum(t_token *lst_token)
 	enum e_token_tag 		tk;
 
 	tk = ret_token(lst_token->content, 0);
-
 	if (tk == 0)
 		lst_token->tag = token_str_or_cote(lst_token);
 	else
@@ -164,8 +163,11 @@ static t_ftlst				*create_token_list(char *input, t_ftlst **lst)
 		j += check_input(&input[i]);
 		lst_token = token_new_until(0, input + i, j);
 		lst_token = push_token_enum(lst_token);
-		new = ft_lstnew(lst_token);
-		ft_lstpush_back(lst, new);
+		if (lst_token->content[0] != ' ')
+		{
+			new = ft_lstnew(lst_token);
+			ft_lstpush_back(lst, new);
+		}
 		i += j;
 	}
 	return (*lst);
