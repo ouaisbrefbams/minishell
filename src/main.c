@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/19 17:04:19 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 20:22:37 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ void ast_print(int level, t_ast *ast);
 ** BETTER ERROR HANDLING IS BECOMING URGENT (spagetti code everywhere)
 */
 
+bool	env_set_default(t_env env, char *key, char *value)
+{
+	if (env_search(env, key) != NULL)
+		return (true);
+	return (env_export(env, key, value) != NULL);
+}
+
 char	*g_basename = "minishell";
 
 int main(int argc, char **argv, char **envp)
@@ -48,7 +55,24 @@ int main(int argc, char **argv, char **envp)
 	t_env	env;
 
 	env = env_from_array(envp);
+
+	char buf[PATH_MAX] = {0};
+	if (!(getcwd(buf, PATH_MAX)))
+		return(1);
+	if (!env_set_default(env, "PWD", buf) ||
+		!env_set_default(env, "SHLVL", "1") ||   // TODO increment if set
+		!env_set_default(env, "PATH", "/sbin:")) // FIXME need to prefix if /sbin not in
+		return (1);
+
 	path = path_update(NULL, env_search(env, "PATH"));
+
+	char *env_exec_path;
+	if ((env_exec_path = ft_htget(path, "env")) == NULL)
+	{
+		errorf("env: command not found\n");
+		return (127);
+	}
+	env_export(env, "_", env_exec_path);
 
 	g_last_status_code = 0;
 	signal(SIGINT, signal_sigint);
@@ -60,16 +84,6 @@ int main(int argc, char **argv, char **envp)
 		g_basename = argv[0];
 	else
 		g_basename = last_slash + 1;
-
-	char *pwd_var;
-
-	if ((pwd_var = env_search(env, "PWD")) == NULL)
-	{
-		char buf[PATH_MAX] = {0};
-		if (!(getcwd(buf, PATH_MAX)))
-			return(1);
-		env_export(env, "PWD", buf);
-	}
 
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
