@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:51 by charles           #+#    #+#             */
-/*   Updated: 2020/07/15 13:14:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 18:47:36 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	builtin_unset(char **argv, t_env env)
 	{
 		if (!utils_valid_identifier(argv[i]))
 		{
-			error_put_invalid_identifier("unset", argv[i]);
+			errorf("unset: `%s': not a valid identifier\n", argv[i]);
 			status = 1;
 			continue; // put invalid identifier
 		}

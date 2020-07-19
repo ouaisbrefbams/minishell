@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 16:53:54 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 19:00:54 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,12 @@ int 		forked_cmd(void *void_param)
 			struct stat statbuf;
 			if (stat(param->exec_path, &statbuf) != -1 && S_ISDIR(statbuf.st_mode))
 			{
-				ft_putstr_fd(g_basename, STDERR_FILENO);
-				ft_putstr_fd(": ", STDERR_FILENO);
-				ft_putstr_fd(param->exec_path, STDERR_FILENO);
-				ft_putendl_fd(": Is a directory", STDERR_FILENO);
+				errorf("%s: Is a directory\n", param->exec_path);
 				ret = 126;
 			}
 			else
 			{
-				ft_putstr_fd(g_basename, STDERR_FILENO);
-				ft_putstr_fd(": ", STDERR_FILENO);
-				ft_putstr_fd(param->exec_path, STDERR_FILENO);
-				ft_putstr_fd(": ", STDERR_FILENO);
-				ft_putendl_fd(strerror(errno), STDERR_FILENO);
+				errorf("%s: %s\n", param->exec_path, strerror(errno));
 				ret = 126;
 			}
 		}
@@ -121,7 +114,6 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 		ft_vecpop(param.env_local, NULL);
 		if (ft_vecswallow_at(env, env->size - 1, param.env_local) == NULL)
 		{
-			/* printf("hyo\n"); */
 			ft_vecdestroy(param.env_local, free);
 			return (-1);
 		}
@@ -146,7 +138,7 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 		if (param.exec_path == NULL)
 		{
 			g_last_status_code = 127;
-			error_eval_put(ERROR_CMD_NOT_FOUND, argv[0]);
+			errorf("%s: command not found\n", argv[0]);
 			ft_split_destroy(argv);
 			return (-1); // return error status
 		}

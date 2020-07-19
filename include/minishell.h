@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/17 11:17:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 19:24:06 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <signal.h>
 # include <sys/stat.h>
 # include <stdbool.h>
+# include <stdarg.h>
 
 # include "libft.h"
 # include "libft_ht.h"
@@ -113,31 +114,17 @@ char					*preprocess_filename(t_ftlst **tokens, t_env env);
 ** error.c
 */
 
-enum					e_error
+typedef enum
 {
-	ERROR_AMBIGUOUS_REDIR,
-	ERROR_OPEN,
-	ERROR_CMD_NOT_FOUND,
-	ERROR_SYNTAX,
-	ERROR_CMD_FOUND_ERROR,
-};
+	ERR_FATAL           = -1,
+	ERR_NONE            = 0,
+	ERR_AMBIGUOUS_REDIR = 1,
+	ERR_OPEN            = 1,
+	ERR_CMD_NOT_FOUND   = 127,
+	ERR_SYNTAX          = 2,
+}						t_err;
 
-/*
-** \brief         Error specification
-** \param id      Error type
-** \param status  Status code returned
-** \param msg     Error message to print, if is NULL, use strerror as a msg
-*/
-
-typedef struct
-{
-	enum e_error		id;
-	int					status;
-	char				*msg;
-}						t_error;
-
-void					error_eval_put(enum e_error id, char *content);
-void					error_put_invalid_identifier(char *prefix, char *identifier);
+void					errorf(const char *format, ...);
 
 /*
 ** signal.c

@@ -6,61 +6,40 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 15:34:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 19:20:38 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
-static t_error	g_errors[] =
-{
-	{ERROR_AMBIGUOUS_REDIR, 1, "ambiguous redirect"},
-	{ERROR_OPEN, 1, NULL},
-	{ERROR_CMD_NOT_FOUND, 127, "command not found"},
-};
+/*
+** \brief   printf like function that only works with `%s`,
+**          prefix the message with the program name
+**          and output on STDERR
+** \note    NULL arguments are ignored
+*/
 
-t_error			*st_error_get(enum e_error id)
+void			errorf(const char *format, ...)
 {
-	size_t	i;
-	t_error	*match;
+	va_list	ap;
+	char	*arg;
 
-	match = NULL;
-	i = 0;
-	while (i < sizeof(g_errors) / sizeof(t_error))
+	va_start(ap, format);
+	ft_putstr_fd(g_basename, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	while (*format != '\0')
 	{
-		if (g_errors[i].id == id)
-			match = &g_errors[i];
-		i++;
+		if (format[0] == '%' && format[1] == 's')
+		{
+			arg = va_arg(ap, char*);
+			ft_putstr_fd(arg, STDERR_FILENO);
+			format += 2;
+		}
+		else
+		{
+			ft_putchar_fd(*format, STDERR_FILENO);
+			format++;
+		}
 	}
-	return (match);
-}
-
-void			error_eval_put(enum e_error id, char *unexpected)
-{
-	t_error	*err;
-
-	err = st_error_get(id);
-	ft_putstr_fd(g_basename, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(unexpected, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	if (err->msg == NULL)
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-	else
-		ft_putendl_fd(err->msg, STDERR_FILENO);
-}
-
-int				error_status(enum e_error id)
-{
-	return (st_error_get(id)->status);
-}
-
-void			error_put_invalid_identifier(char *prefix, char *identifier)
-{
-	ft_putstr_fd(g_basename, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(prefix, STDERR_FILENO);
-	ft_putstr_fd(": `", STDERR_FILENO);
-	ft_putstr_fd(identifier, STDERR_FILENO);
-	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+	va_end(ap);
 }

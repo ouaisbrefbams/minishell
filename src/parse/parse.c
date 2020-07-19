@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/17 16:12:53 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/19 19:25:29 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ t_ret					*parse_redir(t_ftlst *input, t_ftlst **redirs)
 {
 	enum e_token_tag    tag;
 	t_ret				*tmp;
-	char 				*error;
 
 	push_token(redirs, input->data);
 	input = input->next;
@@ -60,9 +59,7 @@ t_ret					*parse_redir(t_ftlst *input, t_ftlst **redirs)
 	}
 	if (!(tag & TAG_IS_STR))
 	{
-		error = ft_strjoin3(g_basename,":  syntax error unexpected token `", ((t_token *)input->data)->content);
-		error = ft_strjoin(error, "\'\n");
-		ft_putstr_fd(error, 2);
+		errorf("syntax error near unexpected token `%s'\n", ((t_token *)input->data)->content);
 		tmp = ret_wrap_ast(NULL, NULL);
 		tmp->syntax_error = true;
 		return tmp;
@@ -75,15 +72,12 @@ t_ret                   *parse_cmd(t_ftlst *input)
 {
 	enum e_token_tag    tag;
 	t_ast               *ast;
-	char 				*error;
 	t_ret				*tmp;
 
 	tag = ((t_token *)input->data)->tag;
 	if (tag & TAG_IS_SEP)
 	{
-		error = ft_strjoin3(g_basename,":  syntax error unexpected token `", ((t_token *)input->data)->content);
-		error = ft_strjoin(error, "\'\n");
-		ft_putstr_fd(error, 2);
+		errorf("syntax error near unexpected token `%s'\n", ((t_token *)input->data)->content);
 		tmp = ret_wrap_ast(NULL, NULL);
 		tmp->syntax_error = true;
 		return tmp;
@@ -121,7 +115,6 @@ t_ret		*parse_op(t_ftlst *input)
 	t_ret			*right_ret;
 	enum e_token_tag tag;
 	t_ret 			*tmp;
-	char 			*error;
 
 	left_ret = parse_expr(input);
 	if (left_ret == NULL || left_ret->syntax_error)
@@ -133,19 +126,15 @@ t_ret		*parse_op(t_ftlst *input)
 	tag = ((t_token*)input->data)->tag;
 	if (!(tag & TAG_IS_SEP))
 	{
-		error = ft_strjoin3(g_basename,":  syntax error near unexpected token `", ((t_token *)input->data)->content);
-		error = ft_strjoin(error, "\'\n");
-		ft_putstr_fd(error, 2);
+		errorf("syntax error near unexpected token `%s'\n", ((t_token *)input->data)->content);
 		tmp = ret_wrap_ast(NULL, NULL);
 		tmp->syntax_error = true;
 		return tmp;
 	}
 	input = input->next;
-	if(input == NULL)
+	if (input == NULL)
 	{
-		error = ft_strjoin(g_basename,":  syntax error expected token ");
-		error = ft_strjoin(error, "\n");
-		ft_putstr_fd(error, 2);
+		errorf("syntax error expected token\n");
 		tmp = ret_wrap_ast(NULL, NULL);
 		tmp->syntax_error = true;
 		return tmp;
@@ -165,7 +154,6 @@ t_ret       *parse_expr(t_ftlst *input)
     t_ret               *tmp;
     enum e_token_tag    tag;
 	t_ast 				*new_ast;
-	char 				*error;
 
     tag = ((t_token*)input->data)->tag;
     if (tag & TAG_PARENT_OPEN)
@@ -175,24 +163,21 @@ t_ret       *parse_expr(t_ftlst *input)
         input = tmp->rest;
 		if (input == NULL)
 		{
-			error = ft_strjoin(g_basename,":  syntax error expected token");
-			ft_putstr_fd(error, 2);
+			errorf("syntax error expected token\n");
 			tmp->syntax_error = true;
 			return (tmp);
 		}
 		tag = ((t_token*)input->data)->tag;
-        if (!(tag & TAG_PARENT_CLOSE) )
+        if (!(tag & TAG_PARENT_CLOSE))
 		{
-			error = ft_strjoin(g_basename,":  syntax error expected token `)''");
-			ft_putstr_fd(error, 2);
-			tmp->syntax_error = TRUE;
+			errorf("syntax error expected token `)'\n");
+			tmp->syntax_error = true;
 			return (tmp);
 		}
 		// if (tag & TAG_IS_SEP)
 		// {
-		// 	error = ft_strjoin(g_basename,":  syntax error expected token `)''");
-		// 	ft_putstr_fd(error, 2);
-		// 	tmp->syntax_error = TRUE;
+		//	errorf("syntax error expected token `)'\n");
+		// 	tmp->syntax_error = true;
 		// 	return (tmp);
 		// }
         input = input->next;
@@ -239,7 +224,7 @@ t_ret		*parse(t_ftlst *input)
 	ret->rest = NULL;
 	ret->syntax_error = false;
 	// ret = error_syntax_simple(input, ret);
-	// if (ret->syntax_error == TRUE)
+	// if (ret->syntax_error == true)
 	// 	return ret;
 	ret = parse_op(input);
 	return (ret);

@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/06/17 16:17:43 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 18:57:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static bool				st_open_replace(int *fd, char *filename, int oflag)
 		*fd = open(filename, oflag);
 	if (*fd == -1)
 	{
-		error_eval_put(ERROR_OPEN, filename);
+		errorf("%s: %s\n", filename, strerror(errno));
 		free(filename);
 		return (false);
 	}

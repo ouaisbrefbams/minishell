@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/07/15 13:22:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 18:46:48 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void	st_put_declare_x(char *s)
 {
 	char	*equal_ptr;
 
+	// could use errorf on stdout
 	if (s == NULL)
 		return ;
 	ft_putstr("declare -x ");
@@ -57,7 +58,7 @@ int			builtin_export(char **argv, t_env env)
 		{
 			if (!skip)
 				*equal_ptr = '=';
-			error_put_invalid_identifier("export", argv[i]);
+			errorf("export: `%s': not a valid identifier\n", argv[i]);
 			status = 1;
 			continue;
 		}

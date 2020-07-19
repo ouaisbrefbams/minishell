@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:16 by charles           #+#    #+#             */
-/*   Updated: 2020/07/17 16:36:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 19:12:46 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,12 @@ int	builtin_exit(char **argv, t_env env)
 			after++;
 		if (*after != '\0' || errno == ERANGE)
 		{
-			// replace with minishell error system
-			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-			ft_putstr_fd(argv[1], STDERR_FILENO);
-			ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+			errorf("exit: %s: numeric argument required\n", argv[1]);
 			return 2;
 		}
 		if (argv[2] != NULL)
 		{
-			// replace with minishell error system
-			ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
+			errorf("exit: too many arguments\n");
 			return 1;
 		}
 	}

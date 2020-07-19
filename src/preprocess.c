@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 17:00:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 19:01:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ char		*preprocess_filename(t_ftlst **tokens, t_env env)
 	if (strs[1] != NULL)
 	{
 		/* save tokens */
-		error_eval_put(ERROR_AMBIGUOUS_REDIR, strs[1]);
+		errorf("%s: ambiguous redidrect\n", strs[1]);
 		ft_split_destroy(strs);
 		return (NULL);
 	}
