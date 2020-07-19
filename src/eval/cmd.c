@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/18 09:31:43 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 16:53:54 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,30 @@ int 		forked_cmd(void *void_param)
 		return (param->builtin->func(param->argv, param->env));
 	else
 	{
+		errno = 0;
 		ret = execve(param->exec_path, param->argv, (char**)param->env->data);
 		if (ret == -1)
 		{
-			ft_putstr_fd(g_basename, STDERR_FILENO);
-			ft_putstr_fd(": ", STDERR_FILENO);
-			ft_putstr_fd(param->exec_path, STDERR_FILENO);
-			ft_putstr_fd(": ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			ret = 126;
+			if (errno == ENOEXEC)
+				return (0);
+			struct stat statbuf;
+			if (stat(param->exec_path, &statbuf) != -1 && S_ISDIR(statbuf.st_mode))
+			{
+				ft_putstr_fd(g_basename, STDERR_FILENO);
+				ft_putstr_fd(": ", STDERR_FILENO);
+				ft_putstr_fd(param->exec_path, STDERR_FILENO);
+				ft_putendl_fd(": Is a directory", STDERR_FILENO);
+				ret = 126;
+			}
+			else
+			{
+				ft_putstr_fd(g_basename, STDERR_FILENO);
+				ft_putstr_fd(": ", STDERR_FILENO);
+				ft_putstr_fd(param->exec_path, STDERR_FILENO);
+				ft_putstr_fd(": ", STDERR_FILENO);
+				ft_putendl_fd(strerror(errno), STDERR_FILENO);
+				ret = 126;
+			}
 		}
 		return (ret);
 	}

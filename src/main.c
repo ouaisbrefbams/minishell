@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/19 15:48:02 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 17:04:19 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void ast_print(int level, t_ast *ast);
 ** signal on whole line instead of single command
 ** parsing error
 ** env local to current minishell process
+** BETTER ERROR HANDLING IS BECOMING URGENT (spagetti code everywhere)
 */
 
 char	*g_basename = "minishell";
