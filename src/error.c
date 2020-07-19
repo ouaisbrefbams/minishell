@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/07/15 13:11:13 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 15:34:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ void			error_eval_put(enum e_error id, char *unexpected)
 	t_error	*err;
 
 	err = st_error_get(id);
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(g_basename, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd(unexpected, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	if (err->msg == NULL)

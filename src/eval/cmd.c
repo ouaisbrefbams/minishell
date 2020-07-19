@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/17 11:43:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/18 09:31:43 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int			fork_wrap(
 int 		forked_cmd(void *void_param)
 {
 	t_fork_param_cmd	*param;
+	int					ret;
 
 	param = void_param;
 	ft_vecpop(param->env_local, NULL);
@@ -63,7 +64,19 @@ int 		forked_cmd(void *void_param)
 	if (param->builtin != NULL)
 		return (param->builtin->func(param->argv, param->env));
 	else
-		return (execve(param->exec_path, param->argv, (char**)param->env->data));
+	{
+		ret = execve(param->exec_path, param->argv, (char**)param->env->data);
+		if (ret == -1)
+		{
+			ft_putstr_fd(g_basename, STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+			ft_putstr_fd(param->exec_path, STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
+			ret = 126;
+		}
+		return (ret);
+	}
 }
 
 int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)

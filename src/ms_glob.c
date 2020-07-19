@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/05 11:44:07 by charles           #+#    #+#             */
-/*   Updated: 2020/07/15 12:12:02 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 15:21:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ static int		glob_iter_subdir(
 	size_t	i;
 
 	ft_strcat3(ft_strcpy(subdir_name, dirname), "/", entry->d_name);
+	errno = 0;
 	chdir(subdir_name);
+	if (errno == EACCES)
+		return (0);
 	subdir_matches = glob_matches(subdir_pattern);
 	chdir(dirname);
 	if (subdir_matches == NULL)
@@ -86,9 +89,10 @@ static int		glob_iter(
 			subdir_pattern[-1] = '/';
 		return (0);
 	}
+	/* printf("%s %s\n", dirname, entry->d_name); */
 	if (subdir_pattern != NULL)
 	{
-		if (entry->d_type != DT_DIR)
+		if (entry->d_type != DT_DIR && entry->d_type != DT_LNK)
 		{
 			subdir_pattern[-1] = '/';
 			return (0);
@@ -185,7 +189,7 @@ char			*ms_glob(char *pattern)
 }
 
 /*
-** \brief  Wrapper around `ms_glob` which free `pattern` for convinience
+** \brief  Wrapper around `ms_glob` which free `pattern` for convenience
 */
 
 char			*ms_globf(char *pattern)

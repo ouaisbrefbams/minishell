@@ -1,4 +1,4 @@
-# minishell [![Build Status](https://travis-ci.com/HappyTramp/minishell.svg?token=ZspKVUuPUQ73ZVD6J2w4&branch=master)](https://travis-ci.com/HappyTramp/minishell)
+# minishell
 
 minishell project of school 42
 
@@ -17,16 +17,16 @@ You can then read the man pages in ./doc/man or open ./doc/html/index.html in yo
 
 ### Mandatory
 
-- [ ] Show a prompt when waiting for a new command
+- [x] Show a prompt when waiting for a new command
 - [x] Search and launch the right executable (based on the *PATH* variable or by using relative or absolute path) like in bash
 - [ ] It must implement the builtins like in bash:
 	- [x] `echo` with option `-n`
 	- [ ] `cd` without `-` option
 	- [ ] `pwd` without any options
-	- [ ] `export` without any options
-	- [ ] `unset` without any options
+	- [x] `export` without any options
+	- [x] `unset` without any options
 	- [ ] `env` without any options and any arguments
-	- [ ] `exit` without any options
+	- [x] `exit` without any options
 - [x] `;` in the command should separate commands like in bash
 - [x] `'` and `"` should work like in bash except for multiline commands
 - [ ] Redirections `<` `>` `>>` should work like in bash except for file descriptor aggregation

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/18 08:58:52 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/19 15:48:02 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,10 @@ void ast_print(int level, t_ast *ast);
 ** cmd variable preprocess
 ** PATH with no permission, link and other file system fun stuff
 ** escape lexer
-** escape split preprocessing
+** escape split preprocessing (escaped spaces)
 ** signal on whole line instead of single command
 ** parsing error
 ** env local to current minishell process
-** exit
 */
 
 char	*g_basename = "minishell";
@@ -60,6 +59,16 @@ int main(int argc, char **argv, char **envp)
 		g_basename = argv[0];
 	else
 		g_basename = last_slash + 1;
+
+	char *pwd_var;
+
+	if ((pwd_var = env_search(env, "PWD")) == NULL)
+	{
+		char buf[PATH_MAX] = {0};
+		if (!(getcwd(buf, PATH_MAX)))
+			return(1);
+		env_export(env, "PWD", buf);
+	}
 
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
