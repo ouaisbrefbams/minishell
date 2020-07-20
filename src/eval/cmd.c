@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/20 14:53:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/20 18:22:14 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	t_fork_param_cmd	param;
 	char				**argv;
 	char 				*id;
-	t_ftlst 			*tmp;
+	/* t_ftlst 			*tmp; */
 
 	if (!redir_extract(ast->redirs, env, fds))
 	{
@@ -103,21 +103,48 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	ast->redirs = NULL;
 	if ((param.env_local = env_from_array((char*[]){NULL})) == NULL)
 		return (-1);
-	// TODO generate token list after `=` for variable value preprocessing
+
 	while (ast->cmd_argv != NULL
 		&& ((t_token*)ast->cmd_argv->data)->tag & TAG_IS_STR
 		&& utils_start_with_valid_identifier(((t_token*)ast->cmd_argv->data)->content))
 	{
+		t_ftlst *start;
+
 		id = ((t_token*)ast->cmd_argv->data)->content;
 		*ft_strchr(id, '=') = '\0';
 		((t_token*)ast->cmd_argv->data)->content = ft_strchr(id, '\0') + 1;
-		tmp = split_token(&ast->cmd_argv, TAG_STICK);
-		preprocess(tmp, env);
-		ft_lstiter(tmp, token_debug);
+		if (*((t_token*)ast->cmd_argv->data)->content == '\0')
+			ft_lstpop_front(&ast->cmd_argv, NULL);
+		else
+		{
+			t_ftlst *curr = ast->cmd_argv;
+			t_ftlst *prev = curr;
 
-		if (env_export(param.env_local,id, ((t_token*)ast->cmd_argv->data)->content) == NULL)
+			while (curr != NULL
+					&& ((t_token*)curr->data)->tag & TAG_STICK && ((t_token*)curr->data)->tag & TAG_IS_STR)
+			{
+				prev = curr;
+				curr = curr->next;
+			}
+			if (curr != NULL && ((t_token*)curr->data)->tag & TAG_IS_STR)
+			{
+				prev = curr;
+				curr = curr->next;
+			}
+
+			start = ast->cmd_argv;
+			ast->cmd_argv = prev->next;
+			prev->next = NULL;
+		}
+
+		/* ft_lstiter(start, token_debug); */
+		/* puts(""); */
+		/* ft_lstiter(ast->cmd_argv, token_debug); */
+
+		char **strs = preprocess(&start, env);
+
+		if (env_export(param.env_local, id, strs[0]) == NULL)
 			return (-1);
-		ft_lstpop_front(&ast->cmd_argv, (void (*)(void*))token_destroy);
 	}
 	if (ast->cmd_argv == NULL) // FIXME special env not passed to child processes
 	{

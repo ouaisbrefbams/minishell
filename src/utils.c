@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/19 14:53:27 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/20 17:06:21 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ int		utils_directory_iter(
 	DIR				*dir;
 	struct dirent	*entry;
 
-	errno = 0;
-	if ((dir = opendir(dirname)) == NULL)  // add fail safe
-		return (errno == EACCES ? -2 : -1);
+	if ((dir = opendir(dirname)) == NULL)  // EACCES and Not a directory with glob are ignored by bash
+		return (-2);
 	while ((entry = readdir(dir)) != NULL)
 		if (f(dirname, entry, param) == -1)
 		{

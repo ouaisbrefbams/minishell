@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/20 13:07:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/20 14:51:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/20 17:53:18 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,38 @@ t_ftlst                 *split_token(t_ftlst **lst, enum e_token_tag tag)
 {
     t_ftlst             *curr;
     t_ftlst             *start;
+	enum e_token_tag	curr_tag;
 
     start = *lst;
     curr = *lst;
-    while (curr != NULL || ((t_token *)curr->data)->tag & tag)
+	t_ftlst  *prev = curr;
+	while (curr != NULL)
 	{
-		if (curr->next == NULL || (!(((t_token *)curr->next->data)->tag & tag)))
+		curr_tag = ((t_token *)curr->data)->tag;
+		if (!(curr_tag & TAG_STICK) || !(curr_tag & TAG_IS_STR))
 		{
-            *lst = curr->next;
-			curr->next = NULL;
-            return start;
+			*lst = prev->next;
+			prev->next = NULL;
+			return start;
 		}
+		prev = curr;
 		curr = curr->next;
 	}
-    return start;
+	return start;
+
+
+
+	/* if (curr != NULL) */
+	/* 	curr_tag = ((t_token *)curr->data)->tag; */
+    /* while (curr != NULL && curr_tag & TAG_STICK && curr_tag & TAG_IS_STR) */
+	/* { */
+	/* 	curr = curr->next; */
+	/* 	curr_tag = ((t_token *)curr->data)->tag; */
+	/* 	if (curr == NULL || !(curr_tag & TAG_STICK) || !(curr_tag & TAG_IS_STR)) */
+	/* 	{ */
+    /*         *lst = curr->next; */
+	/* 		curr->next = NULL; */
+	/* 	} */
+	/* } */
+    /* return start; */
 }

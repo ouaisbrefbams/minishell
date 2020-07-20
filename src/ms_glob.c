@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/05 11:44:07 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 15:21:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/20 17:14:04 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 
 #define MATCHES_VEC_START_SIZE 16
 
+static char g_glob_path[PATH_MAX];
+
 /*
 ** \brief                 Glob directory iteration function
 **                        for subdirectory matches
@@ -31,23 +33,15 @@
 */
 
 static int		glob_iter_subdir(
-	char *dirname,
 	struct dirent *entry,
 	struct s_glob_param *param,
 	char *subdir_pattern
 )
 {
-	char	subdir_name[PATH_MAX];
 	t_ftvec	*subdir_matches;
 	size_t	i;
 
-	ft_strcat3(ft_strcpy(subdir_name, dirname), "/", entry->d_name);
-	errno = 0;
-	chdir(subdir_name);
-	if (errno == EACCES)
-		return (0);
 	subdir_matches = glob_matches(subdir_pattern);
-	chdir(dirname);
 	if (subdir_matches == NULL)
 		return (-1);
 	i = 0;
@@ -78,7 +72,9 @@ static int		glob_iter(
 )
 {
 	char	*subdir_pattern;
+	int		ret;
 
+	(void)dirname;
 	if (param->pattern[0] != '.' && entry->d_name[0] == '.')
 		return (0);
 	if ((subdir_pattern = ft_strchr(param->pattern, '/')) != NULL)
@@ -89,7 +85,6 @@ static int		glob_iter(
 			subdir_pattern[-1] = '/';
 		return (0);
 	}
-	/* printf("%s %s\n", dirname, entry->d_name); */
 	if (subdir_pattern != NULL)
 	{
 		if (entry->d_type != DT_DIR && entry->d_type != DT_LNK)
@@ -97,7 +92,10 @@ static int		glob_iter(
 			subdir_pattern[-1] = '/';
 			return (0);
 		}
-		return (glob_iter_subdir(dirname, entry, param, subdir_pattern));
+		ft_strcat3(g_glob_path, "/", entry->d_name);
+		ret = glob_iter_subdir(entry, param, subdir_pattern);
+		*ft_strrchr(g_glob_path, '/') = '\0';
+		return (ret);
 	}
 	if (ft_vecpush_safe(param->matches, ft_strdup(entry->d_name)) == NULL)
 		return (-1);
@@ -112,47 +110,15 @@ static int		glob_iter(
 
 t_ftvec			*glob_matches(char *pattern)
 {
-	char				dirname[PATH_MAX];
 	struct s_glob_param	param;
-	bool				absolute;
-	size_t				i;
 
-	if (getcwd(dirname, PATH_MAX) == NULL)
+	param.pattern = pattern;
+	if ((param.matches = ft_vecnew(MATCHES_VEC_START_SIZE)) == NULL)
 		return (NULL);
-	absolute = *pattern == '/';
-	if (*pattern == '/')
-		pattern++;
-	if ((param.pattern = ft_strdup(pattern)) == NULL ||
-		(param.matches = ft_vecnew(MATCHES_VEC_START_SIZE)) == NULL)
+	if (utils_directory_iter(g_glob_path, &param, (t_directory_iter_func)glob_iter) == -1)
 	{
-		free(param.pattern);
-		return (NULL);
-	}
-	if (absolute)
-		chdir("/");
-	if (utils_directory_iter(absolute ? "/" : dirname, &param,
-					(t_directory_iter_func)glob_iter) == -1)
-	{
-		chdir(dirname);
-		free(param.pattern);
 		ft_vecdestroy(param.matches, free);
 		return (NULL);
-	}
-	chdir(dirname);
-	free(param.pattern);
-	if (absolute)
-	{
-		i = 0;
-		while (i < param.matches->size)
-		{
-			param.matches->data[i] = ft_strjoinf("/", param.matches->data[i], FT_STRJOINF_SND);
-			if (param.matches->data[i] == NULL)
-			{
-				ft_vecdestroy(param.matches, free);
-				return (NULL);
-			}
-			i++;
-		}
 	}
 	return (param.matches);
 }
@@ -169,9 +135,26 @@ char			*ms_glob(char *pattern)
 {
 	char	*join;
 	t_ftvec	*matches;
+	bool	absolute;
+	size_t	i;
 
-	if ((matches = glob_matches(pattern)) == NULL)
+	absolute = *pattern == '/';
+	if (absolute)
+		ft_strcpy(g_glob_path, "/");
+	else if (getcwd(g_glob_path, PATH_MAX) == NULL)
 		return (NULL);
+	if ((matches = glob_matches(absolute ? pattern + 1 : pattern)) == NULL)
+		return (NULL);
+	if (absolute)
+	{
+		i = -1;
+		while (++i < matches->size)
+			if ((matches->data[i] = ft_strjoinf("/", matches->data[i], FT_STRJOINF_SND)) == NULL)
+			{
+				ft_vecdestroy(matches, free);
+				return (NULL);
+			}
+	}
 	ft_vecsort(matches, ft_compar_str);
 	if (ft_vecpush(matches, NULL) == NULL ||
 		(join = ft_strsjoin((char**)matches->data, " ")) == NULL)

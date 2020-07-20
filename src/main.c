@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/20 11:21:23 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/07/20 17:35:51 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv, char **envp)
 
 	path = path_update(NULL, env_search(env, "PATH"));
 
-	char *env_exec_path;
+	/* char *env_exec_path; */
 	// if ((env_exec_path = ft_htget(path, "env")) == NULL)
 	// {
 	// 	errorf("env: command not found\n");
@@ -104,7 +104,7 @@ int main(int argc, char **argv, char **envp)
 		if (parser_out == NULL || parser_out->syntax_error)
 			return (1);
 
-		 ast_print(0, parser_out->ast);
+		 /* ast_print(0, parser_out->ast); */
 
 		/* printf("===cmd_argv===\n"); */
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
