@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/07/15 17:03:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/20 13:22:26 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int				eval(int fds[2], t_env env, t_path path, t_ast *ast);
 
 int				fork_wrap(int fds[2], void *passed, int (*wrapped)(void *param));
 int				eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast);
+t_ftlst         *split_token(t_ftlst **lst, enum e_token_tag);
 
 /*
 ** redir.c

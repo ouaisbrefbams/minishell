@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/19 20:22:37 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/20 11:21:23 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void ast_print(int level, t_ast *ast);
 ** pipeline
 ** cmd variable preprocess
 ** PATH with no permission, link and other file system fun stuff
-** escape lexer
+** escape lexer ------- ok
 ** escape split preprocessing (escaped spaces)
 ** signal on whole line instead of single command
-** parsing error
+** parsing error ------ ok
 ** env local to current minishell process
 ** BETTER ERROR HANDLING IS BECOMING URGENT (spagetti code everywhere)
 */
@@ -67,12 +67,12 @@ int main(int argc, char **argv, char **envp)
 	path = path_update(NULL, env_search(env, "PATH"));
 
 	char *env_exec_path;
-	if ((env_exec_path = ft_htget(path, "env")) == NULL)
-	{
-		errorf("env: command not found\n");
-		return (127);
-	}
-	env_export(env, "_", env_exec_path);
+	// if ((env_exec_path = ft_htget(path, "env")) == NULL)
+	// {
+	// 	errorf("env: command not found\n");
+	// 	return (127);
+	// }
+	// env_export(env, "_", env_exec_path);
 
 	g_last_status_code = 0;
 	signal(SIGINT, signal_sigint);
@@ -104,7 +104,7 @@ int main(int argc, char **argv, char **envp)
 		if (parser_out == NULL || parser_out->syntax_error)
 			return (1);
 
-		 //ast_print(0, parser_out->ast);
+		 ast_print(0, parser_out->ast);
 
 		/* printf("===cmd_argv===\n"); */
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */

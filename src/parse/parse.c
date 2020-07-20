@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/19 19:25:29 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/20 10:26:14 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ t_ret					*parse_redir(t_ftlst *input, t_ftlst **redirs)
 
 	push_token(redirs, input->data);
 	input = input->next;
+	if (input == NULL)
+	{
+		errorf("syntax error near unexpected token `newline'\n", NULL);
+		tmp = ret_wrap_ast(NULL, NULL);
+		tmp->syntax_error = true;
+		return tmp;
+	}
 	tag = ((t_token *)input->data)->tag;
 	while(input != NULL
 			&& input->next != NULL
@@ -91,7 +98,7 @@ t_ret                   *parse_cmd(t_ftlst *input)
 		else if (tag & TAG_IS_REDIR)
 		{
 			tmp = parse_redir(input, &ast->redirs);
-			if (tmp->syntax_error || tmp == NULL)
+			if (tmp == NULL || tmp->syntax_error)
 				return tmp;
 			input = tmp->rest;
 		}

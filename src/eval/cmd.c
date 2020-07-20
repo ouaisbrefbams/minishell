@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 19:00:54 by charles          ###   ########.fr       */
+/*   Updated: 2020/07/20 14:53:40 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 pid_t	g_child_pid = -1;
 int		g_last_status_code = 0;
+void token_debug(void *v);
 
 /*
 ** \brief          Wrap a function in a fork
@@ -91,6 +92,8 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 {
 	t_fork_param_cmd	param;
 	char				**argv;
+	char 				*id;
+	t_ftlst 			*tmp;
 
 	if (!redir_extract(ast->redirs, env, fds))
 	{
@@ -105,7 +108,14 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 		&& ((t_token*)ast->cmd_argv->data)->tag & TAG_IS_STR
 		&& utils_start_with_valid_identifier(((t_token*)ast->cmd_argv->data)->content))
 	{
-		if (env_export_full(param.env_local, ((t_token*)ast->cmd_argv->data)->content) == NULL)
+		id = ((t_token*)ast->cmd_argv->data)->content;
+		*ft_strchr(id, '=') = '\0';
+		((t_token*)ast->cmd_argv->data)->content = ft_strchr(id, '\0') + 1;
+		tmp = split_token(&ast->cmd_argv, TAG_STICK);
+		preprocess(tmp, env);
+		ft_lstiter(tmp, token_debug);
+
+		if (env_export(param.env_local,id, ((t_token*)ast->cmd_argv->data)->content) == NULL)
 			return (-1);
 		ft_lstpop_front(&ast->cmd_argv, (void (*)(void*))token_destroy);
 	}
