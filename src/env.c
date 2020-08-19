@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/16 08:44:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/19 10:23:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ char	*env_search_first_match(t_env env, const char *haystack)
 	size_t	i;
 	size_t	key_len;
 
+	if (!ft_isalnum(*haystack) && *haystack != '_' && *haystack != '?') // $ alone
+		return ("$");
 	if (ft_isdigit(*haystack))
 		return (NULL);
 	len = 0;

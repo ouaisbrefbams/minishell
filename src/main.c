@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/07/20 17:35:51 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/19 10:03:24 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ int main(int argc, char **argv, char **envp)
 	// env_export(env, "_", env_exec_path);
 
 	g_last_status_code = 0;
-	signal(SIGINT, signal_sigint);
-	signal(SIGQUIT, signal_sigquit);
-	signal(SIGTERM, signal_sigterm);
+	/* signal(SIGINT, signal_sigint); */
+	/* signal(SIGQUIT, signal_sigquit); */
+	/* signal(SIGTERM, signal_sigterm); */
 
 	char *last_slash = ft_strrchr(argv[0], '/');
 	if (last_slash == NULL)

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/20 11:07:13 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/08/19 13:41:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,24 @@ int                     lexer_sep(char input);
 int                     lexer_verif_entre_cote(char *input, int i);
 int                     lexe_space(char *input);
 
+
+t_token					*push_token_enum(t_token *lst_token);
+
+t_ftlst             	*lexe_trim_out(t_ftlst *lst);
+
+/*
+** token.c
+*/
+
 t_token					*token_new(enum e_token_tag tag, char *content);
 t_token					*token_new_until(enum e_token_tag tag, char *content, int n);
 void					token_destroy(t_token *token);
 void					token_destroy_lst(t_ftlst *tokens);
 void					token_destroy_lst2(t_ftlst *tokens1, t_ftlst *tokens2);
-t_token					*push_token_enum(t_token *lst_token);
-
-t_ftlst             	*lexe_trim_out(t_ftlst *lst);
+enum e_token_tag		token_tag(t_ftlst *token_lst);
+void					token_set_tag(t_ftlst *token_lst, enum e_token_tag tag);
+char					*token_content(t_ftlst *token_lst);
+void					token_set_content(t_ftlst *token_lst, char *content);
+void					token_set_contentf(t_ftlst *token_lst, char *content);
 
 #endif

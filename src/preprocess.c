@@ -6,175 +6,157 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/07/20 17:36:09 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/19 16:32:22 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "ms_glob.h"
 #include "lexer.h"
 #include "eval.h"
 
-static bool		st_escapable(char c, enum e_token_tag tag)
-{
-	if (tag & TAG_STR)
-		return (true);
-	if ((tag & TAG_STR_DOUBLE) && (c == '\\' || c == '"' || c == '$'))
-		return (true);
-	return (false);
-}
-
-static char		*st_iterpolate_env(char *str, enum e_token_tag tag, t_env env)
-{
-	size_t		i;
-	t_ftdstr	*dstr;
-	char		*match;
-
-	if ((dstr = ft_dstrwrap(str)) == NULL)
-		return (NULL);
-	i = -1;
-	while (++i < dstr->length)
-		if (dstr->str[i] == '\\' && st_escapable(dstr->str[i + 1], tag))
-			ft_dstrerase(dstr, i, 1);
-		else if (dstr->str[i] == '$' && !ft_isalnum(dstr->str[i + 1])
-				&& dstr->str[i + 1] != '_'
-				&& dstr->str[i + 1] != '?') // $ alone
-			continue;
-		else if (dstr->str[i] == '$')
-		{
-			if ((match = env_search_first_match(env, dstr->str + i + 1)) == NULL)
-			{
-				ft_dstrerase(dstr, i, utils_var_end(dstr->str + i + 1));
-				i--;
-			}
-			else
-			{
-				if (ft_dstrsubstitute(dstr, match, i, utils_var_end(dstr->str + i + 1)) == NULL)
-				{
-					ft_dstrdestroy(dstr);
-					return (NULL);
-				}
-				i += ft_strlen(match) - 1;
-			}
-		}
-	return (ft_dstrunwrap(dstr));
-}
-
-static char		*st_iterpolate_globs(char *str)
+static t_ftlst	*st_field_split(char *str)
 {
 	char	**strs;
+	t_ftlst	*ret;
+	t_ftlst	*node;
 	int		i;
 
-	if ((strs = ft_splitf(str, ' ')) == NULL)
+	if ((strs = ft_split(str, ' ')) == NULL)
 		return (NULL);
+	ret = NULL;
 	i = 0;
 	while (strs[i] != NULL)
 	{
-		if (ft_strchr(strs[i], '*') != NULL
-			&& (strs[i] = ms_globf(strs[i])) == NULL)
+		if ((node = ft_lstnew(token_new(TAG_STR, strs[i]))) == NULL)
 		{
-			ft_split_destroy(strs);
+			free(strs);
 			return (NULL);
 		}
+		ft_lstpush_back(&ret, node);
 		i++;
 	}
-	return (ft_strsjoinf(strs, " "));
+	free(strs);
+	return (ret);
 }
 
-static int		st_splat_arg(t_ftvec *argv, int i)
-{
-	t_token	*splated;
-	char	**strs;
-	int		j;
-
-	if ((splated = ft_vectake(argv, i)) == NULL
-		|| (strs = ft_split(splated->content, ' ')) == NULL)
-	{
-		token_destroy(splated);
-		return (-1);
-	}
-	j = 0;
-	while (strs[j] != NULL)
-	{
-		if (ft_vecinsert_safe(argv, i + j, token_new(TAG_STR, strs[j])) == NULL)
-		{
-			token_destroy(splated);
-			ft_split_destroy(strs);
-			return (-1);
-		}
-		j++;
-	}
-	token_destroy(splated);
-	ft_split_destroy(strs);
-	return (i + j - 1);
-}
-
-static void		st_iter_func_unwrap_token(void **addr)
-{
-	char	*content;
-
-	content = (*(t_token**)addr)->content;
-	free(*(t_token**)addr);
-	*(char**)addr = content;
-}
-
-// need to free argv on error
 char			**preprocess(t_ftlst **tokens, t_env env)
 {
-	size_t	i;
-	t_token	*token;
-	t_ftvec	*argv;
+	t_ftlst *curr;
 
-	if ((argv = ft_vecfrom_lst(*tokens)) == NULL)
+	curr = *tokens;
+	while (curr != NULL)
 	{
-		ft_lstdestroy(tokens, NULL);
-		return (NULL);
-	}
-	ft_lstdestroy(tokens, NULL);
-	i = -1;
-	while (++i < argv->size)
-	{
-		token = argv->data[i];
-		/* printf("|%s| %d\n", token->content, token->tag & TAG_STICK); */
-		if (token->tag & TAG_STR_SINGLE)
-			continue ;
-		token->content = st_iterpolate_env(token->content, token->tag, env);
-		if (token->tag & TAG_STR)
+		if (token_tag(curr) & (TAG_STR | TAG_STR_DOUBLE))
 		{
-			if (ft_strchr(token->content, '*') != NULL)
-				token->content = st_iterpolate_globs(token->content);
-			if (ft_strchr(token->content, ' ') != NULL)
+			char *str = token_content(curr);
+
+			size_t	i = -1;
+			while (str[++i] != '\0')
 			{
-				if ((i = st_splat_arg(argv, i)) == (size_t)-1)
-					return (NULL);
-				if (token->tag & TAG_STICK)   // FIXME temporary will not work with `echo *''`
-					((t_token*)argv->data[i])->tag |= TAG_STICK;
+				str = token_content(curr);
+				// escape
+				if (str[i] == '\\'
+						&& (token_tag(curr)& TAG_STR
+							|| ((token_tag(curr) & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[i + 1]))))
+				{
+					ft_memmove(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
+					continue;
+				}
+
+				// interpolate
+				if (str[i] == '$')
+				{
+					char	*match;
+					size_t	var_len = utils_var_end(&str[i + 1]);
+
+					if ((match = env_search_first_match(env, &str[i + 1])) == NULL)
+					{
+						ft_memmove(&str[i], &str[i + var_len], var_len );
+						i--;
+						continue;
+					}
+
+					char *before;
+					char *after;
+					size_t len;
+
+					str[i] = '\0';
+					before = str;
+					after = &str[i + var_len];
+					/* printf("%s | %s | %s\n", before, match, after); */
+					if (token_tag(curr) & TAG_STR)
+					{
+						t_ftlst *fields = st_field_split(match);
+						/* printf("f %p\n", fields); */
+						/* printf("f %s\n", token_content(fields)); */
+
+						len = ft_strlen(token_content(ft_lstlast(fields)));
+						/* printf("l %d\n", len); */
+
+						if (fields->next == NULL)
+						{
+							/* printf("yo\n"); */
+							token_set_content(curr, ft_strjoin3(before, token_content(fields), after));
+						}
+						else
+						{
+							token_set_content(curr, ft_strjoin(before, token_content(fields)));
+							token_set_content(ft_lstlast(fields),
+											  ft_strjoin(token_content(ft_lstlast(fields)), after));
+							t_ftlst *tmp = curr->next;
+							curr->next = fields->next;
+							curr = ft_lstlast(fields);
+							curr->next = tmp;
+						}
+						/* str = token_content(curr); */
+						/* i = len - 1; */
+						/* printf("%d\n", i); */
+						i += len - 1;
+						/* printf("%d\n", i); */
+						/* printf(">  %s\n", str); */
+						/* printf(">> %s\n", str + i); */
+					}
+					else if (token_tag(curr) & TAG_STR_DOUBLE)
+					{
+						token_set_content(curr, ft_strjoin3(before, match, after));
+						/* printf(">%s< %d\n", match, ft_strlen(match)); */
+						i += ft_strlen(match) - 1;
+						/* printf(">  %zu %s\n", i, str); */
+					}
+				}
 			}
 		}
+		curr = curr->next;
 	}
 
-	/* printf("-------\n"); */
-	t_token *next;
-	i = -1;
-	while (++i < argv->size - 1)
+	curr = *tokens;
+	while (curr != NULL)
 	{
-		token = argv->data[i];
-		/* printf("|%s| %d\n", token->content, token->tag & TAG_STICK); */
-		while (token->tag & TAG_STICK && i + 1 < argv->size)
+		// curr->next shouldn't be null
+		if (token_tag(curr) & TAG_STICK)
 		{
-			/* printf("2|%s|\n", token->content); */
-			next = argv->data[i + 1];
-			token->content = ft_strjoinf_fst(token->content, next->content);
-			if (token->content == NULL)
-				return (NULL);
-			token->tag &= next->tag;
-			ft_vecremove(argv, i + 1, (void (*)(void*))token_destroy);
+			token_set_content(curr, ft_strjoinf_fst(token_content(curr), token_content(curr->next)));
+			t_ftlst *tmp = curr->next->next;
+			token_set_tag(curr, token_tag(curr->next));
+			ft_lstdelone(curr->next, free);
+			curr->next = tmp;
+			continue;
 		}
+		curr = curr->next;
 	}
 
-	ft_veciter_addr(argv, st_iter_func_unwrap_token);
-	ft_vecpush(argv, NULL);
-	return ((char**)ft_vecunwrap(argv));
+	char **ret = malloc(sizeof(char*) * (ft_lstsize(*tokens) + 1));
+	curr = *tokens;
+	size_t	i = 0;
+	while (curr != NULL)
+	{
+		ret[i] = token_content(curr);
+		i++;
+		curr = curr->next;
+	}
+	ret[i] = NULL;
+	ft_lstdestroy(tokens, NULL);
+	return ret;
 }
 
 // need to free tokens
