@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/19 10:03:24 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/19 17:54:22 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,16 @@ char	*g_basename = "minishell";
 
 int main(int argc, char **argv, char **envp)
 {
+	/* char **strs = ms_split_notrim(ft_strdup(" bar  "), ' '); */
+	/* printf("p %p\n", strs); */
+    /*  */
+	/* for (size_t i = 0; strs[i] != NULL; i++) */
+	/* 	printf("|%s|\n", strs[i]); */
+	/* return 0; */
+
+
+
+
 	t_path	path;
 	t_env	env;
 

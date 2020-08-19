@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/08/19 16:32:22 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/19 17:56:12 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static t_ftlst	*st_field_split(char *str)
 	t_ftlst	*node;
 	int		i;
 
-	if ((strs = ft_split(str, ' ')) == NULL)
+	if ((strs = ms_split_notrim(str, ' ')) == NULL)
 		return (NULL);
 	ret = NULL;
 	i = 0;
@@ -39,6 +39,7 @@ static t_ftlst	*st_field_split(char *str)
 	return (ret);
 }
 
+// FIXME field split space before/after when arg not sticked
 char			**preprocess(t_ftlst **tokens, t_env env)
 {
 	t_ftlst *curr;
@@ -167,7 +168,10 @@ char		*preprocess_filename(t_ftlst **tokens, t_env env)
 
 	if ((strs = preprocess(tokens, env)) == NULL
 		|| strs[0] == NULL)
+	{
+		free(strs);
 		return (NULL);
+	}
 	if (strs[1] != NULL)
 	{
 		/* save tokens */
