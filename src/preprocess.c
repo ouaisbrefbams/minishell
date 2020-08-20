@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/08/19 17:56:12 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/20 14:24:51 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,15 @@ static t_ftlst	*st_field_split(char *str)
 	return (ret);
 }
 
+void token_debug(void *v);
+
 // FIXME field split space before/after when arg not sticked
 char			**preprocess(t_ftlst **tokens, t_env env)
 {
 	t_ftlst *curr;
+	enum e_token_tag prev_tag;
 
+	prev_tag = 0;
 	curr = *tokens;
 	while (curr != NULL)
 	{
@@ -84,38 +88,64 @@ char			**preprocess(t_ftlst **tokens, t_env env)
 					str[i] = '\0';
 					before = str;
 					after = &str[i + var_len];
-					/* printf("%s | %s | %s\n", before, match, after); */
 					if (token_tag(curr) & TAG_STR)
 					{
 						t_ftlst *fields = st_field_split(match);
+						/* printf("fields \n"); */
+						/* ft_lstiter(fields, token_debug); */
 						/* printf("f %p\n", fields); */
 						/* printf("f %s\n", token_content(fields)); */
 
 						len = ft_strlen(token_content(ft_lstlast(fields)));
 						/* printf("l %d\n", len); */
 
-						if (fields->next == NULL)
+						/* printf("prev %d\n", prev_tag & TAG_STICK); */
+						if (!(prev_tag & TAG_STICK) && *before == '\0' && *token_content(fields) == '\0')
+						{
+							/* printf("yo\n"); */
+							ft_lstpop_front(&fields, NULL);
+						}
+						if (!(token_tag(curr) & TAG_STICK) && *after == '\0' && *token_content(ft_lstlast(fields)) == '\0')
+							ft_lstpop_back(&fields, NULL);
+						/* ft_lstiter(fields, token_debug); */
+
+						if (fields == NULL)
+							// delete curr
+							;
+						else if (fields->next == NULL)
 						{
 							/* printf("yo\n"); */
 							token_set_content(curr, ft_strjoin3(before, token_content(fields), after));
+							i += len - 1;
 						}
 						else
 						{
+
+							/*
+							** A='  bonjour je suis '
+							** echo $A
+							** curr = $A
+							** fs = '' 'bonjour' 'je' 'suis' ''
+							*/
+
+							/* if (*before != '\0' && */
+
 							token_set_content(curr, ft_strjoin(before, token_content(fields)));
 							token_set_content(ft_lstlast(fields),
 											  ft_strjoin(token_content(ft_lstlast(fields)), after));
+
 							t_ftlst *tmp = curr->next;
 							curr->next = fields->next;
 							curr = ft_lstlast(fields);
 							curr->next = tmp;
+							i = len - 1;
+						str = token_content(curr);
+						/* printf("%d\n", i); */
+						/* i += len - 1; */
+						/* printf("%d\n", i); */
+						/* printf(">  |%s|\n", str); */
+						/* printf(">> |%s|\n", str + i); */
 						}
-						/* str = token_content(curr); */
-						/* i = len - 1; */
-						/* printf("%d\n", i); */
-						i += len - 1;
-						/* printf("%d\n", i); */
-						/* printf(">  %s\n", str); */
-						/* printf(">> %s\n", str + i); */
 					}
 					else if (token_tag(curr) & TAG_STR_DOUBLE)
 					{
@@ -127,8 +157,17 @@ char			**preprocess(t_ftlst **tokens, t_env env)
 				}
 			}
 		}
+		prev_tag = token_tag(curr);
 		curr = curr->next;
+		/* if (curr != NULL) */
+		/* { */
+		/* prev_tag = token_tag(curr); */
+		/* token_debug(curr->data); */
+		/* } */
 	}
+
+	/* printf("=====================AFTER\n"); */
+	/* ft_lstiter(*tokens, token_debug); */
 
 	curr = *tokens;
 	while (curr != NULL)
