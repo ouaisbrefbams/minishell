@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/19 17:50:43 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/20 14:45:14 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,32 +96,4 @@ void print_prompt(void)
 {
 	printf("\033[0;32m%s\033[0m$ ", getcwd(NULL, 0));
 	fflush(stdout);
-}
-
-char **ms_split_notrim(const char *s, char c)
-{
-	t_ftvec	*ret;
-	char	*match;
-
-	if ((ret = ft_vecnew(16)) == NULL)
-		return (NULL);
-	while (*s != '\0')
-	{
-		if ((match = ft_strchr(s, c)) == NULL)
-		{
-			if (ft_vecpush_safe(ret, ft_strdup(s)) == NULL)
-				return (ft_vecdestroy(ret, free));
-			break;
-		}
-		if (ft_vecpush_safe(ret, ft_strndup(s, match - s)) == NULL)
-			return (ft_vecdestroy(ret, free));
-		while (*++match == c)
-			;
-		s = match;
-		if (*s == '\0' && ft_vecpush_safe(ret, ft_strdup(s)) == NULL)
-			return (ft_vecdestroy(ret, free));
-	}
-	if (ft_vecpush(ret, NULL) == NULL)
-		return (ft_vecdestroy(ret, free));
-	return ((char**)ft_vecunwrap(ret));
 }

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/19 17:42:15 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/20 14:45:19 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,6 @@ int		utils_directory_iter(
 size_t	utils_var_end(char *name);
 bool	utils_valid_identifier(char *name);
 bool	utils_start_with_valid_identifier(char *name);
-char 	**ms_split_notrim(const char *s, char c);
 
 void print_prompt(void);
 
