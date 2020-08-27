@@ -99,7 +99,7 @@ int 					check_input_out(char *input)
 	return(0);
 }
 
-enum e_token_tag token_verif_stick(t_token *lst_token)
+enum e_tok token_verif_stick(t_token *lst_token)
 {
 	int i;
 
@@ -110,7 +110,7 @@ enum e_token_tag token_verif_stick(t_token *lst_token)
 	return(lst_token->tag | TAG_STICK);
 }
 
-enum e_token_tag token_str_or_cote(t_token *lst_token)
+enum e_tok token_str_or_cote(t_token *lst_token)
 {
 	int i;
 
@@ -139,7 +139,7 @@ enum e_token_tag token_str_or_cote(t_token *lst_token)
 
 t_token			*push_token_enum(t_token *lst_token)
 {
-	enum e_token_tag 		tk;
+	enum e_tok 		tk;
 
 	tk = ret_token(lst_token->content, 0);
 	if (tk == 0)

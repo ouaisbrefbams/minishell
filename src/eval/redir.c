@@ -6,13 +6,13 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 18:57:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 09:28:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
-static enum e_token_tag	st_lst_tag(t_ftlst *lst)
+static enum e_tok	st_lst_tag(t_ftlst *lst)
 {
 	return (((t_token*)lst->data)->tag);
 }

@@ -82,7 +82,7 @@ char	**st_tokens_to_argv(t_ftlst *tokens)
 char			**preprocess(t_ftlst **tokens, t_env env)
 {
 	t_ftlst *curr;
-	enum e_token_tag prev_tag;
+	enum e_tok prev_tag;
 
 	prev_tag = 0;
 	curr = *tokens;

@@ -12,7 +12,7 @@
 
 #include "lexer.h"
 
-t_token				*token_new(enum e_token_tag tag, char *content)
+t_token				*token_new(enum e_tok tag, char *content)
 {
 	size_t	len;
 
@@ -22,7 +22,7 @@ t_token				*token_new(enum e_token_tag tag, char *content)
 	return (token_new_until(tag, content, len));
 }
 
-t_token				*token_new_until(enum e_token_tag tag, char *content, int n)
+t_token				*token_new_until(enum e_tok tag, char *content, int n)
 {
 	t_token			*token;
 
@@ -56,12 +56,12 @@ void				token_destroy_lst2(t_ftlst *tokens1, t_ftlst *tokens2)
 	ft_lstdestroy(&tokens2, (void (*)(void*))token_destroy);
 }
 
-enum e_token_tag	token_tag(t_ftlst *token_lst)
+enum e_tok	token_tag(t_ftlst *token_lst)
 {
 	return (((t_token*)token_lst->data)->tag);
 }
 
-void				token_set_tag(t_ftlst *token_lst, enum e_token_tag tag)
+void				token_set_tag(t_ftlst *token_lst, enum e_tok tag)
 {
 	((t_token*)token_lst->data)->tag = tag;
 }

@@ -37,7 +37,7 @@ typedef struct			s_op
 {
 	struct s_ast		*left;
 	struct s_ast		*right;
-	enum e_token_tag	sep;
+	enum e_tok	sep;
 }						t_op;
 
 /*

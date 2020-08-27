@@ -58,7 +58,7 @@ int				eval(int fds[2], t_env env, t_path path, t_ast *ast);
 
 int				fork_wrap(int fds[2], void *passed, int (*wrapped)(void *param));
 int				eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast);
-t_ftlst         *split_token(t_ftlst **lst, enum e_token_tag);
+t_ftlst         *split_token(t_ftlst **lst, enum e_tok);
 
 /*
 ** redir.c

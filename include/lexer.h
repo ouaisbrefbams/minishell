@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/19 13:41:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 09:26:33 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "libft_str.h"
 # include "minishell.h"
 
-enum                    e_token_tag
+enum                    e_tok
 {
 	TAG_AND          = 1 << 0,
 	TAG_END          = 1 << 1,
@@ -41,13 +41,13 @@ enum                    e_token_tag
 
 typedef struct
 {
-    enum e_token_tag    tag;
+    enum e_tok    tag;
     char                *content;
 }                       t_token;
 
 t_ftlst                 *lexer(char *input);
-enum e_token_tag        ret_token(char *input, int  i);
-enum e_token_tag        ret_token_sep_redir_append(char *input, int i);
+enum e_tok        ret_token(char *input, int  i);
+enum e_tok        ret_token_sep_redir_append(char *input, int i);
 
 int                     lexer_sep(char input);
 int                     lexer_verif_entre_cote(char *input, int i);
@@ -62,15 +62,26 @@ t_ftlst             	*lexe_trim_out(t_ftlst *lst);
 ** token.c
 */
 
-t_token					*token_new(enum e_token_tag tag, char *content);
-t_token					*token_new_until(enum e_token_tag tag, char *content, int n);
+t_token					*token_new(enum e_tok tag, char *content);
+t_token					*token_new_until(enum e_tok tag, char *content, int n);
 void					token_destroy(t_token *token);
 void					token_destroy_lst(t_ftlst *tokens);
 void					token_destroy_lst2(t_ftlst *tokens1, t_ftlst *tokens2);
-enum e_token_tag		token_tag(t_ftlst *token_lst);
-void					token_set_tag(t_ftlst *token_lst, enum e_token_tag tag);
+enum e_tok		token_tag(t_ftlst *token_lst);
+void					token_set_tag(t_ftlst *token_lst, enum e_tok tag);
 char					*token_content(t_ftlst *token_lst);
 void					token_set_content(t_ftlst *token_lst, char *content);
 void					token_set_contentf(t_ftlst *token_lst, char *content);
+
+/*
+** \warning DO NOT change the order of the fields
+*/
+
+typedef struct		s_tlst
+{
+	char			*content;
+	struct s_tlst	*next;
+	enum e_tok		tag;
+}					t_tlst;
 
 #endif

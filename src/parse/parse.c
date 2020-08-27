@@ -42,7 +42,7 @@ t_ret					*ret_wrap_ast(t_ast *ast, t_ftlst *rest)
 
 t_ret					*parse_redir(t_ftlst *input, t_ftlst **redirs)
 {
-	enum e_token_tag    tag;
+	enum e_tok    tag;
 	t_ret				*tmp;
 
 	push_token(redirs, input->data);
@@ -77,7 +77,7 @@ t_ret					*parse_redir(t_ftlst *input, t_ftlst **redirs)
 
 t_ret                   *parse_cmd(t_ftlst *input)
 {
-	enum e_token_tag    tag;
+	enum e_tok    tag;
 	t_ast               *ast;
 	t_ret				*tmp;
 
@@ -120,7 +120,7 @@ t_ret		*parse_op(t_ftlst *input)
 	t_ast			*ast;
 	t_ret			*left_ret;
 	t_ret			*right_ret;
-	enum e_token_tag tag;
+	enum e_tok tag;
 	t_ret 			*tmp;
 
 	left_ret = parse_expr(input);
@@ -159,7 +159,7 @@ t_ret		*parse_op(t_ftlst *input)
 t_ret       *parse_expr(t_ftlst *input)
 {
     t_ret               *tmp;
-    enum e_token_tag    tag;
+    enum e_tok    tag;
 	t_ast 				*new_ast;
 
     tag = ((t_token*)input->data)->tag;

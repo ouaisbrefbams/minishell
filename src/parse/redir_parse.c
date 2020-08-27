@@ -1,7 +1,7 @@
 
 #include "parser.h"
 
-int                 parse_redir_true_false(enum e_token_tag tag)
+int                 parse_redir_true_false(enum e_tok tag)
 {
     if (tag & TAG_IS_REDIR)
         return (1);

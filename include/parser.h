@@ -52,8 +52,8 @@ t_ftlst				*push_token(t_ftlst **tokens, t_token *pushed);
 
 t_ast 				*push_cmd(t_ast *ast, t_ftlst *ret);
 t_ast 				*push_redir(t_ast *ast, t_ftlst *rest);
-int                 parse_cmd_str_true_false(enum e_token_tag tag);
-int                 parse_redir_true_false(enum e_token_tag tag);
+int                 parse_cmd_str_true_false(enum e_tok tag);
+int                 parse_redir_true_false(enum e_tok tag);
 
 // error
 t_token                 *error_syntax_simple(t_ftlst *in);

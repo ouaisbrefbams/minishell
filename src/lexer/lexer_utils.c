@@ -13,7 +13,7 @@
 #include "lexer.h"
 
 // check for append tag
-enum e_token_tag                ret_token_sep_redir_append(char *input, int i)
+enum e_tok                ret_token_sep_redir_append(char *input, int i)
 {
     if (input[i + 1] ==  '>')
         return(TAG_REDIR_APPEND);
@@ -22,7 +22,7 @@ enum e_token_tag                ret_token_sep_redir_append(char *input, int i)
 }
 
 // return token tag corresponding to string id
-enum e_token_tag                ret_token(char *input, int  i)
+enum e_tok                ret_token(char *input, int  i)
 {
     if (input[i] == ';')
         return(TAG_END);
