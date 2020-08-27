@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 18:44:17 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:55:27 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void					tok_lst_push_back(t_tok_lst **tokens, t_tok_lst *pushed);
 t_tok_lst				*tok_lst_push_front(t_tok_lst **tokens, t_tok_lst *pushed);
 void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*));
 t_tok_lst				*tok_lst_last(t_tok_lst *tokens);
+t_tok_lst				*tok_lst_pop_front(t_tok_lst **tokens);
 
 /*
 ** lexer.c

@@ -6,19 +6,15 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/27 18:40:55 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:38:13 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSE_H
 # define PARSE_H
 
-# include "minishell.h"
-#include "libft_str.h"
-# include "ast.h"
-
 /*
-** \file   parse.h
+** \file   parser.h
 ** \brief  Input parsing and AST manipulation
 **
 ** Context free grammar:
@@ -34,6 +30,86 @@
 ** ```
 */
 
+# include <stdlib.h>
+# include <stdbool.h>
+# include "libft_lst.h"
+# include "lexer.h"
+# include "error.h"
+
+struct s_ast;
+
+/*
+** \brief            Operation struct
+** \param left       AST to the left of separator
+** \param right      AST to the right of separator
+** \param sep        Type of separator
+*/
+
+
+typedef struct			s_op
+{
+	struct s_ast		*left;
+	struct s_ast		*right;
+	enum e_tok	sep;
+}						t_op;
+
+/*
+** \brief            AST node tag (type)
+** \param TAG_CMD    Command AST node
+** \param TAG_OP     Operation AST node
+** \param TAG_PARENT Parenthesis AST node
+*/
+
+enum			e_ast
+{
+	AST_CMD,
+	AST_OP,
+	AST_PARENT,
+};
+
+/*
+** \brief             AST node struct
+** \param tag         Node tag
+** \param op          Operation struct
+** \param cmd_argv    Command argv tokens
+** \param parend_ast  AST inside parenthesis
+** \param redirs      Redirections tokens
+*/
+
+typedef struct			s_ast
+{
+	enum e_ast			tag;
+	union
+	{
+		t_op			op;
+		t_tok_lst		*cmd_argv;
+		struct s_ast	*parent_ast;
+	};
+	t_tok_lst			*redirs;
+}						t_ast;
+
+/*
+** ast.c
+*/
+
+t_ast					*ast_new(enum e_ast tag);
+void					ast_destroy(t_ast *ast);
+
+/*
+** parsed.c
+*/
+
+typedef struct			s_parsed
+{
+	bool				syntax_error;
+	t_ast				*ast;
+	t_tok_lst			*rest;
+}						t_parsed;
+
+t_parsed				*parsed_new(t_ast *ast, t_tok_lst *rest);
+t_parsed				*parsed_error(const char *format, ...);
+
+
 /*
 ** parse.c
 */
@@ -42,5 +118,6 @@ t_parsed				*parse(t_tok_lst *input);
 t_parsed		        *parse_op(t_tok_lst *input);
 t_parsed		        *parse_expr(t_tok_lst *input);
 t_parsed               	*parse_cmd(t_tok_lst *input);
+
 
 #endif

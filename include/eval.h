@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 17:15:19 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:31:35 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # include "minishell.h"
 # include "lexer.h"
-# include "ast.h"
+# include "parser.h"
 
 typedef struct
 {

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 17:34:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:45:59 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ int				check_input(char *input)
 	}
 	if (lexer_sep(input[i]))
 	{
+		/* src/lexer/lexer.c:62:12: warning: Although the value stored to 'i' is used in the enclosing expression, the value is never actually read from 'i' */
+        /*                 return (i += lexer_space(&input[i + 1]) + 1); */
+        /*                         ^    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 		if (input[i] == ';')
 			return (i += lexer_space(&input[i + 1]) + 1);
 		while(input[i] == input[i + 1] && op < 2)

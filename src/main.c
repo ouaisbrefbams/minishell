@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/27 18:41:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:44:44 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@
 */
 
 #include "minishell.h"
-#include "ast.h"
 #include "lexer.h"
 #include "parser.h"
 #include "eval.h"
 
-void token_debug(void *v);
-void token_put(void *v);
-void print_level(int level);
-void ast_print(int level, t_ast *ast);
+/* void token_debug(void *v); */
+/* void token_put(void *v); */
+/* void print_level(int level); */
+/* void ast_print(int level, t_ast *ast); */
+void tok_lst_debug(t_tok_lst *tokens);
 
 /*
 ** TODO
@@ -90,6 +90,7 @@ int main(int argc, char **argv, char **envp)
 		t_tok_lst *lex_out = lexer(ft_strdup(argv[2]));
 		if (lex_out == NULL)
 			return (1);
+		tok_lst_debug(lex_out);
 		/* ft_lstiter((t_ftlst*)lex_out, token_debug); */
 	}
 	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
@@ -145,6 +146,8 @@ int main(int argc, char **argv, char **envp)
 			(void)eval_out;
 			print_prompt();
 		}
+		if (ret != FTGL_EOF)
+			return (1);
 	}
 
 	ft_htdestroy(path, free);

@@ -1,7 +1,15 @@
 
 #include <stdio.h>
 #include "lexer.h"
-#include "ast.h"
+
+void tok_lst_debug(t_tok_lst *tokens)
+{
+	while (tokens != NULL)
+	{
+		printf("[%#06x] |%s|%s\n", tokens->tag, tokens->content, tokens->tag & TAG_STICK ? " STICK" : "");
+		tokens = tokens->next;
+	}
+}
 
 /* void token_debug(void *v) */
 /* { */

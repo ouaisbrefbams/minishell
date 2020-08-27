@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 09:32:58 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 18:40:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:54:35 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_tok_lst				*tok_lst_new_until(enum e_tok tag, char *content, size_t n)
 		return (NULL);
 	}
 	ret->tag = tag;
+	ret->next = NULL;
 	return (ret);
 }
 
@@ -56,4 +57,16 @@ void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*))
 t_tok_lst				*tok_lst_last(t_tok_lst *tokens)
 {
 	return ((t_tok_lst*)ft_lstlast((t_ftlst*)tokens));
+}
+
+t_tok_lst				*tok_lst_pop_front(t_tok_lst **tokens)
+{
+	t_tok_lst	*poped;
+
+	if (tokens == NULL || *tokens == NULL)
+		return (NULL);
+	poped = *tokens;
+	*tokens = poped->next;
+	poped->next = NULL;
+	return (poped);
 }

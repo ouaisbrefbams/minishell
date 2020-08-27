@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 11:02:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 21:12:21 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,11 @@
 */
 
 #include "parser.h"
-#include "lexer.h"
-
-t_parsed					*parsed_new(t_ast *ast, t_tok_lst *rest)
-{
-	t_parsed	*ret;
-
-	if ((ret = malloc(sizeof(t_parsed))) == NULL)
-		return (NULL);
-	ret->syntax_error = false;
-	ret->rest = rest;
-	ret->ast = ast;
-	return ret;
-}
-
-t_parsed					*parsed_error(const char *format, ...)
-{
-	t_parsed	*err;
-	va_list		ap;
-
-	if ((err = parsed_new(NULL, NULL)) == NULL)
-		return (NULL);
-	err->syntax_error = true;
-	va_start(ap, format);
-	verrorf(format, ap);
-	va_end(ap);
-	return (err);
-}
 
 t_parsed					*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 {
-	tok_lst_push_back(redirs, input);
-	input = input->next;
+	tok_lst_push_back(redirs, tok_lst_pop_front(&input));
+	/* input = input->next; */
 	if (input == NULL)
 		return (parsed_error("syntax error near unexpected token `newline'\n"));
 	while(input != NULL
@@ -55,42 +28,37 @@ t_parsed					*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 			&& input->next->tag & TAG_IS_STR
 			&& input->tag & TAG_IS_STR && input->tag & TAG_STICK)
 	{
-		tok_lst_push_back(redirs, input);
-		input = input->next;
+		tok_lst_push_back(redirs, tok_lst_pop_front(&input));
+		/* input = input->next; */
 	}
-	if (!(input->tag & TAG_IS_STR))
+	if (input != NULL && !(input->tag & TAG_IS_STR))
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
-	tok_lst_push_back(redirs, input);
+	tok_lst_push_back(redirs, tok_lst_pop_front(&input));
 	return (parsed_new(NULL, input));
 }
 
 t_parsed                   *parse_cmd(t_tok_lst *input)
 {
-	enum e_tok    tag;
-	t_ast               *ast;
-	t_parsed				*tmp;
+	t_ast		*ast;
+	t_parsed	*tmp;
 
-	tag = input->tag;
-	if (tag & TAG_IS_SEP)
+	if (input->tag & TAG_IS_SEP)
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
-	ast = ast_new(AST_CMD);
+	if ((ast = ast_new(AST_CMD)) == NULL)
+		return (NULL);
 	while (input != NULL)
 	{
-		tag = input->tag;
-		if (tag & TAG_IS_STR)
-			tok_lst_push_back(&ast->cmd_argv, input);
-		else if (tag & TAG_IS_REDIR)
+		if (input->tag & TAG_IS_STR)
+			tok_lst_push_back(&ast->cmd_argv, tok_lst_pop_front(&input));
+		else if (input->tag & TAG_IS_REDIR)
 		{
 			tmp = parse_redir(input, &ast->redirs);
 			if (tmp == NULL || tmp->syntax_error)
-				return tmp;
+				return (tmp);
 			input = tmp->rest;
 		}
 		else
 			break;
-		if (input == NULL)
-			break;
-		input = input->next;
 	}
 	return parsed_new(ast, input);
 }
@@ -159,7 +127,7 @@ t_parsed       *parse_expr(t_tok_lst *input)
 			while(input != NULL)
 			{
 				tag = input->tag;
-				tok_lst_push_back(&tmp->ast->redirs, input);
+				tok_lst_push_back(&tmp->ast->redirs, tok_lst_pop_front(&input));
 				if (tag & TAG_IS_STR && tag & TAG_STICK)
 					input = input->next;
 				else if (tag & TAG_IS_REDIR)
@@ -167,9 +135,9 @@ t_parsed       *parse_expr(t_tok_lst *input)
 				else
 					break;
 			}
-			input = input->next;
 			if (input == NULL)
 				break;
+			input = input->next;
 			tag = input->tag;
 		}
         tmp->rest = input;

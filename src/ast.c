@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 18:39:31 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:31:48 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 ** \brief   AST functions
 */
 
-#include "ast.h"
+#include "parser.h"
 
 /*
 ** \brief       Create a new AST node according to `tag`

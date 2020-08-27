@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 17:33:55 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:43:22 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_tok_lst *st_stick_tokens(t_tok_lst *tokens)
 	while (curr != NULL)
 	{
 		// curr->next shouldn't be null
-		if (curr->tag & TAG_STICK)
+		if (curr->tag & TAG_STICK && curr->next != NULL)
 		{
 			curr->content = ft_strjoinf_fst(curr->content, curr->next->content);
 			t_tok_lst *tmp = curr->next->next;

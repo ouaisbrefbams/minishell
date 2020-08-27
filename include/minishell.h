@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/27 17:18:43 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 20:34:44 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # include "libft_dstr.h"
 
 # include "lexer.h"
+# include "error.h"
 
 /*
 ** \brief  Value of pipe entry if closed
@@ -111,23 +112,6 @@ int						builtin_exit(char **argv, t_env env);
 
 char					**preprocess(t_tok_lst **tokens, t_env env);
 char					*preprocess_filename(t_tok_lst **tokens, t_env env);
-
-/*
-** error.c
-*/
-
-typedef enum
-{
-	ERR_FATAL           = -1,
-	ERR_NONE            = 0,
-	ERR_AMBIGUOUS_REDIR = 1,
-	ERR_OPEN            = 1,
-	ERR_CMD_NOT_FOUND   = 127,
-	ERR_SYNTAX          = 2,
-}						t_err;
-
-void					errorf(const char *format, ...);
-void					verrorf(const char *format, va_list ap);
 
 /*
 ** signal.c
