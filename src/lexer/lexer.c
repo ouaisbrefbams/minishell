@@ -6,13 +6,13 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/19 16:08:40 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 09:56:46 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-int 			len_is_not_sep(char *input)
+int 			len_until_sep(char *input)
 {
 	int i;
 
@@ -23,7 +23,7 @@ int 			len_is_not_sep(char *input)
 		{
 			i +=2;
 			if (input[i] == '\\')
-				i += len_is_not_sep(&input[i]);
+				i += len_until_sep(&input[i]);
 		}
 		if (lexer_sep(input[i]))
 			return(i);
@@ -59,24 +59,24 @@ int				check_input(char *input)
 	if (lexer_sep(input[i]))
 	{
 		if (input[i] == ';')
-			return (i += lexe_space(&input[i + 1]) + 1);
+			return (i += lexer_space(&input[i + 1]) + 1);
 		while(input[i] == input[i + 1] && op < 2)
 		{
 			i++;
 			op++;
 		}
-		i += lexe_space(&input[i + 1]);
+		i += lexer_space(&input[i + 1]);
 		return (i + 1);
 	}
 	if (input[i] == 39 || input[i] == '"')
-		return(lexer_verif_entre_cote(input, i));
+		return(lexer_check_between_quote(input, i));
 	if (input[i] == ' ')
 	{
 		while(input[++i] == ' ')
 			;
 		 return (i);
 	}
-	return(len_is_not_sep(&input[i]));
+	return(len_until_sep(&input[i]));
 }
 
 
@@ -89,7 +89,7 @@ int 					check_input_out(char *input)
 	while(input[i] != '\0')
 	{
 		j = 0;
-		j += len_is_not_sep(&input[i]);
+		j += len_until_sep(&input[i]);
 		if (j != 0)
 			return(j);
 		i += j;
@@ -99,7 +99,7 @@ int 					check_input_out(char *input)
 	return(0);
 }
 
-enum e_tok token_verif_stick(t_token *lst_token)
+enum e_tok token_check_stick(t_token *lst_token)
 {
 	int i;
 
@@ -110,7 +110,7 @@ enum e_tok token_verif_stick(t_token *lst_token)
 	return(lst_token->tag | TAG_STICK);
 }
 
-enum e_tok token_str_or_cote(t_token *lst_token)
+enum e_tok token_str_or_quote(t_token *lst_token)
 {
 	int i;
 
@@ -120,17 +120,17 @@ enum e_tok token_str_or_cote(t_token *lst_token)
 		if(lst_token->content[i] == '\'')
 		{
 			lst_token->tag = TAG_STR_SINGLE;
-			return(token_verif_stick(lst_token));
+			return(token_check_stick(lst_token));
 		}
 		if(lst_token->content[i] == '"')
 		{
 			lst_token->tag = TAG_STR_DOUBLE;
-			return(token_verif_stick(lst_token));
+			return(token_check_stick(lst_token));
 		}
 		else
 		{
 			lst_token->tag = TAG_STR;
-			return(token_verif_stick(lst_token));
+			return(token_check_stick(lst_token));
 		}
 		i++;
 	}
@@ -143,7 +143,7 @@ t_token			*push_token_enum(t_token *lst_token)
 
 	tk = ret_token(lst_token->content, 0);
 	if (tk == 0)
-		lst_token->tag = token_str_or_cote(lst_token);
+		lst_token->tag = token_str_or_quote(lst_token);
 	else
 		lst_token->tag = tk;
 	return (lst_token);
@@ -181,6 +181,6 @@ t_ftlst        			*lexer(char *input)
 		return (NULL);
 	lst = NULL;
 	lst = create_token_list(input, &lst);
-	lst = lexe_trim_out(lst);
+	lst = lexer_trim_out(lst);
 	return (lst);
 }

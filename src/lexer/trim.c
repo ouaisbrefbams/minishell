@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/17 10:18:51 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/08/27 10:00:09 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char                *del_quote(char *str)
     return (s);
 }
 
-t_ftlst             *lexe_trim_out(t_ftlst *lst)
+t_ftlst             *lexer_trim_out(t_ftlst *lst)
 {
     t_ftlst        *first;
     t_token        *tk;

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/16 08:18:17 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/08/27 09:55:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ enum e_tok                ret_token(char *input, int  i)
 }
 
 // check is char is separator
-// ft_strchr(";&|><()", input)
+// /!\ can be replaced by ft_strchr(";&|><()", input) == NULL
 int                 	lexer_sep(char input)
 {
     char            *sep;
@@ -63,7 +63,8 @@ int                 	lexer_sep(char input)
 }
 
 // skip spaces
-int             		lexe_space(char *input)
+// /!\ can be replaced by strspn
+int             		lexer_space(char *input)
 {
     int i;
 
@@ -73,7 +74,7 @@ int             		lexe_space(char *input)
     return(i);
 }
 
-static int             lex_verif_simple_cote(char *input, int i)
+static int             lex_check_single_quote(char *input, int i)
 {
     i++;
     while(input[i] != '\0')
@@ -90,10 +91,10 @@ static int             lex_verif_simple_cote(char *input, int i)
     return(i + 1);
 }
 
-int             		lexer_verif_entre_cote(char *input, int i)
+int             		lexer_check_between_quote(char *input, int i)
 {
     if(input[i] == '\'')
-        return(lex_verif_simple_cote(input, i));
+        return(lex_check_single_quote(input, i));
     i++;
     while(input[i] != '"' && (input[i] != '\0'))
     {

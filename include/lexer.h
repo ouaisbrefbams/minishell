@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 09:26:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 09:57:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ enum e_tok        ret_token(char *input, int  i);
 enum e_tok        ret_token_sep_redir_append(char *input, int i);
 
 int                     lexer_sep(char input);
-int                     lexer_verif_entre_cote(char *input, int i);
-int                     lexe_space(char *input);
+int                     lexer_check_between_quote(char *input, int i);
+int                     lexer_space(char *input);
 
 
 t_token					*push_token_enum(t_token *lst_token);
 
-t_ftlst             	*lexe_trim_out(t_ftlst *lst);
+t_ftlst             	*lexer_trim_out(t_ftlst *lst);
 
 /*
 ** token.c
@@ -77,11 +77,14 @@ void					token_set_contentf(t_ftlst *token_lst, char *content);
 ** \warning DO NOT change the order of the fields
 */
 
-typedef struct		s_tlst
+typedef struct			s_tok_lst
 {
-	char			*content;
-	struct s_tlst	*next;
-	enum e_tok		tag;
-}					t_tlst;
+	char				*content;
+	struct s_tok_lst	*next;
+	enum e_tok			tag;
+}						t_tok_lst;
+
+t_tok_lst				*tok_lst_new(enum e_tok tag, char *content);
+t_tok_lst				*tok_lst_new_until(enum e_tok tag, char *content, size_t n);
 
 #endif
