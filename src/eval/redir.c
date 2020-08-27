@@ -6,16 +6,11 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 09:28:55 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 17:06:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
-
-static enum e_tok	st_lst_tag(t_ftlst *lst)
-{
-	return (((t_token*)lst->data)->tag);
-}
 
 static bool				st_open_replace(int *fd, char *filename, int oflag)
 {
@@ -35,24 +30,24 @@ static bool				st_open_replace(int *fd, char *filename, int oflag)
 }
 
 bool					redir_extract(
-		t_ftlst *redirs,
+		t_tok_lst *redirs,
 		t_env env,
 		int fds[2])
 {
-	t_ftlst	*after;
-	t_ftlst	*curr;
-	char	*filename;
+	t_tok_lst	*after;
+	t_tok_lst	*curr;
+	char		*filename;
 
 	if (redirs == NULL)
 		return (true);
-	if (!(st_lst_tag(redirs) & TAG_IS_REDIR) || redirs->next == NULL
-		|| !(st_lst_tag(redirs->next) & TAG_IS_STR))
+	if (!(redirs->tag & TAG_IS_REDIR) || redirs->next == NULL
+		|| !(redirs->next->tag & TAG_IS_STR))
 		return (false);
 	curr = redirs->next;
 	after = NULL;
-	while (curr != NULL && st_lst_tag(curr) & TAG_IS_STR)
+	while (curr != NULL && curr->tag & TAG_IS_STR)
 	{
-		if (curr->next == NULL || st_lst_tag(curr->next) & TAG_IS_REDIR)
+		if (curr->next == NULL || curr->next->tag & TAG_IS_REDIR)
 		{
 			after = curr->next;
 			curr->next = NULL;
@@ -61,20 +56,22 @@ bool					redir_extract(
 	}
 	if ((filename = preprocess_filename(&redirs->next, env)) == NULL)
 	{
-		token_destroy_lst2(redirs, after);
+		ft_lstdestroy((t_ftlst**)&redirs, free);
+		ft_lstdestroy((t_ftlst**)&after, free);
 		return (false);
 	}
-	if ((st_lst_tag(redirs) == TAG_REDIR_IN
+	if ((redirs->tag == TAG_REDIR_IN
 			&& !st_open_replace(&fds[FDS_READ], filename, O_RDONLY))
-		|| (st_lst_tag(redirs) == TAG_REDIR_OUT
+		|| (redirs->tag == TAG_REDIR_OUT
 			&& !st_open_replace(&fds[FDS_WRITE], filename, O_WRONLY | O_CREAT | O_TRUNC))
-		|| (st_lst_tag(redirs) == TAG_REDIR_APPEND
+		|| (redirs->tag == TAG_REDIR_APPEND
 			&& !st_open_replace(&fds[FDS_WRITE], filename, O_WRONLY | O_CREAT | O_APPEND)))
 	{
-		token_destroy_lst2(redirs, after);
+		ft_lstdestroy((t_ftlst**)&redirs, free);
+		ft_lstdestroy((t_ftlst**)&after, free);
 		return (false);
 	}
-	token_destroy_lst(redirs);
+	ft_lstdestroy((t_ftlst**)&redirs, free);
 	free(filename);
 	return (redir_extract(after, env, fds));
 }

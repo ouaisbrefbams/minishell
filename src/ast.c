@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/06/18 14:46:07 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/08/27 18:39:31 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 ** \return      Created node or NULL on error
 */
 
-t_ast			*ast_new(enum e_ast_tag tag)
+t_ast			*ast_new(enum e_ast tag)
 {
 	t_ast	*ast;
 
@@ -46,16 +46,17 @@ void			ast_destroy(t_ast *ast)
 {
 	if (ast == NULL)
 		return ;
-	//ft_lstdestroy(&ast->cmd_argv, (void (*)(void*))token_destroy);
 	if (ast->tag == AST_CMD)
 	{
-		ft_lstdestroy(&ast->cmd_argv, (void (*)(void*))token_destroy);
-		ft_lstdestroy(&ast->redirs, (void (*)(void*))token_destroy);
+		tok_lst_destroy(&ast->cmd_argv, free);
+		tok_lst_destroy(&ast->redirs, free);
 	}
 	else if (ast->tag == AST_OP)
 	{
 		ast_destroy(ast->op.left);
 		ast_destroy(ast->op.right);
 	}
+	else if (ast->tag == AST_PARENT)
+		ast_destroy(ast->parent_ast);
 	free(ast);
 }

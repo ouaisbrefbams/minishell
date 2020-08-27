@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 19:20:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 10:44:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,16 @@
 void			errorf(const char *format, ...)
 {
 	va_list	ap;
-	char	*arg;
 
 	va_start(ap, format);
+	verrorf(format, ap);
+	va_end(ap);
+}
+
+void			verrorf(const char *format, va_list ap)
+{
+	char	*arg;
+
 	ft_putstr_fd(g_basename, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	while (*format != '\0')
@@ -41,5 +48,4 @@ void			errorf(const char *format, ...)
 			format++;
 		}
 	}
-	va_end(ap);
 }

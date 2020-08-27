@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/08/20 17:28:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 17:33:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,46 +14,46 @@
 #include "lexer.h"
 #include "eval.h"
 
-static t_ftlst	*st_field_split(char *str)
+static t_tok_lst	*st_field_split(char *str)
 {
-	t_ftlst	*ret;
-	char	*match;
+	t_tok_lst	*ret;
+	char		*match;
 
 	ret = NULL;
 	while (*str != '\0')
 	{
 		if ((match = ft_strchr(str, ' ')) == NULL)
 		{
-			if (ft_lstpush_front_node(&ret, token_new(TAG_STR, str)) == NULL)
-				return (ft_lstdestroy(&ret, free));
+			if (tok_lst_push_front(&ret, tok_lst_new(TAG_STR, str)) == NULL)
+				return (tok_lst_destroy(&ret, free));
 			break;
 		}
-		if (ft_lstpush_front_node(&ret, token_new_until(TAG_STR, str, match - str)) == NULL)
-			return (ft_lstdestroy(&ret, free));
+		if (tok_lst_push_front(&ret, tok_lst_new_until(TAG_STR, str, match - str)) == NULL)
+			return (tok_lst_destroy(&ret, free));
 		while (*++match == ' ')
 			;
 		str = match;
-		if (*str == '\0' && ft_lstpush_front_node(&ret, token_new(TAG_STR, str)) == NULL)
-			return (ft_lstdestroy(&ret, free));
+		if (*str == '\0' && tok_lst_push_front(&ret, tok_lst_new(TAG_STR, str)) == NULL)
+			return (tok_lst_destroy(&ret, free));
 	}
-	return (ft_lstreverse_ret(ret));
+	return ((t_tok_lst*)ft_lstreverse_ret((t_ftlst*)ret));
 }
 
 
-t_ftlst *st_stick_tokens(t_ftlst *tokens)
+t_tok_lst *st_stick_tokens(t_tok_lst *tokens)
 {
-	t_ftlst	*curr;
+	t_tok_lst	*curr;
 
 	curr = tokens;
 	while (curr != NULL)
 	{
 		// curr->next shouldn't be null
-		if (token_tag(curr) & TAG_STICK)
+		if (curr->tag & TAG_STICK)
 		{
-			token_set_content(curr, ft_strjoinf_fst(token_content(curr), token_content(curr->next)));
-			t_ftlst *tmp = curr->next->next;
-			token_set_tag(curr, token_tag(curr->next));
-			ft_lstdelone(curr->next, free);
+			curr->content = ft_strjoinf_fst(curr->content, curr->next->content);
+			t_tok_lst *tmp = curr->next->next;
+			curr->tag = curr->next->tag;
+			ft_lstdelone((t_ftlst*)curr->next, free);
 			curr->next = tmp;
 			continue;
 		}
@@ -62,44 +62,44 @@ t_ftlst *st_stick_tokens(t_ftlst *tokens)
 	return (tokens);
 }
 
-char	**st_tokens_to_argv(t_ftlst *tokens)
+char	**st_tokens_to_argv(t_tok_lst *tokens)
 {
 	char	**ret;
 	size_t	i;
 
-	if ((ret = ft_calloc(ft_lstsize(tokens) + 1, sizeof(char*))) == NULL)
+	if ((ret = ft_calloc(ft_lstsize((t_ftlst*)tokens) + 1, sizeof(char*))) == NULL)
 		return (NULL);
 	i = 0;
 	while (tokens != NULL)
 	{
-		ret[i++] = token_content(tokens);
+		ret[i++] = tokens->content;
 		tokens = tokens->next;
 	}
-	ft_lstdestroy(&tokens, free);
+	tok_lst_destroy(&tokens, free);
 	return (ret);
 }
 
-char			**preprocess(t_ftlst **tokens, t_env env)
+char			**preprocess(t_tok_lst **tokens, t_env env)
 {
-	t_ftlst *curr;
+	t_tok_lst *curr;
 	enum e_tok prev_tag;
 
 	prev_tag = 0;
 	curr = *tokens;
 	while (curr != NULL)
 	{
-		if (token_tag(curr) & (TAG_STR | TAG_STR_DOUBLE))
+		if (curr->tag & (TAG_STR | TAG_STR_DOUBLE))
 		{
-			char *str = token_content(curr);
+			char *str = curr->content;
 
 			size_t	i = -1;
 			while (str[++i] != '\0')
 			{
-				str = token_content(curr);
+				str = curr->content;
 				// escape
 				if (str[i] == '\\'
-						&& (token_tag(curr)& TAG_STR
-							|| ((token_tag(curr) & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[i + 1]))))
+						&& (curr->tag & TAG_STR
+							|| ((curr->tag & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[i + 1]))))
 				{
 					ft_memmove(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
 					continue;
@@ -125,48 +125,49 @@ char			**preprocess(t_ftlst **tokens, t_env env)
 					str[i] = '\0';
 					before = str;
 					after = &str[i + var_len];
-					if (token_tag(curr) & TAG_STR)
+					if (curr->tag & TAG_STR)
 					{
-						t_ftlst *fields = st_field_split(match);
+						t_tok_lst *fields = st_field_split(match);
 
-						len = ft_strlen(token_content(ft_lstlast(fields)));
+						len = ft_strlen(tok_lst_last(fields)->content);
 
-						if (!(prev_tag & TAG_STICK) && *before == '\0' && *token_content(fields) == '\0')
-							ft_lstpop_front(&fields, (void (*)(void*))token_destroy);
-						if (!(token_tag(curr) & TAG_STICK) && *after == '\0' && *token_content(ft_lstlast(fields)) == '\0')
-							ft_lstpop_back(&fields, (void (*)(void*))token_destroy);
+						if (!(prev_tag & TAG_STICK) && *before == '\0' && *fields->content == '\0')
+							ft_lstpop_front((t_ftlst**)&fields, free);
+						if (!(curr->tag & TAG_STICK) && *after == '\0'
+								&& *tok_lst_last(fields)->content == '\0')
+							ft_lstpop_back((t_ftlst**)&fields, free);
 
 						if (fields == NULL)
 							// delete curr?
 							;
 						else if (fields->next == NULL)
 						{
-							token_set_content(curr, ft_strjoin3(before, token_content(fields), after));
+							curr->content = ft_strjoin3(before, fields->content, after);
 							i += len - 1;
 						}
 						else
 						{
-							token_set_content(curr, ft_strjoin(before, token_content(fields)));
-							token_set_content(ft_lstlast(fields),
-											  ft_strjoin(token_content(ft_lstlast(fields)), after));
+							curr->content = ft_strjoin(before, fields->content);
+							tok_lst_last(fields)->content =
+								ft_strjoin(tok_lst_last(fields)->content, after);
 
-							t_ftlst *tmp = curr->next;
+							t_tok_lst *tmp = curr->next;
 							curr->next = fields->next;
-							curr = ft_lstlast(fields);
+							curr = tok_lst_last(fields);
 							curr->next = tmp;
 							i = len - 1;
-						str = token_content(curr);
+							str = curr->content;
 						}
 					}
-					else if (token_tag(curr) & TAG_STR_DOUBLE)
+					else if (curr->tag & TAG_STR_DOUBLE)
 					{
-						token_set_content(curr, ft_strjoin3(before, match, after));
+						curr->content = ft_strjoin3(before, match, after);
 						i += ft_strlen(match) - 1;
 					}
 				}
 			}
 		}
-		prev_tag = token_tag(curr);
+		prev_tag = curr->tag;
 		curr = curr->next;
 	}
 
@@ -175,7 +176,7 @@ char			**preprocess(t_ftlst **tokens, t_env env)
 }
 
 // need to free tokens
-char		*preprocess_filename(t_ftlst **tokens, t_env env)
+char		*preprocess_filename(t_tok_lst **tokens, t_env env)
 {
 	char	**strs;
 	char	*ret;

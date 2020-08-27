@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/19 17:54:22 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 18:41:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,6 @@ char	*g_basename = "minishell";
 
 int main(int argc, char **argv, char **envp)
 {
-	/* char **strs = ms_split_notrim(ft_strdup(" bar  "), ' '); */
-	/* printf("p %p\n", strs); */
-    /*  */
-	/* for (size_t i = 0; strs[i] != NULL; i++) */
-	/* 	printf("|%s|\n", strs[i]); */
-	/* return 0; */
-
-
-
-
 	t_path	path;
 	t_env	env;
 
@@ -97,20 +87,20 @@ int main(int argc, char **argv, char **envp)
 
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
-		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
+		t_tok_lst *lex_out = lexer(ft_strdup(argv[2]));
 		if (lex_out == NULL)
 			return (1);
-		ft_lstiter(lex_out, token_debug);
+		/* ft_lstiter((t_ftlst*)lex_out, token_debug); */
 	}
 	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
-		t_ftlst *lex_out = lexer(ft_strdup(argv[2]));
+		t_tok_lst *lex_out = lexer(ft_strdup(argv[2]));
 		if (lex_out == NULL)
 			return (1);
 
 		/* ft_lstiter(lex_out, token_debug); */
 
-		t_ret *parser_out = parse(lex_out);
+		t_parsed *parser_out = parse(lex_out);
 		if (parser_out == NULL || parser_out->syntax_error)
 			return (1);
 
@@ -137,11 +127,11 @@ int main(int argc, char **argv, char **envp)
 				print_prompt();
 				continue;
 			}
-			t_ftlst *lex_out = lexer(line);
+			t_tok_lst *lex_out = lexer(line);
 			if (lex_out == NULL)
 				return (1);
 
-			t_ret *parser_out = parse(lex_out);
+			t_parsed *parser_out = parse(lex_out);
 			if (parser_out == NULL)
 				return (1);
 			if (parser_out->syntax_error)

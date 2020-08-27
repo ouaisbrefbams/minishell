@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/08/20 17:32:32 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 17:19:14 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 {
 	t_fork_param_cmd	param;
 	char				**argv;
-	char 				*id;
+	/* char 				*id; */
 	/* t_ftlst 			*tmp; */
 
 	if (!redir_extract(ast->redirs, env, fds))

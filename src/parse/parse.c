@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/07/20 10:26:14 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/08/27 11:02:33 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,11 @@
 #include "parser.h"
 #include "lexer.h"
 
-t_ftlst					*push_token(t_ftlst **tokens, t_token *pushed)
+t_parsed					*parsed_new(t_ast *ast, t_tok_lst *rest)
 {
-	t_ftlst *tmp;
+	t_parsed	*ret;
 
-	if ((tmp = ft_lstnew(pushed)) == NULL)
-		return (NULL);
-	ft_lstpush_back(tokens, tmp);
-	return (tmp);
-}
-
-t_ret					*ret_wrap_ast(t_ast *ast, t_ftlst *rest)
-{
-	t_ret	*ret;
-
-	if ((ret = malloc(sizeof(t_ret))) == NULL)
+	if ((ret = malloc(sizeof(t_parsed))) == NULL)
 		return (NULL);
 	ret->syntax_error = false;
 	ret->rest = rest;
@@ -40,61 +30,55 @@ t_ret					*ret_wrap_ast(t_ast *ast, t_ftlst *rest)
 	return ret;
 }
 
-t_ret					*parse_redir(t_ftlst *input, t_ftlst **redirs)
+t_parsed					*parsed_error(const char *format, ...)
 {
-	enum e_tok    tag;
-	t_ret				*tmp;
+	t_parsed	*err;
+	va_list		ap;
 
-	push_token(redirs, input->data);
-	input = input->next;
-	if (input == NULL)
-	{
-		errorf("syntax error near unexpected token `newline'\n", NULL);
-		tmp = ret_wrap_ast(NULL, NULL);
-		tmp->syntax_error = true;
-		return tmp;
-	}
-	tag = ((t_token *)input->data)->tag;
-	while(input != NULL
-			&& input->next != NULL
-			&& (((t_token*)input->next->data)->tag & TAG_IS_STR)
-			&& tag & TAG_IS_STR && tag & TAG_STICK)
-	{
-		push_token(redirs, input->data);
-		input = input->next;
-		tag = ((t_token *)input->data)->tag;
-	}
-	if (!(tag & TAG_IS_STR))
-	{
-		errorf("syntax error near unexpected token `%s'\n", ((t_token *)input->data)->content);
-		tmp = ret_wrap_ast(NULL, NULL);
-		tmp->syntax_error = true;
-		return tmp;
-	}
-	push_token(redirs, input->data);
-	return (ret_wrap_ast(NULL, input));
+	if ((err = parsed_new(NULL, NULL)) == NULL)
+		return (NULL);
+	err->syntax_error = true;
+	va_start(ap, format);
+	verrorf(format, ap);
+	va_end(ap);
+	return (err);
 }
 
-t_ret                   *parse_cmd(t_ftlst *input)
+t_parsed					*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
+{
+	tok_lst_push_back(redirs, input);
+	input = input->next;
+	if (input == NULL)
+		return (parsed_error("syntax error near unexpected token `newline'\n"));
+	while(input != NULL
+			&& input->next != NULL
+			&& input->next->tag & TAG_IS_STR
+			&& input->tag & TAG_IS_STR && input->tag & TAG_STICK)
+	{
+		tok_lst_push_back(redirs, input);
+		input = input->next;
+	}
+	if (!(input->tag & TAG_IS_STR))
+		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
+	tok_lst_push_back(redirs, input);
+	return (parsed_new(NULL, input));
+}
+
+t_parsed                   *parse_cmd(t_tok_lst *input)
 {
 	enum e_tok    tag;
 	t_ast               *ast;
-	t_ret				*tmp;
+	t_parsed				*tmp;
 
-	tag = ((t_token *)input->data)->tag;
+	tag = input->tag;
 	if (tag & TAG_IS_SEP)
-	{
-		errorf("syntax error near unexpected token `%s'\n", ((t_token *)input->data)->content);
-		tmp = ret_wrap_ast(NULL, NULL);
-		tmp->syntax_error = true;
-		return tmp;
-	}
+		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
 	ast = ast_new(AST_CMD);
 	while (input != NULL)
 	{
-		tag = ((t_token *)input->data)->tag;
+		tag = input->tag;
 		if (tag & TAG_IS_STR)
-			push_token(&ast->cmd_argv, input->data);
+			tok_lst_push_back(&ast->cmd_argv, input);
 		else if (tag & TAG_IS_REDIR)
 		{
 			tmp = parse_redir(input, &ast->redirs);
@@ -108,85 +92,60 @@ t_ret                   *parse_cmd(t_ftlst *input)
 			break;
 		input = input->next;
 	}
-	return ret_wrap_ast(ast, input);
+	return parsed_new(ast, input);
 }
 
 // <cmd>  ::= (<string> | <redir>)+
 // <op>   ::= <expr> <sep> <op> | <expr>
 // <expr> ::= '(' <op> ')' | <cmd>
 
-t_ret		*parse_op(t_ftlst *input)
+t_parsed		*parse_op(t_tok_lst *input)
 {
-	t_ast			*ast;
-	t_ret			*left_ret;
-	t_ret			*right_ret;
-	enum e_tok tag;
-	t_ret 			*tmp;
+	t_ast		*ast;
+	t_parsed	*left_parsed;
+	t_parsed	*right_parsed;
+	enum e_tok	tag;
 
-	left_ret = parse_expr(input);
-	if (left_ret == NULL || left_ret->syntax_error)
-		return left_ret;
-	input = left_ret->rest;
-	if (input == NULL || ((t_token*)input->data)->tag & TAG_PARENT_CLOSE)
-		return ret_wrap_ast(left_ret->ast, input);
+	left_parsed = parse_expr(input);
+	if (left_parsed == NULL || left_parsed->syntax_error)
+		return left_parsed;
+	input = left_parsed->rest;
+	if (input == NULL || input->tag & TAG_PARENT_CLOSE)
+		return parsed_new(left_parsed->ast, input);
 
-	tag = ((t_token*)input->data)->tag;
+	tag = input->tag;
 	if (!(tag & TAG_IS_SEP))
-	{
-		errorf("syntax error near unexpected token `%s'\n", ((t_token *)input->data)->content);
-		tmp = ret_wrap_ast(NULL, NULL);
-		tmp->syntax_error = true;
-		return tmp;
-	}
+		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
 	input = input->next;
 	if (input == NULL)
-	{
-		errorf("syntax error expected token\n");
-		tmp = ret_wrap_ast(NULL, NULL);
-		tmp->syntax_error = true;
-		return tmp;
-	}
-	right_ret = parse_op(input);
-	if (right_ret == NULL  || right_ret->syntax_error)
-		return right_ret;
+		return (parsed_error("syntax error expected token\n"));
+	right_parsed = parse_op(input);
+	if (right_parsed == NULL  || right_parsed->syntax_error)
+		return right_parsed;
 	ast = ast_new(AST_OP);
-	ast->op.left = left_ret->ast;
-	ast->op.right = right_ret->ast;
+	ast->op.left = left_parsed->ast;
+	ast->op.right = right_parsed->ast;
 	ast->op.sep = tag;
-	return ret_wrap_ast(ast, right_ret->rest);
+	return parsed_new(ast, right_parsed->rest);
 }
 
-t_ret       *parse_expr(t_ftlst *input)
+t_parsed       *parse_expr(t_tok_lst *input)
 {
-    t_ret               *tmp;
-    enum e_tok    tag;
-	t_ast 				*new_ast;
+    t_parsed	*tmp;
+    enum e_tok	tag;
+	t_ast		*new_ast;
 
-    tag = ((t_token*)input->data)->tag;
+    tag = input->tag;
     if (tag & TAG_PARENT_OPEN)
     {
         if (!(tmp = parse_op(input->next)) || tmp->syntax_error)
 			return tmp;
         input = tmp->rest;
 		if (input == NULL)
-		{
-			errorf("syntax error expected token\n");
-			tmp->syntax_error = true;
-			return (tmp);
-		}
-		tag = ((t_token*)input->data)->tag;
+			return (parsed_error("syntax error expected token\n"));
+		tag = input->tag;
         if (!(tag & TAG_PARENT_CLOSE))
-		{
-			errorf("syntax error expected token `)'\n");
-			tmp->syntax_error = true;
-			return (tmp);
-		}
-		// if (tag & TAG_IS_SEP)
-		// {
-		//	errorf("syntax error expected token `)'\n");
-		// 	tmp->syntax_error = true;
-		// 	return (tmp);
-		// }
+			return (parsed_error("syntax error expected token\n"));
         input = input->next;
         new_ast = ast_new(AST_PARENT);
         new_ast->parent_ast = tmp->ast;
@@ -194,13 +153,13 @@ t_ret       *parse_expr(t_ftlst *input)
 		if (input == NULL)
 			return tmp;
 		// could reuse parse_redir instead
-		tag = ((t_token*)input->data)->tag;
+		tag = input->tag;
 		while (tag & TAG_IS_REDIR)
 		{
 			while(input != NULL)
 			{
-				tag = ((t_token *)input->data)->tag;
-				push_token(&tmp->ast->redirs, input->data);
+				tag = input->tag;
+				tok_lst_push_back(&tmp->ast->redirs, input);
 				if (tag & TAG_IS_STR && tag & TAG_STICK)
 					input = input->next;
 				else if (tag & TAG_IS_REDIR)
@@ -211,7 +170,7 @@ t_ret       *parse_expr(t_ftlst *input)
 			input = input->next;
 			if (input == NULL)
 				break;
-			tag = ((t_token*)input->data)->tag;
+			tag = input->tag;
 		}
         tmp->rest = input;
         return tmp;
@@ -219,20 +178,9 @@ t_ret       *parse_expr(t_ftlst *input)
     return parse_cmd(input);
 }
 
-t_ret		*parse(t_ftlst *input)
+t_parsed		*parse(t_tok_lst *input)
 {
-	t_ret *ret;
-
 	if (input == NULL)
 		return NULL;
-	if (!(ret = malloc(sizeof(t_ret) * 1)))
-		return (NULL);
-	ret->ast = NULL;
-	ret->rest = NULL;
-	ret->syntax_error = false;
-	// ret = error_syntax_simple(input, ret);
-	// if (ret->syntax_error == true)
-	// 	return ret;
-	ret = parse_op(input);
-	return (ret);
+	return (parse_op(input));
 }

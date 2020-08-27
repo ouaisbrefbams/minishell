@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/07/20 13:22:26 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/08/27 17:15:19 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_ftlst         *split_token(t_ftlst **lst, enum e_tok);
 ** redir.c
 */
 
-bool			redir_extract(t_ftlst *redirs, t_env env, int fds[2]);
+bool			redir_extract(t_tok_lst *redirs, t_env env, int fds[2]);
 
 /*
 ** exec.c
