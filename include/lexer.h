@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 09:57:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 18:44:17 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include "libft_lst.h"
 # include "libft_str.h"
-# include "minishell.h"
+// # include "minishell.h"
 
 enum                    e_tok
 {
@@ -39,39 +39,9 @@ enum                    e_tok
     TAG_IS_SEP       = TAG_AND | TAG_END | TAG_OR | TAG_PIPE,
 };
 
-typedef struct
-{
-    enum e_tok    tag;
-    char                *content;
-}                       t_token;
-
-t_ftlst                 *lexer(char *input);
-enum e_tok        ret_token(char *input, int  i);
-enum e_tok        ret_token_sep_redir_append(char *input, int i);
-
-int                     lexer_sep(char input);
-int                     lexer_check_between_quote(char *input, int i);
-int                     lexer_space(char *input);
-
-
-t_token					*push_token_enum(t_token *lst_token);
-
-t_ftlst             	*lexer_trim_out(t_ftlst *lst);
-
 /*
-** token.c
+** tok_lst.c
 */
-
-t_token					*token_new(enum e_tok tag, char *content);
-t_token					*token_new_until(enum e_tok tag, char *content, int n);
-void					token_destroy(t_token *token);
-void					token_destroy_lst(t_ftlst *tokens);
-void					token_destroy_lst2(t_ftlst *tokens1, t_ftlst *tokens2);
-enum e_tok		token_tag(t_ftlst *token_lst);
-void					token_set_tag(t_ftlst *token_lst, enum e_tok tag);
-char					*token_content(t_ftlst *token_lst);
-void					token_set_content(t_ftlst *token_lst, char *content);
-void					token_set_contentf(t_ftlst *token_lst, char *content);
 
 /*
 ** \warning DO NOT change the order of the fields
@@ -86,5 +56,33 @@ typedef struct			s_tok_lst
 
 t_tok_lst				*tok_lst_new(enum e_tok tag, char *content);
 t_tok_lst				*tok_lst_new_until(enum e_tok tag, char *content, size_t n);
+void					tok_lst_push_back(t_tok_lst **tokens, t_tok_lst *pushed);
+t_tok_lst				*tok_lst_push_front(t_tok_lst **tokens, t_tok_lst *pushed);
+void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*));
+t_tok_lst				*tok_lst_last(t_tok_lst *tokens);
+
+/*
+** lexer.c
+*/
+
+t_tok_lst             	*lexer(char *input);
+void					push_token_enum(t_tok_lst *tok);
+
+/*
+** lexer_utils.c
+*/
+
+enum e_tok      		ret_token(char *input, int i);
+enum e_tok        		ret_token_sep_redir_append(char *input, int i);
+int                     lexer_sep(char input);
+int                     lexer_check_between_quote(char *input, int i);
+int                     lexer_space(char *input);
+
+
+/*
+** trim.c
+*/
+
+t_tok_lst             	*lexer_trim_out(t_tok_lst *lst);
 
 #endif

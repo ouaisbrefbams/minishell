@@ -6,35 +6,32 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 10:00:09 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 17:30:11 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "lexer.h"
 
-char                *del_space(t_token *tk)
+char                *del_space(t_tok_lst *tok)
 {
-    int             i;
-    char            *s;
+    int	i;
 
     i = 0;
-    while(tk->content[i] != '\0')
+    while (tok->content[i] != '\0')
     {
-        if(tk->content[i] == '\\')
-            return tk->content;
-        if(tk->content[i] == ' ')
-            break;
+        if (tok->content[i] == '\\')
+            return (tok->content);
+        if (tok->content[i] == ' ')
+            break ;
         i++;
     }
-    s = ft_strsubf(tk->content, 0, i);
-    return(s);
+    return (ft_strsubf(tok->content, 0, i));
 }
 
 char                *del_quote(char *str)
 {
-    int             i;
-    char            *s;
+    int		i;
 
     i = 0;
     while(str[i++] != '\0')
@@ -47,34 +44,31 @@ char                *del_quote(char *str)
 
     if(str[i] != '\'' && str[i] != '"')
         return str;
-    s = ft_strsubf(str, 1, i - 1);
-    return (s);
+    return (ft_strsubf(str, 1, i - 1));
 }
 
-t_ftlst             *lexer_trim_out(t_ftlst *lst)
+t_tok_lst             *lexer_trim_out(t_tok_lst *tokens)
 {
-    t_ftlst        *first;
-    t_token        *tk;
+    t_tok_lst	*first;
 
-    first = lst;
-    while(lst != NULL)
+    first = tokens;
+    while (tokens != NULL)
     {
-        tk = lst->data;
-        if (tk->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
+        if (tokens->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
         {
-            tk->content = del_quote(tk->content);
-            if(lst->next == NULL)
-                if (tk->tag & TAG_STICK)
-                    tk->tag -= TAG_STICK;
+            tokens->content = del_quote(tokens->content);
+            if (tokens->next == NULL)
+                if (tokens->tag & TAG_STICK)
+                    tokens->tag -= TAG_STICK;
         }
         else
         {
-            tk->content = del_space(tk);
-            if(lst->next == NULL)
-                if (tk->tag & TAG_STICK)
-                    tk->tag -= TAG_STICK;
+            tokens->content = del_space(tokens);
+            if (tokens->next == NULL)
+                if (tokens->tag & TAG_STICK)
+                    tokens->tag -= TAG_STICK;
         }
-        lst = lst->next;
+        tokens = tokens->next;
     }
     return (first);
 }

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 09:56:46 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/27 17:34:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,83 +99,78 @@ int 					check_input_out(char *input)
 	return(0);
 }
 
-enum e_tok token_check_stick(t_token *lst_token)
+enum e_tok token_check_stick(t_tok_lst *tok)
 {
 	int i;
 
-	i = ft_strlen(lst_token->content);
+	i = ft_strlen(tok->content);
 	if (i > 0)
-		if (lst_token->content[i - 1] == ' ')
-			return(lst_token->tag);
-	return(lst_token->tag | TAG_STICK);
+		if (tok->content[i - 1] == ' ')
+			return(tok->tag);
+	return(tok->tag | TAG_STICK);
 }
 
-enum e_tok token_str_or_quote(t_token *lst_token)
+enum e_tok token_str_or_quote(t_tok_lst *tok)
 {
 	int i;
 
 	i = 0;
-	while(lst_token->content[i] != '\0')
+	while(tok->content[i] != '\0')
 	{
-		if(lst_token->content[i] == '\'')
+		if(tok->content[i] == '\'')
 		{
-			lst_token->tag = TAG_STR_SINGLE;
-			return(token_check_stick(lst_token));
+			tok->tag = TAG_STR_SINGLE;
+			return(token_check_stick(tok));
 		}
-		if(lst_token->content[i] == '"')
+		if(tok->content[i] == '"')
 		{
-			lst_token->tag = TAG_STR_DOUBLE;
-			return(token_check_stick(lst_token));
+			tok->tag = TAG_STR_DOUBLE;
+			return(token_check_stick(tok));
 		}
 		else
 		{
-			lst_token->tag = TAG_STR;
-			return(token_check_stick(lst_token));
+			tok->tag = TAG_STR;
+			return(token_check_stick(tok));
 		}
 		i++;
 	}
 	return(0);
 }
 
-t_token			*push_token_enum(t_token *lst_token)
+void						push_token_enum(t_tok_lst *tok)
 {
-	enum e_tok 		tk;
+	enum e_tok 		tag;
 
-	tk = ret_token(lst_token->content, 0);
-	if (tk == 0)
-		lst_token->tag = token_str_or_quote(lst_token);
+	tag = ret_token(tok->content, 0);
+	if (tag == 0)
+		tok->tag = token_str_or_quote(tok);
 	else
-		lst_token->tag = tk;
-	return (lst_token);
+		tok->tag = tag;
 }
 
-static t_ftlst				*create_token_list(char *input, t_ftlst **lst)
+static t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
 {
-	t_token 				*lst_token;
-	t_ftlst					*new;
-	int 					i;
-	int						j;
+	t_tok_lst	*tok;
+	size_t 		i;
+	size_t		j;
 
 	i = 0;
-	while (i < (int)ft_strlen(input))
+	while (i < ft_strlen(input))
 	{
 		j = 0;
 		j += check_input(&input[i]);
-		lst_token = token_new_until(0, input + i, j);
-		lst_token = push_token_enum(lst_token);
-		if (lst_token->content[0] != ' ')
-		{
-			new = ft_lstnew(lst_token);
-			ft_lstpush_back(lst, new);
-		}
+		tok = tok_lst_new_until(0, input + i, j);
+		push_token_enum(tok);
+		if (tok->content[0] != ' ')
+			tok_lst_push_back(lst, tok);
 		i += j;
 	}
 	return (*lst);
 }
 
-t_ftlst        			*lexer(char *input)
+t_tok_lst        			*lexer(char *input)
 {
-	t_ftlst		*lst;
+	t_tok_lst	*lst;
 
 	if (!input)
 		return (NULL);
