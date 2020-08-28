@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 20:45:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 10:43:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,8 @@ enum e_tok token_check_stick(t_tok_lst *tok)
 	i = ft_strlen(tok->content);
 	if (i > 0)
 		if (tok->content[i - 1] == ' ')
-			return(tok->tag);
-	return(tok->tag | TAG_STICK);
+			return (tok->tag);
+	return (tok->tag | TAG_STICK);
 }
 
 enum e_tok token_str_or_quote(t_tok_lst *tok)
@@ -119,22 +119,22 @@ enum e_tok token_str_or_quote(t_tok_lst *tok)
 	int i;
 
 	i = 0;
-	while(tok->content[i] != '\0')
+	while (tok->content[i] != '\0')
 	{
-		if(tok->content[i] == '\'')
+		if (tok->content[i] == '\'')
 		{
 			tok->tag = TAG_STR_SINGLE;
-			return(token_check_stick(tok));
+			return (token_check_stick(tok));
 		}
-		if(tok->content[i] == '"')
+		if (tok->content[i] == '"')
 		{
 			tok->tag = TAG_STR_DOUBLE;
-			return(token_check_stick(tok));
+			return (token_check_stick(tok));
 		}
 		else
 		{
 			tok->tag = TAG_STR;
-			return(token_check_stick(tok));
+			return (token_check_stick(tok));
 		}
 		i++;
 	}

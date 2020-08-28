@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/27 20:38:13 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 10:06:44 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,11 @@ void					ast_destroy(t_ast *ast);
 typedef struct			s_parsed
 {
 	bool				syntax_error;
-	t_ast				*ast;
+	union
+	{
+		t_ast			*ast;
+		t_tok_lst		*redir; // more general
+	};
 	t_tok_lst			*rest;
 }						t_parsed;
 

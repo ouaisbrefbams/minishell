@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 21:12:21 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 10:40:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,31 @@
 
 #include "parser.h"
 
-t_parsed					*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
+/*
+** push redirection token
+** push while token is str and stick
+** push last str token
+*/
+
+t_parsed	*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 {
-	tok_lst_push_back(redirs, tok_lst_pop_front(&input));
-	/* input = input->next; */
+	tok_lst_push_back(redirs, tok_lst_uncons(&input));
 	if (input == NULL)
 		return (parsed_error("syntax error near unexpected token `newline'\n"));
-	while(input != NULL
-			&& input->next != NULL
-			&& input->next->tag & TAG_IS_STR
-			&& input->tag & TAG_IS_STR && input->tag & TAG_STICK)
-	{
-		tok_lst_push_back(redirs, tok_lst_pop_front(&input));
-		/* input = input->next; */
-	}
-	if (input != NULL && !(input->tag & TAG_IS_STR))
+	// FIXME big condition could be avoided with lexer not putting STICK if the next tokens isn't a string
+	while (input != NULL
+			&& input->tag & TAG_IS_STR && input->tag & TAG_STICK
+			&& input->next != NULL && input->next->tag & TAG_IS_STR)
+		tok_lst_push_back(redirs, tok_lst_uncons(&input));
+	if (input == NULL)
+		return (NULL);
+	if (!(input->tag & TAG_IS_STR))
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
-	tok_lst_push_back(redirs, tok_lst_pop_front(&input));
+	tok_lst_push_back(redirs, tok_lst_uncons(&input));
 	return (parsed_new(NULL, input));
 }
 
-t_parsed                   *parse_cmd(t_tok_lst *input)
+t_parsed	*parse_cmd(t_tok_lst *input)
 {
 	t_ast		*ast;
 	t_parsed	*tmp;
@@ -49,7 +53,7 @@ t_parsed                   *parse_cmd(t_tok_lst *input)
 	while (input != NULL)
 	{
 		if (input->tag & TAG_IS_STR)
-			tok_lst_push_back(&ast->cmd_argv, tok_lst_pop_front(&input));
+			tok_lst_push_back(&ast->cmd_argv, tok_lst_uncons(&input));
 		else if (input->tag & TAG_IS_REDIR)
 		{
 			tmp = parse_redir(input, &ast->redirs);
@@ -60,95 +64,75 @@ t_parsed                   *parse_cmd(t_tok_lst *input)
 		else
 			break;
 	}
-	return parsed_new(ast, input);
+	return (parsed_new(ast, input));
 }
 
-// <cmd>  ::= (<string> | <redir>)+
-// <op>   ::= <expr> <sep> <op> | <expr>
-// <expr> ::= '(' <op> ')' | <cmd>
+/*
+** parse and operation (| ; && ||)
+*/
 
-t_parsed		*parse_op(t_tok_lst *input)
+t_parsed	*parse_op(t_tok_lst *input)
 {
 	t_ast		*ast;
-	t_parsed	*left_parsed;
-	t_parsed	*right_parsed;
-	enum e_tok	tag;
+	t_parsed	*left;
+	t_parsed	*right;
+	enum e_tok	sep_tag;
 
-	left_parsed = parse_expr(input);
-	if (left_parsed == NULL || left_parsed->syntax_error)
-		return left_parsed;
-	input = left_parsed->rest;
+	left = parse_expr(input);
+	if (left == NULL || left->syntax_error)
+		return (left);
+	input = left->rest;
 	if (input == NULL || input->tag & TAG_PARENT_CLOSE)
-		return parsed_new(left_parsed->ast, input);
-
-	tag = input->tag;
-	if (!(tag & TAG_IS_SEP))
+		return (parsed_new(left->ast, input));
+	sep_tag = input->tag;
+	if (!(sep_tag & TAG_IS_SEP))
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
-	input = input->next;
+	ft_lstpop_front((t_ftlst**)&input, free);
 	if (input == NULL)
 		return (parsed_error("syntax error expected token\n"));
-	right_parsed = parse_op(input);
-	if (right_parsed == NULL  || right_parsed->syntax_error)
-		return right_parsed;
-	ast = ast_new(AST_OP);
-	ast->op.left = left_parsed->ast;
-	ast->op.right = right_parsed->ast;
-	ast->op.sep = tag;
-	return parsed_new(ast, right_parsed->rest);
+	right = parse_op(input);
+	if (right == NULL  || right->syntax_error)
+		return (right);
+	if ((ast = ast_new(AST_OP)) == NULL)
+		return (NULL);
+	ast->op.left = left->ast;
+	ast->op.right = right->ast;
+	ast->op.sep = sep_tag;
+	return (parsed_new(ast, right->rest));
 }
 
-t_parsed       *parse_expr(t_tok_lst *input)
+/*
+** try to parse parenthesis, if fail parse a command.
+** parenthesis can be followed by redirections
+*/
+
+t_parsed	*parse_expr(t_tok_lst *input)
 {
     t_parsed	*tmp;
-    enum e_tok	tag;
-	t_ast		*new_ast;
+	t_ast		*ast;
 
-    tag = input->tag;
-    if (tag & TAG_PARENT_OPEN)
+    if (input->tag & TAG_PARENT_OPEN)
     {
         if (!(tmp = parse_op(input->next)) || tmp->syntax_error)
-			return tmp;
+			return (tmp);
         input = tmp->rest;
-		if (input == NULL)
-			return (parsed_error("syntax error expected token\n"));
-		tag = input->tag;
-        if (!(tag & TAG_PARENT_CLOSE))
+		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
 			return (parsed_error("syntax error expected token\n"));
         input = input->next;
-        new_ast = ast_new(AST_PARENT);
-        new_ast->parent_ast = tmp->ast;
-        tmp->ast = new_ast;
-		if (input == NULL)
-			return tmp;
-		// could reuse parse_redir instead
-		tag = input->tag;
-		while (tag & TAG_IS_REDIR)
-		{
-			while(input != NULL)
-			{
-				tag = input->tag;
-				tok_lst_push_back(&tmp->ast->redirs, tok_lst_pop_front(&input));
-				if (tag & TAG_IS_STR && tag & TAG_STICK)
-					input = input->next;
-				else if (tag & TAG_IS_REDIR)
-					input = input->next;
-				else
-					break;
-			}
-			if (input == NULL)
-				break;
-			input = input->next;
-			tag = input->tag;
-		}
+        ast = ast_new(AST_PARENT);
+        ast->parent_ast = tmp->ast;
+        tmp->ast = ast;
+		while (input != NULL && input->tag & TAG_IS_REDIR)
+			parse_redir(input, &tmp->ast->redirs);
         tmp->rest = input;
-        return tmp;
+        return (tmp);
     }
-    return parse_cmd(input);
+    return (parse_cmd(input));
 }
 
-t_parsed		*parse(t_tok_lst *input)
+t_parsed	*parse(t_tok_lst *input)
 {
 	if (input == NULL)
-		return NULL;
+		return (NULL);
 	return (parse_op(input));
 }

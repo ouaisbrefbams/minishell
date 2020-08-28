@@ -59,7 +59,7 @@ t_tok_lst				*tok_lst_last(t_tok_lst *tokens)
 	return ((t_tok_lst*)ft_lstlast((t_ftlst*)tokens));
 }
 
-t_tok_lst				*tok_lst_pop_front(t_tok_lst **tokens)
+t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens)
 {
 	t_tok_lst	*poped;
 

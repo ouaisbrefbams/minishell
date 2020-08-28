@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/27 20:44:44 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 10:45:33 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv, char **envp)
 
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
-		t_tok_lst *lex_out = lexer(ft_strdup(argv[2]));
+		t_tok_lst *lex_out = lexer(argv[2]);
 		if (lex_out == NULL)
 			return (1);
 		tok_lst_debug(lex_out);
@@ -95,11 +95,9 @@ int main(int argc, char **argv, char **envp)
 	}
 	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
-		t_tok_lst *lex_out = lexer(ft_strdup(argv[2]));
+		t_tok_lst *lex_out = lexer(argv[2]);
 		if (lex_out == NULL)
 			return (1);
-
-		/* ft_lstiter(lex_out, token_debug); */
 
 		t_parsed *parser_out = parse(lex_out);
 		if (parser_out == NULL || parser_out->syntax_error)

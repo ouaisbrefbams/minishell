@@ -60,7 +60,7 @@ void					tok_lst_push_back(t_tok_lst **tokens, t_tok_lst *pushed);
 t_tok_lst				*tok_lst_push_front(t_tok_lst **tokens, t_tok_lst *pushed);
 void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*));
 t_tok_lst				*tok_lst_last(t_tok_lst *tokens);
-t_tok_lst				*tok_lst_pop_front(t_tok_lst **tokens);
+t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens);
 
 /*
 ** lexer.c

@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 20:27:42 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 20:31:11 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 10:44:39 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,3 @@ t_parsed					*parsed_error(const char *format, ...)
 	va_end(ap);
 	return (err);
 }
-

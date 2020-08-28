@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 17:06:45 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 10:22:02 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ bool					redir_extract(
 	}
 	if ((filename = preprocess_filename(&redirs->next, env)) == NULL)
 	{
-		ft_lstdestroy((t_ftlst**)&redirs, free);
-		ft_lstdestroy((t_ftlst**)&after, free);
+		/* ft_lstdestroy((t_ftlst**)&redirs, free); */
+		/* ft_lstdestroy((t_ftlst**)&after, free); */
 		return (false);
 	}
 	if ((redirs->tag == TAG_REDIR_IN
@@ -67,11 +67,11 @@ bool					redir_extract(
 		|| (redirs->tag == TAG_REDIR_APPEND
 			&& !st_open_replace(&fds[FDS_WRITE], filename, O_WRONLY | O_CREAT | O_APPEND)))
 	{
-		ft_lstdestroy((t_ftlst**)&redirs, free);
-		ft_lstdestroy((t_ftlst**)&after, free);
+		/* ft_lstdestroy((t_ftlst**)&redirs, free); */
+		/* ft_lstdestroy((t_ftlst**)&after, free); */
 		return (false);
 	}
-	ft_lstdestroy((t_ftlst**)&redirs, free);
+	/* ft_lstdestroy((t_ftlst**)&redirs, free); */
 	free(filename);
 	return (redir_extract(after, env, fds));
 }
