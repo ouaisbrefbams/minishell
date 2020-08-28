@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 20:43:22 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 17:42:02 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ char	**st_tokens_to_argv(t_tok_lst *tokens)
 	char	**ret;
 	size_t	i;
 
-	if ((ret = ft_calloc(ft_lstsize((t_ftlst*)tokens) + 1, sizeof(char*))) == NULL)
+	ret = ft_calloc(ft_lstsize((t_ftlst*)tokens) + 1, sizeof(char*));
+	if (ret == NULL)
 		return (NULL);
 	i = 0;
 	while (tokens != NULL)
@@ -75,7 +76,7 @@ char	**st_tokens_to_argv(t_tok_lst *tokens)
 		ret[i++] = tokens->content;
 		tokens = tokens->next;
 	}
-	tok_lst_destroy(&tokens, free);
+	tok_lst_destroy(&tokens, NULL);
 	return (ret);
 }
 
@@ -128,36 +129,41 @@ char			**preprocess(t_tok_lst **tokens, t_env env)
 					if (curr->tag & TAG_STR)
 					{
 						t_tok_lst *fields = st_field_split(match);
-
-						len = ft_strlen(tok_lst_last(fields)->content);
-
-						if (!(prev_tag & TAG_STICK) && *before == '\0' && *fields->content == '\0')
-							ft_lstpop_front((t_ftlst**)&fields, free);
-						if (!(curr->tag & TAG_STICK) && *after == '\0'
-								&& *tok_lst_last(fields)->content == '\0')
-							ft_lstpop_back((t_ftlst**)&fields, free);
-
-						if (fields == NULL)
-							// delete curr?
-							;
-						else if (fields->next == NULL)
+						if (fields != NULL)
 						{
-							curr->content = ft_strjoin3(before, fields->content, after);
-							i += len - 1;
-						}
-						else
-						{
-							curr->content = ft_strjoin(before, fields->content);
-							tok_lst_last(fields)->content =
-								ft_strjoin(tok_lst_last(fields)->content, after);
+							len = ft_strlen(tok_lst_last(fields)->content);
 
-							t_tok_lst *tmp = curr->next;
-							curr->next = fields->next;
-							curr = tok_lst_last(fields);
-							curr->next = tmp;
-							i = len - 1;
-							str = curr->content;
+							if (!(prev_tag & TAG_STICK) && *before == '\0' && *fields->content == '\0')
+								ft_lstpop_front((t_ftlst**)&fields, free);
+							if (!(curr->tag & TAG_STICK) && *after == '\0'
+									&& *tok_lst_last(fields)->content == '\0')
+								ft_lstpop_back((t_ftlst**)&fields, free);
+
+							if (fields == NULL)
+								// delete curr?
+								;
+							else if (fields->next == NULL)
+							{
+								curr->content = ft_strjoin3(before, fields->content, after);
+								i += len - 1;
+							}
+							else
+							{
+								curr->content = ft_strjoin(before, fields->content);
+								tok_lst_last(fields)->content =
+									ft_strjoin(tok_lst_last(fields)->content, after);
+
+								t_tok_lst *tmp = curr->next;
+								curr->next = fields->next;
+								curr = tok_lst_last(fields);
+								curr->next = tmp;
+								i = len - 1;
+								str = curr->content;
+							}
 						}
+						/* else */
+						/* 	printf("yo\n"); */
+							/* i+=10; */
 					}
 					else if (curr->tag & TAG_STR_DOUBLE)
 					{
@@ -175,7 +181,7 @@ char			**preprocess(t_tok_lst **tokens, t_env env)
 	return (st_tokens_to_argv(*tokens));
 }
 
-// need to free tokens
+// TODO malloc error vs shell error
 char		*preprocess_filename(t_tok_lst **tokens, t_env env)
 {
 	char	**strs;
@@ -196,5 +202,5 @@ char		*preprocess_filename(t_tok_lst **tokens, t_env env)
 	}
 	ret = strs[0];
 	free(strs);
-	return (ret);
+	return (ft_strdup(ret));
 }

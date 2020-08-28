@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 18:46:48 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 17:49:47 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int			builtin_export(char **argv, t_env env)
 	int		status;
 	size_t  i;
 	char	*equal_ptr;
-	bool	skip;
 
 	if (argv[1] == NULL)
 	{
@@ -51,20 +50,18 @@ int			builtin_export(char **argv, t_env env)
 	i = 0;
 	while (argv[++i] != NULL)
 	{
-		skip = (equal_ptr = ft_strchr(argv[i], '=')) == NULL;
-		if (!skip)
+		equal_ptr = ft_strchr(argv[i], '=');
+		if (equal_ptr != NULL)
 			*equal_ptr = '\0';
 		if (!utils_valid_identifier(argv[i]))
 		{
-			if (!skip)
+			if (equal_ptr != NULL)
 				*equal_ptr = '=';
 			errorf("export: `%s': not a valid identifier\n", argv[i]);
 			status = 1;
 			continue;
 		}
-		if (skip)
-			continue;
-		if (env_export(env, argv[i], equal_ptr + 1) == NULL)
+		if (env_export(env, argv[i], equal_ptr == NULL ? "" : equal_ptr + 1) == NULL)
 			return (127); // malloc error
 	}
 	return (status);

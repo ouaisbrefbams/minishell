@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/08/28 10:22:02 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 17:14:19 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static bool				st_open_replace(int *fd, char *filename, int oflag)
 		*fd = open(filename, oflag);
 	if (*fd == -1)
 	{
+		g_last_status_code = 1;
 		errorf("%s: %s\n", filename, strerror(errno));
 		free(filename);
 		return (false);
@@ -30,7 +31,7 @@ static bool				st_open_replace(int *fd, char *filename, int oflag)
 }
 
 bool					redir_extract(
-		t_tok_lst *redirs,
+		t_tok_lst **redirs,
 		t_env env,
 		int fds[2])
 {
@@ -38,12 +39,12 @@ bool					redir_extract(
 	t_tok_lst	*curr;
 	char		*filename;
 
-	if (redirs == NULL)
+	if (*redirs == NULL)
 		return (true);
-	if (!(redirs->tag & TAG_IS_REDIR) || redirs->next == NULL
-		|| !(redirs->next->tag & TAG_IS_STR))
+	if (!((*redirs)->tag & TAG_IS_REDIR) || (*redirs)->next == NULL
+		|| !((*redirs)->next->tag & TAG_IS_STR))
 		return (false);
-	curr = redirs->next;
+	curr = (*redirs)->next;
 	after = NULL;
 	while (curr != NULL && curr->tag & TAG_IS_STR)
 	{
@@ -54,24 +55,24 @@ bool					redir_extract(
 		}
 		curr = curr->next;
 	}
-	if ((filename = preprocess_filename(&redirs->next, env)) == NULL)
+	if ((filename = preprocess_filename(&(*redirs)->next, env)) == NULL)
 	{
-		/* ft_lstdestroy((t_ftlst**)&redirs, free); */
-		/* ft_lstdestroy((t_ftlst**)&after, free); */
+		tok_lst_destroy(redirs, free);
+		tok_lst_destroy(&after, free);
 		return (false);
 	}
-	if ((redirs->tag == TAG_REDIR_IN
+	if (((*redirs)->tag == TAG_REDIR_IN
 			&& !st_open_replace(&fds[FDS_READ], filename, O_RDONLY))
-		|| (redirs->tag == TAG_REDIR_OUT
+		|| ((*redirs)->tag == TAG_REDIR_OUT
 			&& !st_open_replace(&fds[FDS_WRITE], filename, O_WRONLY | O_CREAT | O_TRUNC))
-		|| (redirs->tag == TAG_REDIR_APPEND
+		|| ((*redirs)->tag == TAG_REDIR_APPEND
 			&& !st_open_replace(&fds[FDS_WRITE], filename, O_WRONLY | O_CREAT | O_APPEND)))
 	{
-		/* ft_lstdestroy((t_ftlst**)&redirs, free); */
-		/* ft_lstdestroy((t_ftlst**)&after, free); */
+		tok_lst_destroy(redirs, free);
+		tok_lst_destroy(&after, free);
 		return (false);
 	}
-	/* ft_lstdestroy((t_ftlst**)&redirs, free); */
+	tok_lst_destroy(redirs, free);
 	free(filename);
-	return (redir_extract(after, env, fds));
+	return (redir_extract(&after, env, fds));
 }

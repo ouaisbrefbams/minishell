@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/06/19 17:32:43 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 16:54:39 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,8 @@ int			eval_parent(int fds[2], t_env env, t_path path, t_ast *ast)
 {
 	t_fork_param_parent	param;
 
-	if (!redir_extract(ast->redirs, env, fds))
-	{
-		ast->redirs = NULL;
+	if (!redir_extract(&ast->redirs, env, fds))
 		return (-1);
-	}
 	param.fds[0] = fds[0];
 	param.fds[1] = fds[1];
 	param.env = env;

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/28 10:45:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/28 17:16:18 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,12 +118,12 @@ int main(int argc, char **argv, char **envp)
 		int		ret;
 		char	*line;
 
-		print_prompt();
+		ft_putstr_fd("> ", STDERR_FILENO);
 		while ((ret = ft_getline(STDOUT_FILENO, &line)) == FTGL_OK)
 		{
 			if (*line == '\0')
 			{
-				print_prompt();
+				ft_putstr_fd("> ", STDERR_FILENO);
 				continue;
 			}
 			t_tok_lst *lex_out = lexer(line);
@@ -135,14 +135,14 @@ int main(int argc, char **argv, char **envp)
 				return (1);
 			if (parser_out->syntax_error)
 			{
-				print_prompt();
+				ft_putstr_fd("> ", STDERR_FILENO);
 				continue;
 			}
 
 			int fds[2] = {MS_NO_FD, MS_NO_FD};
 			int eval_out = eval(fds, env, path, parser_out->ast);
 			(void)eval_out;
-			print_prompt();
+			ft_putstr_fd("> ", STDERR_FILENO);
 		}
 		if (ret != FTGL_EOF)
 			return (1);
