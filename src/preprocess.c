@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/08/28 17:42:02 by charles          ###   ########.fr       */
+/*   Updated: 2020/08/29 20:58:37 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,90 @@ char	**st_tokens_to_argv(t_tok_lst *tokens)
 	return (ret);
 }
 
+
+bool escape(char *str, enum e_tok tag)
+{
+	if (str[0] == '\\'
+			&& (tag & TAG_STR
+				|| ((tag & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[1]))))
+	{
+		ft_memmove(str, str + 1, ft_strlen(str + 1) + 1);
+		return (true);
+	}
+	return (false);
+}
+
+size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_tag, t_env env)
+{
+	char		*match;
+	size_t		var_len;
+	t_tok_lst	*curr;
+	char		*before;
+	char		*after;
+	size_t		len;
+	t_tok_lst	*fields;
+	t_tok_lst	*last;
+
+	curr = *curr_addr;
+	var_len = utils_var_end(&str[i + 1]);
+	if ((match = env_search_first_match(env, &str[i + 1])) == NULL)
+	{
+		ft_memmove(&str[i], &str[i + var_len], var_len);
+		return (i);
+	}
+
+	str[i] = '\0';
+	before = str;
+	after = &str[i + var_len];
+	if (curr->tag & TAG_STR_DOUBLE)
+	{
+		curr->content = ft_strjoin3(before, match, after);
+		return i + ft_strlen(match);
+	}
+	if (curr->tag & TAG_STR)
+	{
+		fields = st_field_split(match);
+		if (fields == NULL)
+			return (i);
+
+		last = tok_lst_last(fields);
+		len = ft_strlen(last->content);
+
+		if (!(prev_tag & TAG_STICK) && *before == '\0' && *fields->content == '\0')
+			ft_lstpop_front((t_ftlst**)&fields, free);
+		if (!(curr->tag & TAG_STICK) && *after == '\0' && *last->content == '\0')
+			ft_lstpop_back((t_ftlst**)&fields, free);
+
+		if (fields == NULL)
+			;
+		else if (fields->next == NULL)
+		{
+			curr->content = ft_strjoin3(before, fields->content, after);
+			return i + len;
+		}
+		else
+		{
+			last = tok_lst_last(fields);
+			curr->content = ft_strjoin(before, fields->content);
+			last->content = ft_strjoin(last->content, after);
+
+			t_tok_lst *tmp = curr->next;
+			curr->next = fields->next;
+			(*curr_addr) = last;
+			(*curr_addr)->next = tmp;
+
+			return len;
+		}
+	}
+	return i;
+}
+
 char			**preprocess(t_tok_lst **tokens, t_env env)
 {
-	t_tok_lst *curr;
-	enum e_tok prev_tag;
+	t_tok_lst	*curr;
+	enum e_tok	prev_tag;
+	char		*str;
+	size_t		i;
 
 	prev_tag = 0;
 	curr = *tokens;
@@ -91,92 +171,18 @@ char			**preprocess(t_tok_lst **tokens, t_env env)
 	{
 		if (curr->tag & (TAG_STR | TAG_STR_DOUBLE))
 		{
-			char *str = curr->content;
-
-			size_t	i = -1;
-			while (str[++i] != '\0')
+			i = -1;
+			while ((str = curr->content) != NULL && str[++i] != '\0')
 			{
-				str = curr->content;
-				// escape
-				if (str[i] == '\\'
-						&& (curr->tag & TAG_STR
-							|| ((curr->tag & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[i + 1]))))
-				{
-					ft_memmove(&str[i], &str[i + 1], ft_strlen(&str[i + 1]) + 1);
+				if (escape(str + i, curr->tag))
 					continue;
-				}
-
-				// interpolate
 				if (str[i] == '$')
-				{
-					char	*match;
-					size_t	var_len = utils_var_end(&str[i + 1]);
-
-					if ((match = env_search_first_match(env, &str[i + 1])) == NULL)
-					{
-						ft_memmove(&str[i], &str[i + var_len], var_len );
-						i--;
-						continue;
-					}
-
-					char *before;
-					char *after;
-					size_t len;
-
-					str[i] = '\0';
-					before = str;
-					after = &str[i + var_len];
-					if (curr->tag & TAG_STR)
-					{
-						t_tok_lst *fields = st_field_split(match);
-						if (fields != NULL)
-						{
-							len = ft_strlen(tok_lst_last(fields)->content);
-
-							if (!(prev_tag & TAG_STICK) && *before == '\0' && *fields->content == '\0')
-								ft_lstpop_front((t_ftlst**)&fields, free);
-							if (!(curr->tag & TAG_STICK) && *after == '\0'
-									&& *tok_lst_last(fields)->content == '\0')
-								ft_lstpop_back((t_ftlst**)&fields, free);
-
-							if (fields == NULL)
-								// delete curr?
-								;
-							else if (fields->next == NULL)
-							{
-								curr->content = ft_strjoin3(before, fields->content, after);
-								i += len - 1;
-							}
-							else
-							{
-								curr->content = ft_strjoin(before, fields->content);
-								tok_lst_last(fields)->content =
-									ft_strjoin(tok_lst_last(fields)->content, after);
-
-								t_tok_lst *tmp = curr->next;
-								curr->next = fields->next;
-								curr = tok_lst_last(fields);
-								curr->next = tmp;
-								i = len - 1;
-								str = curr->content;
-							}
-						}
-						/* else */
-						/* 	printf("yo\n"); */
-							/* i+=10; */
-					}
-					else if (curr->tag & TAG_STR_DOUBLE)
-					{
-						curr->content = ft_strjoin3(before, match, after);
-						i += ft_strlen(match) - 1;
-					}
-				}
+					i = interpolate(str, i, &curr, prev_tag, env) - 1;
 			}
 		}
 		prev_tag = curr->tag;
 		curr = curr->next;
 	}
-
 	st_stick_tokens(*tokens);
 	return (st_tokens_to_argv(*tokens));
 }
