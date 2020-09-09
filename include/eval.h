@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/08/28 16:56:37 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 17:27:21 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,11 @@ bool			redir_extract(t_tok_lst **redirs, t_env env, int fds[2]);
 bool			exec_is_path(char *exec_name);
 bool			exec_is_valid(char *exec_path);
 char			*exec_search_path(t_path path, char *path_var, char *exec_name);
+
+/*
+** variable.c
+*/
+
+bool			variable_extract(t_tok_lst **argv, t_env env, t_env env_local);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/09 14:20:41 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 16:19:00 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void tok_lst_debug(t_tok_lst *tokens);
 ** $?
 ** concurrent pipeline
 ** cmd variable preprocess
-** PATH with no permission, link and other file system fun stuff
 ** signal on whole line instead of single command
 ** env local to current minishell process
 */
@@ -115,7 +114,7 @@ int main(int argc, char **argv, char **envp)
 		char	*line;
 
 		print_prompt();
-		while ((ret = ft_getline(STDOUT_FILENO, &line)) == FTGL_OK)
+		while ((ret = ft_getline(STDIN_FILENO, &line)) == FTGL_OK)
 		{
 			if (*line == '\0')
 			{

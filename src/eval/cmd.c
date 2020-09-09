@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/08/28 16:54:48 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 17:40:54 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,30 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	char				**argv;
 
 	if (!redir_extract(&ast->redirs, env, fds))
+	{
+		ast->redirs = NULL;
 		return (-1);
+	}
+	ast->redirs = NULL;
 	if ((param.env_local = env_from_array((char*[]){NULL})) == NULL)
 		return (-1);
+	variable_extract(&ast->cmd_argv, env, param.env_local);
+
+	/* char **strs = preprocess(&start, env); */
+    /*  */
+	/* if (env_export(env_local, id, strs[0]) == NULL) */
+	/* 	return (-1); */
+	/* if (ast->cmd_argv == NULL) // FIXME special env not passed to child processes */
+	/* { */
+	/* 	ft_vecpop(param.env_local, NULL); */
+	/* 	if (ft_vecswallow_at(env, env->size - 1, param.env_local) == NULL) */
+	/* 	{ */
+	/* 		ft_vecdestroy(param.env_local, free); */
+	/* 		return (-1); */
+	/* 	} */
+	/* 	g_last_status_code = 0; */
+	/* 	return (0); */
+	/* } */
 
 	if ((argv = preprocess(&ast->cmd_argv, env)) == NULL)
 	{
