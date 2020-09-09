@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/08/29 20:58:37 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 13:15:16 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_t
 	var_len = utils_var_end(&str[i + 1]);
 	if ((match = env_search_first_match(env, &str[i + 1])) == NULL)
 	{
-		ft_memmove(&str[i], &str[i + var_len], var_len);
+		ft_memmove(&str[i], &str[i + var_len], ft_strlen(&str[i + var_len]) + 1);
 		return (i);
 	}
 
@@ -144,6 +144,8 @@ size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_t
 		else
 		{
 			last = tok_lst_last(fields);
+			last->tag = curr->tag;
+			curr->tag = TAG_STR;
 			curr->content = ft_strjoin(before, fields->content);
 			last->content = ft_strjoin(last->content, after);
 
@@ -151,7 +153,6 @@ size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_t
 			curr->next = fields->next;
 			(*curr_addr) = last;
 			(*curr_addr)->next = tmp;
-
 			return len;
 		}
 	}
