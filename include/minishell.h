@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/09 14:04:00 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 15:42:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,6 @@ void signal_sigterm(int signum);
 /*
 ** utils.c
 */
-
-typedef int	(*t_directory_iter_func)(char*, struct dirent*, void*);
-
-int		utils_directory_iter(
-	char *dirname,
-	void *param,
-	t_directory_iter_func f
-);
 
 size_t	utils_var_end(char *name);
 bool	utils_valid_identifier(char *name);

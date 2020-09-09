@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/09 14:05:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 15:41:04 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,6 @@
 
 #include "minishell.h"
 
-int		utils_directory_iter(
-	char *dirname,
-	void *param,
-	int (*f)(char*, struct dirent*, void*)
-)
-{
-	DIR				*dir;
-	struct dirent	*entry;
-
-	if ((dir = opendir(dirname)) == NULL)  // EACCES and Not a directory with glob are ignored by bash
-		return (-2);
-	while ((entry = readdir(dir)) != NULL)
-		if (f(dirname, entry, param) == -1)
-		{
-			closedir(dir);
-			return (-1);
-		}
-	if (closedir(dir) == -1)
-		return (-1);
-	return (0);
-}
 
 /* bool	utils_is_var_name(char *name) */
 /* { */
