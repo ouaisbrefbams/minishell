@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/28 17:16:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 14:20:41 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,11 @@ void tok_lst_debug(t_tok_lst *tokens);
 /*
 ** TODO
 ** $?
-** pipeline
+** concurrent pipeline
 ** cmd variable preprocess
 ** PATH with no permission, link and other file system fun stuff
-** escape lexer ------- ok
-** escape split preprocessing (escaped spaces)
 ** signal on whole line instead of single command
-** parsing error ------ ok
 ** env local to current minishell process
-** BETTER ERROR HANDLING IS BECOMING URGENT (spagetti code everywhere)
 */
 
 bool	env_set_default(t_env env, char *key, char *value)
@@ -75,9 +71,9 @@ int main(int argc, char **argv, char **envp)
 	// env_export(env, "_", env_exec_path);
 
 	g_last_status_code = 0;
-	/* signal(SIGINT, signal_sigint); */
-	/* signal(SIGQUIT, signal_sigquit); */
-	/* signal(SIGTERM, signal_sigterm); */
+	signal(SIGINT, signal_sigint);
+	signal(SIGQUIT, signal_sigquit);
+	signal(SIGTERM, signal_sigterm);
 
 	char *last_slash = ft_strrchr(argv[0], '/');
 	if (last_slash == NULL)
@@ -118,12 +114,12 @@ int main(int argc, char **argv, char **envp)
 		int		ret;
 		char	*line;
 
-		ft_putstr_fd("> ", STDERR_FILENO);
+		print_prompt();
 		while ((ret = ft_getline(STDOUT_FILENO, &line)) == FTGL_OK)
 		{
 			if (*line == '\0')
 			{
-				ft_putstr_fd("> ", STDERR_FILENO);
+				print_prompt();
 				continue;
 			}
 			t_tok_lst *lex_out = lexer(line);
@@ -135,14 +131,14 @@ int main(int argc, char **argv, char **envp)
 				return (1);
 			if (parser_out->syntax_error)
 			{
-				ft_putstr_fd("> ", STDERR_FILENO);
+				print_prompt();
 				continue;
 			}
 
 			int fds[2] = {MS_NO_FD, MS_NO_FD};
 			int eval_out = eval(fds, env, path, parser_out->ast);
 			(void)eval_out;
-			ft_putstr_fd("> ", STDERR_FILENO);
+			print_prompt();
 		}
 		if (ret != FTGL_EOF)
 			return (1);

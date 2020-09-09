@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/27 20:34:44 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 14:04:00 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,6 @@ int		utils_directory_iter(
 size_t	utils_var_end(char *name);
 bool	utils_valid_identifier(char *name);
 bool	utils_start_with_valid_identifier(char *name);
-
-void print_prompt(void);
+void	print_prompt(void);
 
 #endif

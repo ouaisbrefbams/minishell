@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/20 14:45:14 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 14:05:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,17 @@ bool	utils_start_with_valid_identifier(char *name)
 	return (ret);
 }
 
-// TODO find a way to flush without fflush
-void print_prompt(void)
+void	print_prompt(void)
 {
-	printf("\033[0;32m%s\033[0m$ ", getcwd(NULL, 0));
-	fflush(stdout);
+	char	cwd[PATH_MAX + 1];
+
+	ft_bzero(cwd, PATH_MAX + 1);
+	if (getcwd(cwd, PATH_MAX) == NULL)
+	{
+		ft_putstr_fd("$ ", STDERR_FILENO);
+		return ;
+	}
+	ft_putstr_fd("\033[0;32m", STDERR_FILENO);
+	ft_putstr_fd(cwd, STDERR_FILENO);
+	ft_putstr_fd("\033[0m$ ", STDERR_FILENO);
 }

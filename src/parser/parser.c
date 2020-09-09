@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/28 10:40:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/09 13:40:49 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,24 +108,30 @@ t_parsed	*parse_op(t_tok_lst *input)
 
 t_parsed	*parse_expr(t_tok_lst *input)
 {
+    t_parsed	*parsed;
     t_parsed	*tmp;
 	t_ast		*ast;
 
     if (input->tag & TAG_PARENT_OPEN)
     {
-        if (!(tmp = parse_op(input->next)) || tmp->syntax_error)
-			return (tmp);
-        input = tmp->rest;
+        if (!(parsed = parse_op(input->next)) || parsed->syntax_error)
+			return (parsed);
+        input = parsed->rest;
 		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
 			return (parsed_error("syntax error expected token\n"));
         input = input->next;
         ast = ast_new(AST_PARENT);
-        ast->parent_ast = tmp->ast;
-        tmp->ast = ast;
+        ast->parent_ast = parsed->ast;
+        parsed->ast = ast;
 		while (input != NULL && input->tag & TAG_IS_REDIR)
-			parse_redir(input, &tmp->ast->redirs);
-        tmp->rest = input;
-        return (tmp);
+		{
+			tmp = parse_redir(input, &parsed->ast->redirs);
+			if (tmp == NULL || tmp->syntax_error)
+				return (tmp);
+			input = tmp->rest;
+		}
+        parsed->rest = input;
+        return (parsed);
     }
     return (parse_cmd(input));
 }
