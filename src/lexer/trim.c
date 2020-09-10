@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/27 17:30:11 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 04:39:08 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,22 @@
 
 char                *del_space(t_tok_lst *tok)
 {
-    int	i;
+    int             i;
 
-    i = 0;
-    while (tok->content[i] != '\0')
+    i = ft_strlen(tok->content);
+    if(tok->content[i - 1] == ' ')
     {
-        if (tok->content[i] == '\\')
-            return (tok->content);
-        if (tok->content[i] == ' ')
-            break ;
-        i++;
+        i -= 1;
+        while(tok->content[i] == ' ')
+        {
+            if (tok->content[i - 1] == '\\')
+                break;
+            i--;
+        }
+        tok->content = ft_strsubf(tok->content, 0, i + 1);
+        return (tok->content);
     }
-    return (ft_strsubf(tok->content, 0, i));
+    return(tok->content);
 }
 
 char                *del_quote(char *str)

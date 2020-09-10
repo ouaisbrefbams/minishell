@@ -6,11 +6,12 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/08/28 10:43:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 05:06:11 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <stdio.h>
 
 int 			len_until_sep(char *input)
 {
@@ -24,6 +25,8 @@ int 			len_until_sep(char *input)
 			i +=2;
 			if (input[i] == '\\')
 				i += len_until_sep(&input[i]);
+			i += lexer_space(&input[i]);
+			return i;
 		}
 		if (lexer_sep(input[i]))
 			return(i);
@@ -47,7 +50,10 @@ int				check_input(char *input)
 	i = 0;
 	op = 1;
 	if (input[i] == '\\' && lexer_sep(input[i + 1]))
+	{
 		i += 2;
+		return (i + lexer_space(&input[i]));
+	}
 	if (input[i] == '(' || input[i] == ')')
 	{
 		i +=1;
@@ -58,12 +64,8 @@ int				check_input(char *input)
 	}
 	if (lexer_sep(input[i]))
 	{
-		/* src/lexer/lexer.c:62:12: warning: Although the value stored to 'i' is used in the enclosing expression, the value is never actually read from 'i' */
-        /*                 return (i += lexer_space(&input[i + 1]) + 1); */
-        /*                         ^    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 		if (input[i] == ';')
-			return (i += lexer_space(&input[i + 1]) + 1);
+			return (i + lexer_space(&input[i + 1]) + 1);
 		while(input[i] == input[i + 1] && op < 2)
 		{
 			i++;
