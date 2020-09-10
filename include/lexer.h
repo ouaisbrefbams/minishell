@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/09 17:50:01 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 06:17:43 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,13 @@ t_tok_lst				*tok_lst_take_sticked(t_tok_lst **tokens);
 */
 
 t_tok_lst             	*lexer(char *input);
+int						check_input(char *input);
+int 					len_until_sep(char *input);
+int 					check_input_out(char *input);
+enum e_tok 				token_check_stick(t_tok_lst *tok);
+enum e_tok 				token_str_or_quote(t_tok_lst *tok);
+t_tok_lst				*create_token_list(char *input, t_tok_lst **lst);
+void					push_token_enum(t_tok_lst *tok);
 void					push_token_enum(t_tok_lst *tok);
 
 /*
