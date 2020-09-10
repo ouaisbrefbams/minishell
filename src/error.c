@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 10:44:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 14:48:19 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,30 @@ void			verrorf(const char *format, va_list ap)
 			format++;
 		}
 	}
+}
+
+static int		g_error_to_status[] = {
+	[ERR_NONE]            = 0,
+	[ERR_AMBIGUOUS_REDIR] = 1,
+	[ERR_OPEN]            = 1,
+	[ERR_CMD_NOT_FOUND]   = 127,
+	[ERR_SYNTAX]          = 2,
+	[ERR_IS_DIRECTORY]    = 126,
+	[ERR_ERRNO]           = 126,
+};
+
+int				error_get_status(int status)
+{
+	return (g_error_to_status[status]);
+}
+
+void			error_set_status(int status)
+{
+	if (status == ERR_FATAL)
+		exit(1);
+	/* printf("%d\n", status); */
+	if (status < ERR_NONE)
+		g_last_status = status;
+	else
+		g_last_status = g_error_to_status[status];
 }

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/09/09 17:27:21 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 14:14:56 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ typedef struct
 	t_builtin_entry	*builtin;
 }					t_fork_param_cmd;
 
-# define MS_NO_FD -2
-# define FDS_WRITE 1
-# define FDS_READ 0
+# define FD_NONE -2
+# define FD_WRITE 1
+# define FD_READ 0
 
 extern pid_t	g_child_pid;
 
@@ -64,7 +64,7 @@ t_ftlst         *split_token(t_ftlst **lst, enum e_tok);
 ** redir.c
 */
 
-bool			redir_extract(t_tok_lst **redirs, t_env env, int fds[2]);
+int				redir_extract(t_tok_lst **redirs, t_env env, int fds[2]);
 
 /*
 ** exec.c

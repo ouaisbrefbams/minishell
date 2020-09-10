@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:51 by charles           #+#    #+#             */
-/*   Updated: 2020/07/19 18:47:36 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 13:49:58 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ int	builtin_unset(char **argv, t_env env)
 		{
 			errorf("unset: `%s': not a valid identifier\n", argv[i]);
 			status = 1;
-			continue; // put invalid identifier
+			continue ;
 		}
 		found_index = env_search_index(env, argv[i]);
 		if (found_index == -1)
-			continue;
+			continue ;
 		ft_vecremove(env, found_index, free);
 	}
 	return (status);

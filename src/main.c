@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/09 16:19:00 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 14:33:22 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int main(int argc, char **argv, char **envp)
 	// }
 	// env_export(env, "_", env_exec_path);
 
-	g_last_status_code = 0;
+	g_last_status = 0;
 	signal(SIGINT, signal_sigint);
 	signal(SIGQUIT, signal_sigquit);
 	signal(SIGTERM, signal_sigterm);
@@ -104,9 +104,9 @@ int main(int argc, char **argv, char **envp)
 		/* ft_lstiter(parser_out->ast->cmd_argv, token_debug); */
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
-		int fds[2] = {MS_NO_FD, MS_NO_FD};
-		int eval_out = eval(fds, env, path, parser_out->ast);
-		(void)eval_out;
+		int fds[2] = {FD_NONE, FD_NONE};
+		int status = eval(fds, env, path, parser_out->ast);
+		error_set_status(status);
 	}
 	else
 	{
@@ -134,9 +134,11 @@ int main(int argc, char **argv, char **envp)
 				continue;
 			}
 
-			int fds[2] = {MS_NO_FD, MS_NO_FD};
-			int eval_out = eval(fds, env, path, parser_out->ast);
-			(void)eval_out;
+			int fds[2] = {FD_NONE, FD_NONE};
+			int status = eval(fds, env, path, parser_out->ast);
+			if (status == ERR_FATAL)
+				exit(1);
+			error_set_status(status);
 			print_prompt();
 		}
 		if (ret != FTGL_EOF)
@@ -145,5 +147,5 @@ int main(int argc, char **argv, char **envp)
 
 	ft_htdestroy(path, free);
 	ft_vecdestroy(env, free);
-	return (g_last_status_code);
+	return (g_last_status);
 }

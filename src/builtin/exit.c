@@ -24,7 +24,7 @@ int	builtin_exit(char **argv, t_env env)
 
 	(void)env;
 	if (argv[1] == NULL)
-		status = g_last_status_code;
+		status = g_last_status;
 	else
 	{
 		errno = 0;

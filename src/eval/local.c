@@ -62,7 +62,7 @@
 	/* 		ft_vecdestroy(param.env_local, free); */
 	/* 		return (-1); */
 	/* 	} */
-	/* 	g_last_status_code = 0; */
+	/* 	g_last_status = 0; */
 	/* 	return (0); */
 	/* } */
 

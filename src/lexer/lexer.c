@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/10 08:33:29 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/10 13:58:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ int 			len_until_sep(char *input)
 	{
 		if (input[i] == '\\')
 		{
-			i +=2;
-			if (input[i] == '\\')
-				;
+			i += 2;
 			if (input[i] == ' ')
 			{
 				while(input[++i] == ' ')
