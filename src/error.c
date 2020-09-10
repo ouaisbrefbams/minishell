@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 14:48:19 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 20:29:41 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** \note    NULL arguments are ignored
 */
 
-void			errorf(const char *format, ...)
+void		errorf(const char *format, ...)
 {
 	va_list	ap;
 
@@ -28,7 +28,11 @@ void			errorf(const char *format, ...)
 	va_end(ap);
 }
 
-void			verrorf(const char *format, va_list ap)
+/*
+** \brief   errorf with an argument pointer (ap) instead of arguments
+*/
+
+void		verrorf(const char *format, va_list ap)
 {
 	char	*arg;
 
@@ -50,28 +54,16 @@ void			verrorf(const char *format, va_list ap)
 	}
 }
 
-static int		g_error_to_status[] = {
-	[ERR_NONE]            = 0,
-	[ERR_AMBIGUOUS_REDIR] = 1,
-	[ERR_OPEN]            = 1,
-	[ERR_CMD_NOT_FOUND]   = 127,
-	[ERR_SYNTAX]          = 2,
-	[ERR_IS_DIRECTORY]    = 126,
-	[ERR_ERRNO]           = 126,
-};
+/*
+** \brief   errorf helper to return an status code and print the error
+*/
 
-int				error_get_status(int status)
+int			errorf_ret(int status, const char *format, ...)
 {
-	return (g_error_to_status[status]);
-}
+	va_list	ap;
 
-void			error_set_status(int status)
-{
-	if (status == ERR_FATAL)
-		exit(1);
-	/* printf("%d\n", status); */
-	if (status < ERR_NONE)
-		g_last_status = status;
-	else
-		g_last_status = g_error_to_status[status];
+	va_start(ap, format);
+	verrorf(format, ap);
+	va_end(ap);
+	return (status);
 }

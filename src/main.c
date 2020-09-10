@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/10 14:33:22 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 20:26:19 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void tok_lst_debug(t_tok_lst *tokens);
 ** TODO
 ** $?
 ** concurrent pipeline
-** cmd variable preprocess
 ** signal on whole line instead of single command
 ** env local to current minishell process
 */
@@ -106,7 +105,10 @@ int main(int argc, char **argv, char **envp)
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 		int fds[2] = {FD_NONE, FD_NONE};
 		int status = eval(fds, env, path, parser_out->ast);
-		error_set_status(status);
+		if (status == EVAL_FATAL)
+			exit(1);
+		g_last_status = status;
+		/* error_set_status(status); */
 	}
 	else
 	{
@@ -136,9 +138,10 @@ int main(int argc, char **argv, char **envp)
 
 			int fds[2] = {FD_NONE, FD_NONE};
 			int status = eval(fds, env, path, parser_out->ast);
-			if (status == ERR_FATAL)
+			if (status == EVAL_FATAL)
 				exit(1);
-			error_set_status(status);
+			g_last_status = status;
+			/* error_set_status(status); */
 			print_prompt();
 		}
 		if (ret != FTGL_EOF)

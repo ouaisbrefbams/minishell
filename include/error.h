@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 20:34:25 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 14:48:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 20:29:17 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,10 @@
 ** error.c
 */
 
-enum
-{
-	ERR_NONE = 1024,
-	ERR_FATAL,
-	ERR_SYNTAX,
-	ERR_OPEN,
-	ERR_AMBIGUOUS_REDIR,
-	ERR_CMD_NOT_FOUND,
-	ERR_IS_DIRECTORY,
-	ERR_ERRNO,
-};
-
-typedef int t_err;
+# define EVAL_FATAL 1024
 
 void					errorf(const char *format, ...);
 void					verrorf(const char *format, va_list ap);
-void					error_set_status(int status);
-int						error_get_status(int status);
+int						errorf_ret(int err, const char *format, ...);
 
 #endif

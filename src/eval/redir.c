@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 14:25:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 20:25:59 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static int				st_open_replace(int *fd, char *filename, int oflag)
 	{
 		errorf("%s: %s\n", filename, strerror(errno));
 		free(filename);
-		return (ERR_OPEN);
+		return (1);
 	}
-	return (ERR_NONE);
+	return (0);
 }
 
 int					redir_extract(
@@ -39,10 +39,10 @@ int					redir_extract(
 	char		*filename;
 
 	if (*redirs == NULL)
-		return (ERR_NONE);
+		return (0);
 	if (!((*redirs)->tag & TAG_IS_REDIR) || (*redirs)->next == NULL
 		|| !((*redirs)->next->tag & TAG_IS_STR))
-		return (ERR_FATAL);
+		return (EVAL_FATAL);
 	curr = (*redirs)->next;
 	after = NULL;
 	while (curr != NULL && curr->tag & TAG_IS_STR)
@@ -58,18 +58,18 @@ int					redir_extract(
 	{
 		tok_lst_destroy(redirs, free);
 		tok_lst_destroy(&after, free);
-		return (ERR_FATAL);
+		return (EVAL_FATAL);
 	}
 	if (((*redirs)->tag == TAG_REDIR_IN
-			&& st_open_replace(&fds[FD_READ], filename, O_RDONLY) != ERR_NONE)
+			&& st_open_replace(&fds[FD_READ], filename, O_RDONLY) != 0)
 		|| ((*redirs)->tag == TAG_REDIR_OUT
-			&& st_open_replace(&fds[FD_WRITE], filename, O_WRONLY | O_CREAT | O_TRUNC) != ERR_NONE)
+			&& st_open_replace(&fds[FD_WRITE], filename, O_WRONLY | O_CREAT | O_TRUNC) != 0)
 		|| ((*redirs)->tag == TAG_REDIR_APPEND
-			&& st_open_replace(&fds[FD_WRITE], filename, O_WRONLY | O_CREAT | O_APPEND) != ERR_NONE))
+			&& st_open_replace(&fds[FD_WRITE], filename, O_WRONLY | O_CREAT | O_APPEND) != 0))
 	{
 		tok_lst_destroy(redirs, free);
 		tok_lst_destroy(&after, free);
-		return (ERR_FATAL);
+		return (EVAL_FATAL);
 	}
 	tok_lst_destroy(redirs, free);
 	free(filename);

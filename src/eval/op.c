@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 14:15:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 20:28:57 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ int			eval_op(int fds[2], t_env env, t_path path, t_ast *ast)
 		left_fds[FD_WRITE] = p[FD_WRITE];
 		right_fds[FD_READ] = p[FD_READ];
 	}
-	if ((status = eval(left_fds, env, path, ast->op.left)) == -1)
-		return (-1);
+	if ((status = eval(left_fds, env, path, ast->op.left)) == EVAL_FATAL)
+		return (EVAL_FATAL);
+	g_last_status = status;
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_PIPE && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))
@@ -49,9 +50,10 @@ int			wrapped_eval(void *void_param)
 int			eval_parent(int fds[2], t_env env, t_path path, t_ast *ast)
 {
 	t_fork_param_parent	param;
+	int					status;
 
-	if (!redir_extract(&ast->redirs, env, fds))
-		return (ERR_FATAL);
+	if ((status = redir_extract(&ast->redirs, env, fds)) != 0)
+		return (status);
 	param.fds[0] = fds[0];
 	param.fds[1] = fds[1];
 	param.env = env;
@@ -69,5 +71,5 @@ int			eval(int fds[2], t_env env, t_path path, t_ast *ast)
 		return (eval_op(fds, env, path, ast));
 	if (ast->tag == AST_CMD)
 		return (eval_cmd(fds, env, path, ast));
-	return (ERR_FATAL);
+	return (EVAL_FATAL);
 }

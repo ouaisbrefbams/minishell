@@ -6,13 +6,13 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 20:27:42 by charles           #+#    #+#             */
-/*   Updated: 2020/08/28 10:44:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 19:31:46 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-t_parsed					*parsed_new(t_ast *ast, t_tok_lst *rest)
+t_parsed	*parsed_new(t_ast *ast, t_tok_lst *rest)
 {
 	t_parsed	*ret;
 
@@ -24,7 +24,7 @@ t_parsed					*parsed_new(t_ast *ast, t_tok_lst *rest)
 	return ret;
 }
 
-t_parsed					*parsed_error(const char *format, ...)
+t_parsed	*parsed_error(const char *format, ...)
 {
 	t_parsed	*err;
 	va_list		ap;
