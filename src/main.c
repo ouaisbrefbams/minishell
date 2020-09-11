@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/10 20:26:19 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/11 19:18:00 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void tok_lst_debug(t_tok_lst *tokens);
 /*
 ** TODO
 ** $?
+** pipe make 2 new children
 ** concurrent pipeline
 ** signal on whole line instead of single command
-** env local to current minishell process
 */
 
 bool	env_set_default(t_env env, char *key, char *value)

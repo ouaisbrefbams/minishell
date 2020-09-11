@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/10 06:17:43 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/11 19:17:06 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,26 @@
 # include <stdlib.h>
 # include "libft_lst.h"
 # include "libft_str.h"
-// # include "minishell.h"
+
+/*
+** \brief                  token tags (type of token)
+** \param TAG_AND          &&
+** \param TAG_END          ;
+** \param TAG_OR           ||
+** \param TAG_PIPE         |
+** \param TAG_REDIR_IN     <
+** \param TAG_REDIR_OUT    >
+** \param TAG_REDIR_APPEND >>
+** \param TAG_PARENT_OPEN  (
+** \param TAG_PARENT_CLOSE )
+** \param TAG_STR          unquoted string
+** \param TAG_STR_DOUBLE   string quoted with "
+** \param TAG_STR_SINGLE   string quoted with '
+** \param TAG_STICK        token is sticked to the next one
+** \param TAG_IS_STR       all of string tags
+** \param TAG_IS_REDIR     all of redirection tags
+** \param TAG_IS_SEP       all of separator tags
+*/
 
 enum                    e_tok
 {
@@ -44,7 +63,13 @@ enum                    e_tok
 */
 
 /*
-** \warning DO NOT change the order of the fields
+** \brief          Token list struct
+** \param content  token string content
+** \param next     next token in the list (NULL if end)
+** \param tag      token tag
+** \warning        DO NOT change the order of the fields
+**                 (they are in the same order as t_ftlst so
+**                 that t_ftlst functions can be used on this struct aswell)
 */
 
 typedef struct			s_tok_lst
@@ -61,7 +86,6 @@ t_tok_lst				*tok_lst_push_front(t_tok_lst **tokens, t_tok_lst *pushed);
 void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*));
 t_tok_lst				*tok_lst_last(t_tok_lst *tokens);
 t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens);
-t_tok_lst				*tok_lst_take_sticked(t_tok_lst **tokens);
 
 /*
 ** lexer.c

@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 09:32:58 by charles           #+#    #+#             */
-/*   Updated: 2020/09/09 18:10:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/11 19:11:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,4 @@ t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens)
 	*tokens = poped->next;
 	poped->next = NULL;
 	return (poped);
-}
-
-t_tok_lst				*tok_lst_take_sticked(t_tok_lst **tokens)
-{
-	t_tok_lst	*start;
-	t_tok_lst	*curr;
-
-	if (*tokens == NULL)
-		return (NULL);
-	start = *tokens;
-	curr = *tokens;
-	while (curr->tag & TAG_STICK && curr->tag & TAG_IS_STR)
-		curr = curr->next;
-	/* if (curr->tag & TAG_IS_STR) */
-	/* 	curr = curr->next; */
-	*tokens = curr->next;
-	curr->next = NULL;
-	return (start);
 }

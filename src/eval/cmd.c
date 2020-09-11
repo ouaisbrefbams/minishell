@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 20:32:13 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/11 19:10:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ int 		forked_cmd(void *void_param)
 	struct stat			statbuf;
 
 	param = void_param;
-	ft_vecpop(param->env_local, NULL);
-	if (ft_vecswallow_at(param->env, param->env->size - 1, param->env_local) == NULL)
-	{
-		ft_vecdestroy(param->env_local, free);
-		return (EVAL_FATAL);
-	}
+	/* ft_vecpop(param->env_local, NULL); */
+	/* if (ft_vecswallow_at(param->env, param->env->size - 1, param->env_local) == NULL) */
+	/* { */
+	/* 	ft_vecdestroy(param->env_local, free); */
+	/* 	return (EVAL_FATAL); */
+	/* } */
 	if (param->builtin != NULL)
 		return (param->builtin->func(param->argv, param->env));
 	else
@@ -92,26 +92,6 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 
 	if ((status = redir_extract(&ast->redirs, env, fds)) != 0)
 		return (status);
-	if ((param.env_local = env_from_array((char*[]){NULL})) == NULL)
-		return (EVAL_FATAL);
-	if (!variable_extract(&ast->cmd_argv, env, param.env_local))
-		return (EVAL_FATAL);
-
-	/* char **strs = preprocess(&start, env); */
-    /*  */
-	/* if (env_export(env_local, id, strs[0]) == NULL) */
-	/* 	return (-1); */
-	/* if (ast->cmd_argv == NULL) // FIXME special env not passed to child processes */
-	/* { */
-	/* 	ft_vecpop(param.env_local, NULL); */
-	/* 	if (ft_vecswallow_at(env, env->size - 1, param.env_local) == NULL) */
-	/* 	{ */
-	/* 		ft_vecdestroy(param.env_local, free); */
-	/* 		return (-1); */
-	/* 	} */
-	/* 	g_last_status = 0; */
-	/* 	return (0); */
-	/* } */
 
 	if ((argv = preprocess(&ast->cmd_argv, env)) == NULL)
 	{
@@ -140,7 +120,6 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	param.env = env;
 	status = fork_wrap(fds, &param, &forked_cmd);
 	ft_split_destroy(argv);
-	ft_vecdestroy(param.env_local, free);
 	g_last_status = status;
 	return (status);
 }
