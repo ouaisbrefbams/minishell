@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/11 19:18:00 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/12 17:04:06 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ int main(int argc, char **argv, char **envp)
 		if (status == EVAL_FATAL)
 			exit(1);
 		g_last_status = status;
-		/* error_set_status(status); */
+		exit(status);
+		return (0);
 	}
 	else
 	{

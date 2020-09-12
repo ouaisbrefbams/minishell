@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/11 19:10:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/12 17:04:23 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 pid_t	g_child_pid = -1;
 int		g_last_status = 0;
+
 void token_debug(void *v);
 
 /*
@@ -25,16 +26,22 @@ void token_debug(void *v);
 */
 
 int			fork_wrap(
-				int fds[2],
-				void *passed,
-				int (*wrapped)(void *param))
+	int fds[2],
+	void *passed,
+	int (*wrapped)(void *param),
+	pid_t *child_pid
+)
 {
 	int		status;
-	pid_t	child_pid;
+	bool	waiting;
+	pid_t	pid;
 
-	if ((child_pid = fork()) == -1)
+	waiting = child_pid == NULL;
+	if (waiting)
+		child_pid = &pid;
+	if ((*child_pid = fork()) == -1)
 		return (EVAL_FATAL);
-	if (child_pid == 0)
+	if (*child_pid == 0)
 	{
 		if ((fds[FD_READ] != FD_NONE && dup2(fds[FD_READ], STDIN_FILENO) == -1) ||
 			(fds[FD_WRITE] != FD_NONE && dup2(fds[FD_WRITE], STDOUT_FILENO) == -1))
@@ -43,10 +50,15 @@ int			fork_wrap(
 			exit(EXIT_FAILURE);
 		exit(status);
 	}
-	g_child_pid = child_pid;
-	wait(&child_pid);
-	close(fds[FD_WRITE]);
-	return (WEXITSTATUS(child_pid));
+	g_child_pid = *child_pid;
+	if (waiting)
+	{
+		waitpid(*child_pid, child_pid, 0);
+		close(fds[FD_WRITE]);
+		/* close(fds[FD_READ]); */
+		return (WEXITSTATUS(*child_pid));
+	}
+	return (0);
 }
 
 int 		forked_cmd(void *void_param)
@@ -104,7 +116,6 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 	param.builtin = builtin_search_func(argv[0]);
 	if (param.builtin == NULL)
 	{
-		// check env local for PATH
 		param.exec_path = exec_search_path(path, env_search(env, "PATH"), argv[0]);
 		if (param.exec_path == NULL)
 		{
@@ -118,7 +129,7 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 
 	param.argv = argv;
 	param.env = env;
-	status = fork_wrap(fds, &param, &forked_cmd);
+	status = fork_wrap(fds, &param, &forked_cmd, NULL);
 	ft_split_destroy(argv);
 	g_last_status = status;
 	return (status);
