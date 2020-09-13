@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/10 04:39:08 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/13 08:51:56 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,7 @@ char                *del_quote(char *str)
 {
     int		i;
 
-    i = 0;
-    while(str[i++] != '\0')
-    {
-        if(str[i] == '\\')
-            i+=2;
-        if (str[i] == '\'' || str[i] == '"')
-            break;
-    }
-
+    i = lexer_check_between_quote(str, 0);
     if(str[i] != '\'' && str[i] != '"')
         return str;
     return (ft_strsubf(str, 1, i - 1));
