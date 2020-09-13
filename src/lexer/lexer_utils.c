@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 08:38:27 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/13 11:00:45 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int             		lexer_space(char *input)
     int i;
 
     i=0;
-    while(input[i] == ' ')
+    while(ft_isblank(input[i]))
         i++;
     return(i);
 }
@@ -85,8 +85,8 @@ static int             lex_check_single_quote(char *input, int i)
             break;
         ++i;
     }
-    if (input[i + 1] == ' ')
-        while(input[i + 1] == ' ')
+    if (ft_isblank(input[i + 1]))
+        while(ft_isblank(input[i + 1]))
             i++;
     return(i + 1);
 }
@@ -102,8 +102,8 @@ int             		lexer_check_between_quote(char *input, int i)
             i += 1;
         ++i;
     }
-    if (input[i + 1] == ' ')
-        while(input[i + 1] == ' ')
+    if (ft_isblank(input[i + 1]))
+        while(ft_isblank(input[i + 1]))
             i++;
     return(i + 1);
 }

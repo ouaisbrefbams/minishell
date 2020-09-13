@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 09:24:21 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/13 10:58:26 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ char                *del_space(t_tok_lst *tok)
     int             i;
 
     i = ft_strlen(tok->content);
-    if(tok->content[i - 1] == ' ')
+    if(ft_isblank(tok->content[i - 1]))
     {
         i -= 1;
-        while(tok->content[i] == ' ')
+        while(ft_isblank(tok->content[i]))
         {
             if (tok->content[i - 1] == '\\')
                 break;

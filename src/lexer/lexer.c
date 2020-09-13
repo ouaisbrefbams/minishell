@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 09:01:27 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/13 10:54:43 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ int 			len_until_sep(char *input)
 		if (input[i] == '\\')
 		{
 			i += 2;
-			if (input[i] == ' ')
+			if (input[i] == ' ' || input[i] == '\t')
 			{
-				while(input[++i] == ' ')
+				while(ft_isblank(input[++i]))
 					;
 				return i;
 			}
@@ -36,9 +36,9 @@ int 			len_until_sep(char *input)
 			return(i);
 		if (input[i] == '\'' || input[i] == '"')
 			return(i);
-		if (input[i] == ' ')
+		if (ft_isblank(input[i]))
 		{
-			while(input[++i] == ' ')
+			while(ft_isblank(input[++i]))
 				;
 			return (i);
 		}
@@ -61,8 +61,8 @@ int				check_input(char *input)
 	if (input[i] == '(' || input[i] == ')')
 	{
 		i +=1;
-		if(input[i] == ' ')
-			while(input[i++] != ' ')
+		if(ft_isblank(input[i]))
+			while(ft_isblank(input[i++]) != 1)
 				;
 		return (i);
 	}
@@ -80,9 +80,9 @@ int				check_input(char *input)
 	}
 	if (input[i] == 39 || input[i] == '"')
 		return(lexer_check_between_quote(input, i));
-	if (input[i] == ' ')
+	if (ft_isblank(input[i]))
 	{
-		while(input[++i] == ' ')
+		while(ft_isblank(input[++i]))
 			;
 		 return (i);
 	}
@@ -116,7 +116,7 @@ enum e_tok token_check_stick(t_tok_lst *tok)
 
 	i = ft_strlen(tok->content);
 	if (i > 0)
-		if (tok->content[i - 1] == ' ')
+		if (ft_isblank(tok->content[i - 1]))
 			return (tok->tag);
 	return (tok->tag | TAG_STICK);
 }
@@ -172,7 +172,7 @@ t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
 		j += check_input(&input[i]);
 		tok = tok_lst_new_until(0, input + i, j);
 		push_token_enum(tok);
-		if (tok->content[0] != ' ')
+		if (ft_isblank(tok->content[0]) != 1)
 			tok_lst_push_back(lst, tok);
 		i += j;
 	}
