@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/06/17 16:26:19 by charles          ###   ########.fr        #
+#    Updated: 2020/09/13 16:02:22 by charles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ $(NAME): $(OBJ)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCLUDE)
 	@echo "Compiling: $@"
-	@$(CC) $(CCFLAGS) -c -o $@ $<
+	@$(CC) $(CCFLAGS) $(MINISHELL_TEST_FLAGS) -c -o $@ $<
 
 .PHONY: clean
 clean: libft_clean

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/13 14:23:31 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 16:11:32 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,29 @@ int main(int argc, char **argv, char **envp)
 	char buf[PATH_MAX] = {0};
 	if (!(getcwd(buf, PATH_MAX)))
 		return(1);
+
+	char *shlvl_str = env_search(env, "SHLVL");
+	if (shlvl_str != NULL)
+	{
+		shlvl_str = ft_itoa(ft_atoi(shlvl_str));
+		env_export(env, "SHLVL", shlvl_str);
+		free(shlvl_str);
+	}
+
 	if (!env_set_default(env, "PWD", buf) ||
-		!env_set_default(env, "SHLVL", "0") ||   // TODO increment if set
-		!env_set_default(env, "PATH", "/sbin:")) // FIXME need to prefix if /sbin not in
+		!env_set_default(env, "SHLVL", "0") ||
+		!env_set_default(env, "PATH", "/sbin:"))
 		return (1);
 
-	/* char *path_str = env_search(env, "PATH"); */
-	/* if (ft_strstr(path_str, "/sbin") == NULL) */
-	/* { */
-	/* 	char *value = ft_strjoin("/sbin:", path_str); */
-	/* 	env_export(env, "PATH", value); */
-	/* 	free(value); */
-	/* } */
+#ifndef MINISHELL_TEST
+	char *path_str = env_search(env, "PATH");
+	if (ft_strstr(path_str, "/sbin") == NULL)
+	{
+		char *value = ft_strjoin("/sbin:", path_str);
+		env_export(env, "PATH", value);
+		free(value);
+	}
+#endif
 
 	path = path_update(NULL, env_search(env, "PATH"));
 
@@ -96,7 +107,7 @@ int main(int argc, char **argv, char **envp)
 		tok_lst_debug(lex_out);
 		/* ft_lstiter((t_ftlst*)lex_out, token_debug); */
 	}
-	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
+	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0) // put in MINISHELL_TEST
 	{
 		t_tok_lst *lex_out = lexer(argv[2]);
 		if (lex_out == NULL)
@@ -151,7 +162,6 @@ int main(int argc, char **argv, char **envp)
 			if (status == EVAL_FATAL)
 				exit(1);
 			g_last_status = status;
-			/* error_set_status(status); */
 			print_prompt();
 		}
 		if (ret != FTGL_EOF)
