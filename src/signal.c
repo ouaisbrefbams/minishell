@@ -16,7 +16,7 @@
 void signal_sigint(int signum)
 {
 	(void)signum;
-	g_last_status_code = 130;
+	g_last_status = 130;
 	if (g_child_pid != -1)
 	{
 		kill(g_child_pid, SIGINT);
@@ -32,7 +32,7 @@ void signal_sigint(int signum)
 void signal_sigquit(int signum)
 {
 	(void)signum;
-	g_last_status_code = 131;
+	g_last_status = 131;
 	if (g_child_pid != -1)
 	{
 		kill(g_child_pid, SIGQUIT);

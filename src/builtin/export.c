@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/08/28 17:49:47 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/12 11:06:47 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,20 @@ static void	st_put_declare_x(char *s)
 {
 	char	*equal_ptr;
 
-	// could use errorf on stdout
 	if (s == NULL)
 		return ;
-	ft_putstr("declare -x ");
+	ft_putstr("export ");
 	if ((equal_ptr = ft_strchr(s, '=')) == NULL)
 		equal_ptr = ft_strchr(s, '\0');
 	write(STDOUT_FILENO, s, equal_ptr - s);
 	ft_putchar('=');
 	ft_putchar('"');
-	ft_putstr(equal_ptr + 1);
+	while (*++equal_ptr != '\0')
+	{
+		if (*equal_ptr == '"')
+			ft_putchar('\\');
+		ft_putchar(*equal_ptr);
+	}
 	ft_putchar('"');
 	ft_putchar('\n');
 }
@@ -38,7 +42,7 @@ static void	st_put_declare_x(char *s)
 int			builtin_export(char **argv, t_env env)
 {
 	int		status;
-	size_t  i;
+	size_t	i;
 	char	*equal_ptr;
 
 	if (argv[1] == NULL)
@@ -62,7 +66,7 @@ int			builtin_export(char **argv, t_env env)
 			continue;
 		}
 		if (env_export(env, argv[i], equal_ptr == NULL ? "" : equal_ptr + 1) == NULL)
-			return (127); // malloc error
+			return (EVAL_FATAL);
 	}
 	return (status);
 }

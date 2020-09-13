@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 10:44:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 20:29:41 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** \note    NULL arguments are ignored
 */
 
-void			errorf(const char *format, ...)
+void		errorf(const char *format, ...)
 {
 	va_list	ap;
 
@@ -28,7 +28,11 @@ void			errorf(const char *format, ...)
 	va_end(ap);
 }
 
-void			verrorf(const char *format, va_list ap)
+/*
+** \brief   errorf with an argument pointer (ap) instead of arguments
+*/
+
+void		verrorf(const char *format, va_list ap)
 {
 	char	*arg;
 
@@ -48,4 +52,18 @@ void			verrorf(const char *format, va_list ap)
 			format++;
 		}
 	}
+}
+
+/*
+** \brief   errorf helper to return an status code and print the error
+*/
+
+int			errorf_ret(int status, const char *format, ...)
+{
+	va_list	ap;
+
+	va_start(ap, format);
+	verrorf(format, ap);
+	va_end(ap);
+	return (status);
 }

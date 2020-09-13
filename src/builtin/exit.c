@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:16 by charles           #+#    #+#             */
-/*   Updated: 2020/08/20 17:31:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 19:41:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	builtin_exit(char **argv, t_env env)
 
 	(void)env;
 	if (argv[1] == NULL)
-		status = g_last_status_code;
+		status = g_last_status;
 	else
 	{
 		errno = 0;
@@ -32,15 +32,9 @@ int	builtin_exit(char **argv, t_env env)
 		while (ft_isblank(*after))
 			after++;
 		if (*after != '\0' || errno == ERANGE)
-		{
-			errorf("exit: %s: numeric argument required\n", argv[1]);
-			return (2);
-		}
+			return (errorf_ret(2, "exit: %s: numeric argument required\n", argv[1]));
 		if (argv[2] != NULL)
-		{
-			errorf("exit: too many arguments\n");
-			return (1);
-		}
+			return (errorf_ret(1, "exit: too many arguments\n"));
 	}
 	exit(status % 256);
 	return (0);

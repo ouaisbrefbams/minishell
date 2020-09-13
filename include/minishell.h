@@ -51,7 +51,7 @@
 typedef t_ftht*			t_path;
 typedef t_ftvec*		t_env;
 
-extern int		g_last_status_code;
+extern int		g_last_status;
 extern char		*g_basename;
 
 /*

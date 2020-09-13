@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/09 16:56:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/10 14:19:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	*env_search_first_match(t_env env, const char *haystack)
 	while (ft_isalnum(haystack[len]) || haystack[len] == '_')
 		len++;
 	if (haystack[0] == '?')
-		return (ft_itoa(g_last_status_code)); // FIXME leak (static buffer)
+		return (ft_itoa(g_last_status)); // FIXME leak (static buffer)
 	if (len == 0)
 		return (NULL);
 	i = -1;
