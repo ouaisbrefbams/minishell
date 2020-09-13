@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:51 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 13:49:58 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:22:35 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 */
 
 #include "minishell.h"
+
+/*
+** \brief       Remove variables from the environment
+** \param argv  arguments
+** \param env   environment
+** \return      a status code or EVAL_FATAL on fatal error
+*/
 
 int	builtin_unset(char **argv, t_env env)
 {

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 14:20:17 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:56:29 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,29 @@ typedef struct
 extern pid_t		g_child_pid;
 
 /*
-** op.c
+** eval.c
 */
 
-int					eval_op(int fds[2], t_env env, t_path path, t_ast *ast);
+int					fork_wrap(int fds[2], void *passed, int (*wrapped)(void *param), pid_t *child_pid);
 int					eval(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid);
-int					eval_forked(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid);
 
 /*
 ** cmd.c
 */
 
-int					fork_wrap(int fds[2], void *passed, int (*wrapped)(void *param), pid_t *child_pid);
-int					fork_wrap_wait(int fds[2], void *passed, int (*wrapped)(void *param));
 int					eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid);
+
+/*
+** operation.c
+*/
+
+int					eval_operation(int fds[2], t_env env, t_path path, t_ast *ast);
+
+/*
+** parenthesis.c
+*/
+
+int					eval_parenthesis(int fds[2], t_env env, t_path path, t_ast *ast);
 
 /*
 ** redir.c

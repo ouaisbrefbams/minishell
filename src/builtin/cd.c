@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:20 by charles           #+#    #+#             */
-/*   Updated: 2020/09/12 11:09:49 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:20:13 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 */
 
 #include "minishell.h"
+
+/*
+** \brief       Change directory
+** \param argv  arguments
+** \param env   environment
+** \return      a status code or EVAL_FATAL on fatal error
+*/
 
 int	builtin_cd(char **argv, t_env env)
 {

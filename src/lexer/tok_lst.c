@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 09:32:58 by charles           #+#    #+#             */
-/*   Updated: 2020/09/11 19:11:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:31:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@ t_tok_lst				*tok_lst_new(enum e_tok tag, char *content)
 {
 	return (tok_lst_new_until(tag, content, content == NULL ? 0 : ft_strlen(content)));
 }
+
+/*
+** \brief          Create a new tok_lst
+** \param tag      tok_lst tag
+** \param content  tok_lst content
+** \param n        The maximum number of character to take from content
+** \return         An allocated tok_lst or NULL on error
+*/
 
 t_tok_lst				*tok_lst_new_until(enum e_tok tag, char *content, size_t n)
 {

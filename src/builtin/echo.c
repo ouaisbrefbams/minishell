@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:47 by charles           #+#    #+#             */
-/*   Updated: 2020/09/12 15:24:34 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:24:34 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@
 */
 
 #include "minishell.h"
+
+/*
+** \brief       Print it's arguments out
+** \param argv  arguments
+** \param env   environment
+** \return      a status code or EVAL_FATAL on fatal error
+*/
 
 int	builtin_echo(char **argv, t_env env)
 {

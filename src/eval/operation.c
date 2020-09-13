@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   op.c                                               :+:      :+:    :+:   */
+/*   operation.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 14:22:45 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:38:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
-int			eval_op(int fds[2], t_env env, t_path path, t_ast *ast)
+int			eval_operation(int fds[2], t_env env, t_path path, t_ast *ast)
 {
 	int	status;
 	int	left_fds[2];
@@ -57,45 +57,4 @@ int			eval_op(int fds[2], t_env env, t_path path, t_ast *ast)
 		(ast->op.sep == TAG_OR && status == 0))
 		return (status);
 	return (eval(right_fds, env, path, ast->op.right, NULL));
-}
-
-int			wrapped_eval(void *void_param)
-{
-	t_fork_param_args	*param;
-
-	param = void_param;
-	return (eval(param->fds, param->env, param->path, param->ast, NULL));
-}
-
-int			eval_parent(int fds[2], t_env env, t_path path, t_ast *ast)
-{
-	int					status;
-
-	if ((status = redir_extract(&ast->redirs, env, fds)) != 0)
-		return (status);
-	ast->tag ^= AST_PARENT;
-	return (eval_forked(fds, env, path, ast->parent_ast, NULL));
-}
-
-int			eval_forked(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
-{
-	t_fork_param_args	param;
-
-	param.fds[0] = fds[0];
-	param.fds[1] = fds[1];
-	param.env = env;
-	param.path = path;
-	param.ast = ast;
-	return (fork_wrap(fds, &param, wrapped_eval, child_pid));
-}
-
-int			eval(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
-{
-	if (ast->tag == AST_PARENT)
-		return (eval_parent(fds, env, path, ast));
-	if (ast->tag == AST_OP)
-		return (eval_op(fds, env, path, ast));
-	if (ast->tag == AST_CMD)
-		return (eval_cmd(fds, env, path, ast, child_pid));
-	return (EVAL_FATAL);
 }

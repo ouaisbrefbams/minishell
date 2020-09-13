@@ -6,15 +6,22 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:16 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 19:41:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:25:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "minishell.h"
 
 /*
 ** \file   exit.c
 ** \brief  `exit` builtin
+*/
+
+#include "minishell.h"
+
+/*
+** \brief       Exit the current process with a status
+** \param argv  arguments
+** \param env   environment
+** \return      always 0
 */
 
 int	builtin_exit(char **argv, t_env env)

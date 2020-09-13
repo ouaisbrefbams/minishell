@@ -6,9 +6,14 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 18:06:35 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:33:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+** \file   lexer.h
+** \brief  Lexer module
+*/
 
 #ifndef LEXER_H
 # define LEXER_H
@@ -107,7 +112,6 @@ enum e_tok 				tok_assign_str(t_tok_lst *tok);
 int                     lexer_sep(char input);
 int                     lexer_space(char *input);
 int                     quote_len(char *input, int i);
-
 
 /*
 ** trim.c

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 14:16:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:22:10 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 */
 
 #include "minishell.h"
+
+/*
+** \brief    Put an environment variable in the format "declare -x id=value" of bash
+** \param s  Full variable (id=value)
+*/
 
 static void	st_put_declare_x(char *s)
 {
@@ -50,6 +55,13 @@ static void	st_put_declare_x(char *s)
 	ft_putchar('"');
 	ft_putchar('\n');
 }
+
+/*
+** \brief       Export variables to the environment
+** \param argv  arguments
+** \param env   environment
+** \return      a status code or EVAL_FATAL on fatal error
+*/
 
 int			builtin_export(char **argv, t_env env)
 {

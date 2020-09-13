@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:01 by charles           #+#    #+#             */
-/*   Updated: 2020/07/17 11:16:57 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 20:18:32 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 #include "minishell.h"
 
 /*
-** \brief      Array storing builtin executable name and associated functions
+** \brief      Array storing builtin executable name, associated functions
+**             and if they should be executed in a fork
 */
 
 static t_builtin_entry	g_builtin_lookup[] = {
@@ -30,6 +31,13 @@ static t_builtin_entry	g_builtin_lookup[] = {
 	{"env", builtin_env, false},
 	{"exit", builtin_exit, false},
 };
+
+/*
+** \brief       Search a builtin by name in g_builtin_lookup
+** \param name  Name of the searched builtin
+** \return      the builtin entry of the associated name
+**              or NULL if name is not a builtin.
+*/
 
 t_builtin_entry			*builtin_search_func(char *name)
 {
