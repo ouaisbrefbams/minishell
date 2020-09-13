@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 17:33:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 18:06:35 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,6 @@ int                     quote_len(char *input, int i);
 ** trim.c
 */
 
-t_tok_lst             	*lexer_trim_out(t_tok_lst *lst);
+void					lexer_trim(t_tok_lst *lst);
 
 #endif

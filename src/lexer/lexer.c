@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 17:45:30 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 18:12:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_tok_lst        			*lexer(char *input)
 		return (NULL);
 	lst = NULL;
 	lst = create_token_list(input, &lst);
-	lst = lexer_trim_out(lst);
+	lexer_trim(lst);
 	return (lst);
 }
 
