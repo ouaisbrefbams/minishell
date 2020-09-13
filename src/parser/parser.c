@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/09 13:40:49 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 11:50:11 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ t_parsed	*parse_op(t_tok_lst *input)
 	if (!(sep_tag & TAG_IS_SEP))
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
 	ft_lstpop_front((t_ftlst**)&input, free);
+	if (input == NULL && sep_tag == TAG_END)
+		return (left);
 	if (input == NULL)
 		return (parsed_error("syntax error expected token\n"));
 	right = parse_op(input);

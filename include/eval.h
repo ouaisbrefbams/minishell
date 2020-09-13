@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/09/12 12:28:36 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 14:20:17 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ extern pid_t		g_child_pid;
 */
 
 int					eval_op(int fds[2], t_env env, t_path path, t_ast *ast);
-int					eval(int fds[2], t_env env, t_path path, t_ast *ast);
+int					eval(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid);
 int					eval_forked(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid);
 
 /*
@@ -58,7 +58,7 @@ int					eval_forked(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child
 
 int					fork_wrap(int fds[2], void *passed, int (*wrapped)(void *param), pid_t *child_pid);
 int					fork_wrap_wait(int fds[2], void *passed, int (*wrapped)(void *param));
-int					eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast);
+int					eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid);
 
 /*
 ** redir.c

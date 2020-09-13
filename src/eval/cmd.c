@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/12 17:04:23 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 14:19:37 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,6 @@ int 		forked_cmd(void *void_param)
 	struct stat			statbuf;
 
 	param = void_param;
-	/* ft_vecpop(param->env_local, NULL); */
-	/* if (ft_vecswallow_at(param->env, param->env->size - 1, param->env_local) == NULL) */
-	/* { */
-	/* 	ft_vecdestroy(param->env_local, free); */
-	/* 	return (EVAL_FATAL); */
-	/* } */
 	if (param->builtin != NULL)
 		return (param->builtin->func(param->argv, param->env));
 	else
@@ -96,7 +90,7 @@ int 		forked_cmd(void *void_param)
 	}
 }
 
-int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
+int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
 {
 	t_fork_param_cmd	param;
 	char				**argv;
@@ -124,12 +118,12 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast)
 			return (127);
 		}
 	}
-	else if (!param.builtin->forked)
+	else if (!param.builtin->forked && child_pid == NULL)
 		return (param.builtin->func(argv, env));
 
 	param.argv = argv;
 	param.env = env;
-	status = fork_wrap(fds, &param, &forked_cmd, NULL);
+	status = fork_wrap(fds, &param, &forked_cmd, child_pid);
 	ft_split_destroy(argv);
 	g_last_status = status;
 	return (status);

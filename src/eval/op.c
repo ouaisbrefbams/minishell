@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/09/12 17:00:11 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 14:22:45 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ int			eval_op(int fds[2], t_env env, t_path path, t_ast *ast)
 
 		pid_t left_pid;
 		pid_t right_pid;
-		eval_forked(left_fds, env, path, ast->op.left, &left_pid);
-		eval_forked(right_fds, env, path, ast->op.right, &right_pid);
+		eval(left_fds, env, path, ast->op.left, &left_pid);
+		close(p[FD_WRITE]);
+		eval(right_fds, env, path, ast->op.right, &right_pid);
+		close(p[FD_READ]);
 
 		pid_t finished;
 		finished = wait(NULL);
-		close(p[FD_READ]);
-		close(p[FD_WRITE]);
 		if (finished == left_pid)
 		{
-			/* waitpid(right_pid, &right_pid, 0); */
+			waitpid(right_pid, &right_pid, 0);
 		}
 		else if (finished == right_pid)
 		{
@@ -49,14 +49,14 @@ int			eval_op(int fds[2], t_env env, t_path path, t_ast *ast)
 		}
 		return (0);
 	}
-	if ((status = eval(left_fds, env, path, ast->op.left)) == EVAL_FATAL)
+	if ((status = eval(left_fds, env, path, ast->op.left, NULL)) == EVAL_FATAL)
 		return (EVAL_FATAL);
 	g_last_status = status;
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_PIPE && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))
 		return (status);
-	return (eval(right_fds, env, path, ast->op.right));
+	return (eval(right_fds, env, path, ast->op.right, NULL));
 }
 
 int			wrapped_eval(void *void_param)
@@ -64,7 +64,7 @@ int			wrapped_eval(void *void_param)
 	t_fork_param_args	*param;
 
 	param = void_param;
-	return (eval(param->fds, param->env, param->path, param->ast));
+	return (eval(param->fds, param->env, param->path, param->ast, NULL));
 }
 
 int			eval_parent(int fds[2], t_env env, t_path path, t_ast *ast)
@@ -89,13 +89,13 @@ int			eval_forked(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_p
 	return (fork_wrap(fds, &param, wrapped_eval, child_pid));
 }
 
-int			eval(int fds[2], t_env env, t_path path, t_ast *ast)
+int			eval(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
 {
 	if (ast->tag == AST_PARENT)
 		return (eval_parent(fds, env, path, ast));
 	if (ast->tag == AST_OP)
 		return (eval_op(fds, env, path, ast));
 	if (ast->tag == AST_CMD)
-		return (eval_cmd(fds, env, path, ast));
+		return (eval_cmd(fds, env, path, ast, child_pid));
 	return (EVAL_FATAL);
 }

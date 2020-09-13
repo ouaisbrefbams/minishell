@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/12 11:06:47 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 14:16:28 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,32 @@
 static void	st_put_declare_x(char *s)
 {
 	char	*equal_ptr;
+	int		shlvl;
 
 	if (s == NULL)
 		return ;
-	ft_putstr("export ");
 	if ((equal_ptr = ft_strchr(s, '=')) == NULL)
 		equal_ptr = ft_strchr(s, '\0');
-	write(STDOUT_FILENO, s, equal_ptr - s);
+	*equal_ptr = '\0';
+	if (ft_strcmp(s, "_") == 0)
+		return ;
+	ft_putstr("declare -x ");
+	ft_putstr(s);
 	ft_putchar('=');
 	ft_putchar('"');
-	while (*++equal_ptr != '\0')
+	if (ft_strcmp(s, "SHLVL") == 0)
 	{
-		if (*equal_ptr == '"')
-			ft_putchar('\\');
-		ft_putchar(*equal_ptr);
+		shlvl = ft_atoi(equal_ptr + 1);
+		ft_putnbr(shlvl + 1);
+	}
+	else
+	{
+		while (*++equal_ptr != '\0')
+		{
+			if (*equal_ptr == '"')
+				ft_putchar('\\');
+			ft_putchar(*equal_ptr);
+		}
 	}
 	ft_putchar('"');
 	ft_putchar('\n');

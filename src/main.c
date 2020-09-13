@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/13 10:13:44 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/13 14:23:31 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,28 @@ int main(int argc, char **argv, char **envp)
 	if (!(getcwd(buf, PATH_MAX)))
 		return(1);
 	if (!env_set_default(env, "PWD", buf) ||
-		!env_set_default(env, "SHLVL", "1") ||   // TODO increment if set
+		!env_set_default(env, "SHLVL", "0") ||   // TODO increment if set
 		!env_set_default(env, "PATH", "/sbin:")) // FIXME need to prefix if /sbin not in
 		return (1);
 
+	/* char *path_str = env_search(env, "PATH"); */
+	/* if (ft_strstr(path_str, "/sbin") == NULL) */
+	/* { */
+	/* 	char *value = ft_strjoin("/sbin:", path_str); */
+	/* 	env_export(env, "PATH", value); */
+	/* 	free(value); */
+	/* } */
+
 	path = path_update(NULL, env_search(env, "PATH"));
 
-	/* char *env_exec_path; */
-	// if ((env_exec_path = ft_htget(path, "env")) == NULL)
-	// {
-	// 	errorf("env: command not found\n");
-	// 	return (127);
-	// }
-	// env_export(env, "_", env_exec_path);
+	char *env_exec_path;
+	if ((env_exec_path = ft_htget(path, "env")) == NULL)
+	{
+		env_exec_path = "/sbin/env";
+		/* errorf("env: command not found\n"); */
+		/* return (127); */
+	}
+	env_export(env, "_", env_exec_path);
 
 	g_last_status = 0;
 	signal(SIGINT, signal_sigint);
@@ -104,7 +113,7 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 		int fds[2] = {FD_NONE, FD_NONE};
-		int status = eval(fds, env, path, parser_out->ast);
+		int status = eval(fds, env, path, parser_out->ast, NULL);
 		if (status == EVAL_FATAL)
 			exit(1);
 		g_last_status = status;
@@ -138,7 +147,7 @@ int main(int argc, char **argv, char **envp)
 			}
 
 			int fds[2] = {FD_NONE, FD_NONE};
-			int status = eval(fds, env, path, parser_out->ast);
+			int status = eval(fds, env, path, parser_out->ast, NULL);
 			if (status == EVAL_FATAL)
 				exit(1);
 			g_last_status = status;
