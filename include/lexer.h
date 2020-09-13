@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/11 19:17:06 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/13 17:33:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,25 +91,22 @@ t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens);
 ** lexer.c
 */
 
-t_tok_lst             	*lexer(char *input);
-int						check_input(char *input);
 int 					len_until_sep(char *input);
-int 					check_input_out(char *input);
-enum e_tok 				token_check_stick(t_tok_lst *tok);
-enum e_tok 				token_str_or_quote(t_tok_lst *tok);
+int						tok_len(char *input);
 t_tok_lst				*create_token_list(char *input, t_tok_lst **lst);
-void					push_token_enum(t_tok_lst *tok);
-void					push_token_enum(t_tok_lst *tok);
+t_tok_lst             	*lexer(char *input);
+// int 					check_input_out(char *input);
 
 /*
-** lexer_utils.c
+** utils.c
 */
 
-enum e_tok      		ret_token(char *input, int i);
-enum e_tok        		ret_token_sep_redir_append(char *input, int i);
+enum e_tok      		tok_assign_tag(char *content);
+enum e_tok 				tok_assign_stick(t_tok_lst *tok);
+enum e_tok 				tok_assign_str(t_tok_lst *tok);
 int                     lexer_sep(char input);
-int                     lexer_check_between_quote(char *input, int i);
 int                     lexer_space(char *input);
+int                     quote_len(char *input, int i);
 
 
 /*

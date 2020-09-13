@@ -6,178 +6,100 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 10:54:43 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/13 17:45:30 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
+// len until meaningful character for non quoted str
 int 			len_until_sep(char *input)
 {
 	int i;
 
 	i = -1;
-	while(input[++i])
+	while (input[++i])
 	{
 		if (input[i] == '\\')
 		{
 			i += 2;
-			if (input[i] == ' ' || input[i] == '\t')
-			{
-				while(ft_isblank(input[++i]))
-					;
-				return i;
-			}
-			else if (input[i] != lexer_sep(input[i]) || input[i] != 39 || input[i] != '"')
+			if (ft_isblank(input[i]))
+				return (i + 1 + lexer_space(&input[i + 1]));
+			else if (input[i] != '\'' || input[i] != '"')
 				i += len_until_sep(&input[i]);
-			return i;
-		}
-		if (lexer_sep(input[i]))
-			return(i);
-		if (input[i] == '\'' || input[i] == '"')
-			return(i);
-		if (ft_isblank(input[i]))
-		{
-			while(ft_isblank(input[++i]))
-				;
 			return (i);
 		}
+		if (lexer_sep(input[i]))
+			return (i);
+		if (input[i] == '\'' || input[i] == '"')
+			return (i);
+		if (ft_isblank(input[i]))
+			return (i + 1 + lexer_space(&input[i + 1]));
 	}
-	return(i);
+	return (i);
 }
 
-int				check_input(char *input)
+// token content length
+int				tok_len(char *input)
 {
-	int 				i;
-	int 				op;
+	int i;
 
 	i = 0;
-	op = 1;
 	if (input[i] == '\\' && lexer_sep(input[i + 1]))
 	{
 		i += 2;
 		return (i + lexer_space(&input[i]));
 	}
 	if (input[i] == '(' || input[i] == ')')
-	{
-		i +=1;
-		if(ft_isblank(input[i]))
-			while(ft_isblank(input[i++]) != 1)
-				;
-		return (i);
-	}
-	if (lexer_sep(input[i]))
-	{
-		if (input[i] == ';')
-			return (i + lexer_space(&input[i + 1]) + 1);
-		while(input[i] == input[i + 1] && op < 2)
-		{
-			i++;
-			op++;
-		}
-		i += lexer_space(&input[i + 1]);
 		return (i + 1);
+	if (lexer_sep(input[i])) // fucked on & alone
+	{
+		if (input[i] == input[i + 1])
+			i++;
+		return (i + 1 + lexer_space(&input[i + 1]));
 	}
-	if (input[i] == 39 || input[i] == '"')
-		return(lexer_check_between_quote(input, i));
+	if (input[i] == '\'' || input[i] == '"')
+		return (quote_len(input, i));
 	if (ft_isblank(input[i]))
-	{
-		while(ft_isblank(input[++i]))
-			;
-		 return (i);
-	}
-	i = len_until_sep(&input[i]);
-	return i;
+		return (i + 1 + lexer_space(&input[i + 1]));
+	return (len_until_sep(&input[i]));
 }
 
-
-int 					check_input_out(char *input)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while(input[i] != '\0')
-	{
-		j = 0;
-		j += len_until_sep(&input[i]);
-		if (j != 0)
-			return(j);
-		i += j;
-		j = check_input(&input[i]);
-		return(j);
-	}
-	return(0);
-}
-
-enum e_tok token_check_stick(t_tok_lst *tok)
-{
-	int i;
-
-	i = ft_strlen(tok->content);
-	if (i > 0)
-		if (ft_isblank(tok->content[i - 1]))
-			return (tok->tag);
-	return (tok->tag | TAG_STICK);
-}
-
-enum e_tok token_str_or_quote(t_tok_lst *tok)
-{
-	int i;
-
-	i = 0;
-	while (tok->content[i] != '\0')
-	{
-		if (tok->content[i] == '\'')
-		{
-			tok->tag = TAG_STR_SINGLE;
-			return (token_check_stick(tok));
-		}
-		if (tok->content[i] == '"')
-		{
-			tok->tag = TAG_STR_DOUBLE;
-			return (token_check_stick(tok));
-		}
-		else
-		{
-			tok->tag = TAG_STR;
-			return (token_check_stick(tok));
-		}
-		i++;
-	}
-	return(0);
-}
-
-void						push_token_enum(t_tok_lst *tok)
-{
-	enum e_tok 		tag;
-
-	tag = ret_token(tok->content, 0);
-	if (tag == 0)
-		tok->tag = token_str_or_quote(tok);
-	else
-		tok->tag = tag;
-}
+/*
+** \brief interate over input
+**        get the number of character for the current token
+**        create a token from a substring in input
+**        assign a tag to the token
+*/
 
 t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
 {
 	t_tok_lst	*tok;
 	size_t 		i;
 	size_t		j;
+	size_t		len;
 
+	len = ft_strlen(input);
 	i = 0;
-	while (i < ft_strlen(input))
+	while (i < len)
 	{
-		j = 0;
-		j += check_input(&input[i]);
+		j = tok_len(&input[i]);
 		tok = tok_lst_new_until(0, input + i, j);
-		push_token_enum(tok);
-		if (ft_isblank(tok->content[0]) != 1)
+		tok->tag = tok_assign_tag(tok->content);
+		if (tok->tag == 0)
+			tok->tag = tok_assign_str(tok);
+		if (!ft_isblank(tok->content[0])) // ?
 			tok_lst_push_back(lst, tok);
 		i += j;
 	}
 	return (*lst);
 }
+
+/*
+** \brief        Create a token list from a string
+** \param input  Input string
+** \return       The created tokens or NULL on error
+*/
 
 t_tok_lst        			*lexer(char *input)
 {
@@ -190,3 +112,22 @@ t_tok_lst        			*lexer(char *input)
 	lst = lexer_trim_out(lst);
 	return (lst);
 }
+
+/* int 					check_input_out(char *input) */
+/* { */
+/* 	int i; */
+/* 	int j; */
+/*  */
+/* 	i = 0; */
+/* 	while(input[i] != '\0') */
+/* 	{ */
+/* 		j = 0; */
+/* 		j += len_until_sep(&input[i]); */
+/* 		if (j != 0) */
+/* 			return(j); */
+/* 		i += j; */
+/* 		j = check_input(&input[i]); */
+/* 		return(j); */
+/* 	} */
+/* 	return(0); */
+/* } */
