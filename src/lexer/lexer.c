@@ -6,11 +6,12 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/14 11:30:24 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/14 16:14:51 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
+#include <stdio.h>
 
 // len until meaningful character for non quoted str
 int 			len_until_sep(char *input)
@@ -101,16 +102,20 @@ t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
 ** \return       The created tokens or NULL on error
 */
 
-t_tok_lst        			*lexer(char *input)
+int     			lexer(char *input, t_tok_lst **out)
 {
 	t_tok_lst	*lst;
+	int 		r;
 
+	r = 0;
 	if (!input)
-		return (NULL);
+		return (1);
 	lst = NULL;
 	lst = create_token_list(input, &lst);
-	lexer_trim(lst);
-	return (lst);
+	r = lexer_trim(lst);
+	*out = lst;
+	return r;
+
 }
 
 /* int 					check_input_out(char *input) */

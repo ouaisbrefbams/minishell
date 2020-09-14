@@ -6,12 +6,13 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/14 11:30:18 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/14 15:40:21 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "lexer.h"
+#include <stdio.h>
 
 void	del_space(char *str)
 {
@@ -31,11 +32,13 @@ void	del_space(char *str)
     }
 }
 
-void	del_quote(char *str)
+int 	del_quote(char *str)
 {
     size_t	i;
+    int nb_q;
 
     i = 0;
+    nb_q = 1;
     if (str[0] == '\'')
 	{
         while (str[i++] != '\0')
@@ -48,7 +51,10 @@ void	del_quote(char *str)
             else if (str[i] == '\\')
                 i += 2;
             if (str[i] == '\'')
+            {
+                nb_q++;
                 break ;
+            }
         }
 	}
     else if (str[0] == '"')
@@ -58,22 +64,39 @@ void	del_quote(char *str)
             if (str[i] == '\\')
                 i += 2;
             if (str[i] == '"')
+            {
+                nb_q++;
                 break ;
+            }
         }
 	}
-	str[i] = '\0';
-	ft_memmove(str, str + 1, ft_strlen(str + 1) + 1);
+    if (nb_q % 2 == 0)
+    {
+        str[i] = '\0';
+    	if(!(ft_memmove(str, str + 1, ft_strlen(str + 1) + 1)))
+            return 1;
+        else
+            return 0;
+    }
+    else
+        return 2;
 }
 
-void	lexer_trim(t_tok_lst *tokens)
+int	lexer_trim(t_tok_lst *tokens)
 {
+    int r = 0;
     while (tokens != NULL)
     {
         if (tokens->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
         {
-            del_quote(tokens->content);
-            if (tokens->next == NULL)
-				tokens->tag &= ~TAG_STICK;
+            r = del_quote(tokens->content);
+            if (r == 0)
+            {
+                if (tokens->next == NULL)
+                    tokens->tag &= ~TAG_STICK;
+            }
+            else
+                return r;
         }
         else
         {
@@ -83,4 +106,5 @@ void	lexer_trim(t_tok_lst *tokens)
         }
         tokens = tokens->next;
     }
+    return 0;
 }

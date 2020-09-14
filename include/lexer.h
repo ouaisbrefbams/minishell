@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 20:33:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 16:10:44 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens);
 int 					len_until_sep(char *input);
 int						tok_len(char *input);
 t_tok_lst				*create_token_list(char *input, t_tok_lst **lst);
-t_tok_lst             	*lexer(char *input);
-// int 					check_input_out(char *input);
+int						lexer(char *input, t_tok_lst **lst);
+
 
 /*
 ** utils.c
@@ -117,6 +117,6 @@ int                     quote_len(char *input, int i);
 ** trim.c
 */
 
-void					lexer_trim(t_tok_lst *lst);
+int					lexer_trim(t_tok_lst *lst);
 
 #endif

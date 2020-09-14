@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/13 16:11:32 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 16:13:41 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ int main(int argc, char **argv, char **envp)
 {
 	t_path	path;
 	t_env	env;
+	int 	r;
 
+	r = 0;
 	env = env_from_array(envp);
 
 	char buf[PATH_MAX] = {0};
@@ -101,15 +103,15 @@ int main(int argc, char **argv, char **envp)
 
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
-		t_tok_lst *lex_out = lexer(argv[2]);
-		if (lex_out == NULL)
-			return (1);
+		t_tok_lst *lex_out;
+		r = lexer(argv[2], &lex_out);
 		tok_lst_debug(lex_out);
 		/* ft_lstiter((t_ftlst*)lex_out, token_debug); */
 	}
 	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0) // put in MINISHELL_TEST
 	{
-		t_tok_lst *lex_out = lexer(argv[2]);
+		t_tok_lst *lex_out;
+		r = lexer(argv[2], &lex_out);
 		if (lex_out == NULL)
 			return (1);
 
@@ -144,11 +146,12 @@ int main(int argc, char **argv, char **envp)
 				print_prompt();
 				continue;
 			}
-			t_tok_lst *lex_out = lexer(line);
+			t_tok_lst **lex_out = NULL;
+			r = lexer(line, lex_out);
 			if (lex_out == NULL)
 				return (1);
 
-			t_parsed *parser_out = parse(lex_out);
+			t_parsed *parser_out = parse(*lex_out);
 			if (parser_out == NULL)
 				return (1);
 			if (parser_out->syntax_error)
