@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/09 15:42:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 15:36:04 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int						builtin_exit(char **argv, t_env env);
 */
 
 char					**preprocess(t_tok_lst **tokens, t_env env);
-char					*preprocess_filename(t_tok_lst **tokens, t_env env);
+int						preprocess_filename(t_tok_lst **tokens, t_env env, char **filename);
 
 /*
 ** signal.c

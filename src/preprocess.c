@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/09/09 13:15:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 15:42:18 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ char			**preprocess(t_tok_lst **tokens, t_env env)
 			while ((str = curr->content) != NULL && str[++i] != '\0')
 			{
 				if (escape(str + i, curr->tag))
-					continue;
+					continue ;
 				if (str[i] == '$')
 					i = interpolate(str, i, &curr, prev_tag, env) - 1;
 			}
@@ -188,26 +188,23 @@ char			**preprocess(t_tok_lst **tokens, t_env env)
 	return (st_tokens_to_argv(*tokens));
 }
 
-// TODO malloc error vs shell error
-char		*preprocess_filename(t_tok_lst **tokens, t_env env)
+int		preprocess_filename(t_tok_lst **tokens, t_env env, char **filename)
 {
 	char	**strs;
-	char	*ret;
 
 	if ((strs = preprocess(tokens, env)) == NULL
 		|| strs[0] == NULL)
 	{
 		free(strs);
-		return (NULL);
+		return (EVAL_FATAL);
 	}
 	if (strs[1] != NULL)
 	{
-		/* save tokens */
 		errorf("%s: ambiguous redidrect\n", strs[1]);
 		ft_split_destroy(strs);
-		return (NULL);
+		return (1);
 	}
-	ret = strs[0];
+	*filename = ft_strdup(strs[0]);
 	free(strs);
-	return (ft_strdup(ret));
+	return (*filename == NULL ? EVAL_FATAL : 0);
 }

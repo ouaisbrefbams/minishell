@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/14 11:30:18 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/14 15:13:10 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,7 @@ void	del_quote(char *str)
 	{
         while (str[i++] != '\0')
         {
-            if (str[i] == '\\' && str[i + 1] == '\'')
-            {
-                i++;
-                break;
-            }
-            else if (str[i] == '\\')
+            if (str[i] == '\\')
                 i += 2;
             if (str[i] == '\'')
                 break ;

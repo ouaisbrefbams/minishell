@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 21:00:38 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 15:42:52 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 pid_t	g_child_pid = -1;
 int		g_last_status = 0;
-
-void token_debug(void *v);
 
 int 		wrapped_cmd(void *void_param)
 {
@@ -59,13 +57,8 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
 
 	if ((status = redir_extract(&ast->redirs, env, fds)) != 0)
 		return (status);
-
 	if ((argv = preprocess(&ast->cmd_argv, env)) == NULL)
-	{
-		ast->cmd_argv = NULL;
 		return (EVAL_FATAL);
-	}
-
 	if (argv[0] == NULL)
 		return (0);
 	param.builtin = builtin_search_func(argv[0]);
