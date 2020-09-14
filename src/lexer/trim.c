@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 20:42:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 11:30:18 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,19 @@ void	del_space(char *str)
 
 void	del_quote(char *str)
 {
-    int	i;
+    size_t	i;
 
     i = 0;
     if (str[0] == '\'')
 	{
         while (str[i++] != '\0')
         {
-            if (str[i] == '\\')
+            if (str[i] == '\\' && str[i + 1] == '\'')
+            {
+                i++;
+                break;
+            }
+            else if (str[i] == '\\')
                 i += 2;
             if (str[i] == '\'')
                 break ;

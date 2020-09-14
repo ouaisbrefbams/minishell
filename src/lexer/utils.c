@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 17:23:29 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 11:38:18 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ int             		quote_len(char *input, int i)
     i++;
     while (input[i] != quote_type && input[i] != '\0')
     {
-        if (input[i] == '\\')
-			i++;
+        if(input[i] == '\\')
+            i+=2;
         i++;
     }
 	while (ft_isblank(input[i + 1]))
