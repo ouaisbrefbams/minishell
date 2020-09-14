@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/14 16:13:41 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/14 16:24:30 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,7 @@ int main(int argc, char **argv, char **envp)
 {
 	t_path	path;
 	t_env	env;
-	int 	r;
 
-	r = 0;
 	env = env_from_array(envp);
 
 	char buf[PATH_MAX] = {0};
@@ -104,16 +102,18 @@ int main(int argc, char **argv, char **envp)
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 	{
 		t_tok_lst *lex_out;
-		r = lexer(argv[2], &lex_out);
+		int status = lexer(argv[2], &lex_out);
+		if (status != 0)
+			return (status);
 		tok_lst_debug(lex_out);
 		/* ft_lstiter((t_ftlst*)lex_out, token_debug); */
 	}
 	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0) // put in MINISHELL_TEST
 	{
 		t_tok_lst *lex_out;
-		r = lexer(argv[2], &lex_out);
-		if (lex_out == NULL)
-			return (1);
+		int status = lexer(argv[2], &lex_out);
+		if (status != 0)
+			return (status);
 
 		t_parsed *parser_out = parse(lex_out);
 		if (parser_out == NULL || parser_out->syntax_error)
@@ -126,7 +126,7 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 		int fds[2] = {FD_NONE, FD_NONE};
-		int status = eval(fds, env, path, parser_out->ast, NULL);
+		status = eval(fds, env, path, parser_out->ast, NULL);
 		if (status == EVAL_FATAL)
 			exit(1);
 		g_last_status = status;
@@ -137,6 +137,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		int		ret;
 		char	*line;
+		int		status;
 
 		print_prompt();
 		while ((ret = ft_getline(STDIN_FILENO, &line)) == FTGL_OK)
@@ -146,12 +147,12 @@ int main(int argc, char **argv, char **envp)
 				print_prompt();
 				continue;
 			}
-			t_tok_lst **lex_out = NULL;
-			r = lexer(line, lex_out);
-			if (lex_out == NULL)
-				return (1);
+			t_tok_lst *lex_out;
+			status = lexer(line, &lex_out);
+			if (status != 0)
+				return (status);
 
-			t_parsed *parser_out = parse(*lex_out);
+			t_parsed *parser_out = parse(lex_out);
 			if (parser_out == NULL)
 				return (1);
 			if (parser_out->syntax_error)

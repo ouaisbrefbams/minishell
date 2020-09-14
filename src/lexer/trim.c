@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/14 16:23:35 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/09/14 16:33:13 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,19 +79,16 @@ int 	del_quote(char *str)
 
 int	lexer_trim(t_tok_lst *tokens)
 {
-    int r = 0;
+    int status;
+
     while (tokens != NULL)
     {
         if (tokens->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
         {
-            r = del_quote(tokens->content);
-            if (r == 0)
-            {
-                if (tokens->next == NULL)
-                    tokens->tag &= ~TAG_STICK;
-            }
-            else
-                return r;
+            if ((status = del_quote(tokens->content)) != 0)
+				return (status);
+			if (tokens->next == NULL)
+				tokens->tag &= ~TAG_STICK;
         }
         else
         {
@@ -101,5 +98,5 @@ int	lexer_trim(t_tok_lst *tokens)
         }
         tokens = tokens->next;
     }
-    return 0;
+    return (0);
 }
