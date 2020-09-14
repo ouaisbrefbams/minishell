@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/14 15:36:04 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 19:50:06 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@
 
 # define BUILTIN_NOT_FOUND -2
 
-typedef t_ftht*			t_path;
 typedef t_ftvec*		t_env;
 
 extern int		g_last_status;
@@ -58,7 +57,7 @@ extern char		*g_basename;
 ** path.c
 */
 
-t_path					path_update(t_path path, char *path_var);
+bool					path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1]);
 
 /*
 ** env.c

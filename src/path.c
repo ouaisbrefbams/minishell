@@ -6,77 +6,70 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/09 15:49:50 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 20:44:39 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 ** \file   path.c
-** \brief  Path hash table manipulation
+** \brief  Path search
 */
 
 #include "minishell.h"
 
-/*
-** \brief  Number of buckets of a path hash table
-*/
-
-#define MS_PATH_HT_SIZE 8192
-
-/*
-** \brief          Update `path` with all files
-**                 in the directory named `dirname`.
-** \param path     Path hash table
-** \param dirname  directory name
-** \return         -1 on error, 0 or -2 otherwise
-*/
-
-static int		st_add_directory(t_path path, char *dirname)
+static bool		st_dir_search(char *dirname, char *exec_name, char exec_path[PATH_MAX + 1])
 {
 	DIR				*dir;
 	struct dirent	*entry;
 
 	if ((dir = opendir(dirname)) == NULL)
-		return (-2);
+		return (false);
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if (ft_htset_safe(path, entry->d_name,
-			ft_strjoin3(dirname, "/", entry->d_name), free) == NULL)
+		if (ft_strcmp(entry->d_name, exec_name) == 0)
 		{
-			closedir(dir);
-			return (-1);
+			ft_strcpy(exec_path, dirname);
+			ft_strcat(exec_path, "/");
+			ft_strcat(exec_path, exec_name);
+			return (true);
 		}
 	}
-	if (closedir(dir) == -1)
-		return (-1);
-	return (0);
+	closedir(dir);
+	return (false);
 }
 
-/*
-** \brief           Update the path
-** \param path		Path hash table or NULL to create a new one
-** \param path_var  PATH environment variable where
-**                  each directory is separated by a ':'
-** \return          The updated/created path hash table or NULL on error
-*/
-
-// TODO check nullstring path == current directory
-// i.e ./ not needed before executable
-t_path					path_update(t_path path, char *path_var)
+bool			path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1])
 {
-	int		i;
-	char	**dirs;
+	char	*current_dir;
+	char	*collon;
+	char	cwd[PATH_MAX + 1];
 
-	if (path_var == NULL)
-		return (NULL);
-	if (path == NULL && (path = ft_htnew(MS_PATH_HT_SIZE)) == NULL)
-		return (NULL);
-	if ((dirs = ft_split(path_var, ':')) == NULL)
-		return (NULL);
-	i = -1;
-	while (dirs[++i] != NULL)
-		if (st_add_directory(path, dirs[i]) == -1)
-			return (ft_split_destroy(dirs));
-	ft_split_destroy(dirs);
-	return (path);
+	if (ft_strchr(exec_name, '/') != NULL)
+	{
+		ft_strcpy(exec_path, exec_name);
+		return (true);
+	}
+	/* printf("==========\n"); */
+	if ((current_dir = env_search(env, "PATH")) == NULL)
+		return (st_dir_search(getcwd(cwd, PATH_MAX + 1), exec_name, exec_path));
+	/* printf("%s\n", current_dir); */
+	while ((collon = ft_strchr(current_dir, ':')) != NULL)
+	{
+		*collon = '\0';
+		/* printf("%s\n", current_dir); */
+		if (*current_dir == '\0')
+			current_dir = getcwd(cwd, PATH_MAX + 1);
+		if (st_dir_search(current_dir, exec_name, exec_path))
+			return (true);
+		*collon = ':';
+		current_dir = collon + 1;
+	}
+	/* printf("> %s\n", current_dir); */
+
+	if (*current_dir == '\0')
+		current_dir = getcwd(cwd, PATH_MAX + 1);
+	if (st_dir_search(current_dir, exec_name, exec_path))
+		return (true);
+	/* printf("yo\n"); */
+	return (false);
 }

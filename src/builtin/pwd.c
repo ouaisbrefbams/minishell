@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:40 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 20:23:15 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 21:27:54 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,10 @@ int	builtin_pwd(char **argv, t_env env)
 	char	*working_directory;
 
 	(void)argv;
-	if ((working_directory = env_search(env, "PWD")) == NULL)
-	{
-		ft_bzero(buf, PATH_MAX);
-		if (getcwd(buf, PATH_MAX) == NULL)
-			return (1);
-		ft_putendl(buf);
-	}
-	else
-		ft_putendl(working_directory);
+	(void)env;
+	ft_bzero(buf, PATH_MAX);
+	if (getcwd(buf, PATH_MAX) == NULL)
+		return (1);
+	ft_putendl(buf);
 	return (0);
 }
