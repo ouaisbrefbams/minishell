@@ -6,13 +6,13 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 20:25:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 15:41:03 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
-static int				st_open_replace(int *fd, char *filename, int oflag)
+static int	st_open_replace(char *filename, int *fd, int oflag)
 {
 	if (*fd != FD_NONE)
 		close(*fd);
@@ -29,14 +29,35 @@ static int				st_open_replace(int *fd, char *filename, int oflag)
 	return (0);
 }
 
-int					redir_extract(
-		t_tok_lst **redirs,
-		t_env env,
-		int fds[2])
+static int	st_open_replace_dispatch(char *filename, int fds[2], enum e_tok tag)
+{
+	int	*fd;
+	int	oflag;
+
+	if (tag == TAG_REDIR_IN)
+	{
+		fd = &fds[FD_READ];
+		oflag = O_RDONLY;
+	}
+	else if (tag == TAG_REDIR_OUT)
+	{
+		fd = &fds[FD_WRITE];
+		oflag = O_WRONLY | O_CREAT | O_TRUNC;
+	}
+	else if (tag == TAG_REDIR_APPEND)
+	{
+		fd = &fds[FD_WRITE];
+		oflag = O_WRONLY | O_CREAT | O_APPEND;
+	}
+	return (st_open_replace(filename, fd, oflag));
+}
+
+int			redir_extract(t_tok_lst **redirs, t_env env, int fds[2])
 {
 	t_tok_lst	*after;
 	t_tok_lst	*curr;
 	char		*filename;
+	int			status;
 
 	if (*redirs == NULL)
 		return (0);
@@ -54,22 +75,17 @@ int					redir_extract(
 		}
 		curr = curr->next;
 	}
-	if ((filename = preprocess_filename(&(*redirs)->next, env)) == NULL)
+	if ((status = preprocess_filename(&(*redirs)->next, env, &filename)))
 	{
 		tok_lst_destroy(redirs, free);
 		tok_lst_destroy(&after, free);
-		return (EVAL_FATAL);
+		return (status);
 	}
-	if (((*redirs)->tag == TAG_REDIR_IN
-			&& st_open_replace(&fds[FD_READ], filename, O_RDONLY) != 0)
-		|| ((*redirs)->tag == TAG_REDIR_OUT
-			&& st_open_replace(&fds[FD_WRITE], filename, O_WRONLY | O_CREAT | O_TRUNC) != 0)
-		|| ((*redirs)->tag == TAG_REDIR_APPEND
-			&& st_open_replace(&fds[FD_WRITE], filename, O_WRONLY | O_CREAT | O_APPEND) != 0))
+	if ((status = st_open_replace_dispatch(filename, fds, (*redirs)->tag)) != 0)
 	{
 		tok_lst_destroy(redirs, free);
 		tok_lst_destroy(&after, free);
-		return (EVAL_FATAL);
+		return (status);
 	}
 	tok_lst_destroy(redirs, free);
 	free(filename);
