@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 20:45:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 16:49:31 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int			fork_wrap(
 		if ((fds[FD_READ] != FD_NONE && dup2(fds[FD_READ], STDIN_FILENO) == -1) ||
 			(fds[FD_WRITE] != FD_NONE && dup2(fds[FD_WRITE], STDOUT_FILENO) == -1))
 			exit(EXIT_FAILURE);
-		if ((status = wrapped(passed)) == EVAL_FATAL) // FIXME detect fatal in child (pipe ?)
+		if ((status = wrapped(passed)) == EVAL_FATAL)
 			exit(EXIT_FAILURE);
 		exit(status);
 	}
@@ -52,7 +52,6 @@ int			fork_wrap(
 	{
 		waitpid(*child_pid, child_pid, 0);
 		close(fds[FD_WRITE]);
-		/* close(fds[FD_READ]); */
 		return (WEXITSTATUS(*child_pid));
 	}
 	return (0);

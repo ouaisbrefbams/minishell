@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:06:11 by charles           #+#    #+#             */
-/*   Updated: 2020/07/18 09:39:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 17:20:50 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,34 +18,23 @@
 #include "eval.h"
 
 /*
-** \brief             Check if executable name is already a path
-** \param exec_name   Executable name
-** \return            True if valid
-*/
-
-/* bool	exec_is_path(char *exec_name) */
-/* { */
-/* 	return (ft_strncmp(exec_name, "../", 3) == 0 */
-/* 			|| ft_strncmp(exec_name, "./", 2) == 0 */
-/* 			|| ft_strncmp(exec_name, "/", 1) == 0); */
-/* } */
-
-/*
 ** \brief             Check if executable path is valid
 ** \param exec_path   Executable path
-** \return            True if valid
+** \return            status code
 */
 
-bool	exec_is_valid(char *exec_path)
+int		exec_path_check(char *exec_path)
 {
 	struct stat	statbuf;
 
-	if (stat(exec_path, &statbuf) != 0)
-		return (false);
-	if (!S_ISREG(statbuf.st_mode)) // also need to manage link
-		return (false);
-	// could test permission but probably handled by execve
-	return (true);
+	if (stat(exec_path, &statbuf) == -1)
+		return (errorf_ret(127, "%s: %s\n", exec_path, strerror(errno)));
+	if (S_ISDIR(statbuf.st_mode))
+		return (errorf_ret(126, "%s: Is a directory\n", exec_path));
+	//
+	if (!(statbuf.st_mode & 0444))
+		return (errorf_ret(126, "%s: %s\n", exec_path, strerror(EACCES)));
+	return (0);
 }
 
 /*
@@ -56,19 +45,20 @@ bool	exec_is_valid(char *exec_path)
 ** \return             Executable path or NULL if not found or path update error
 */
 
-char	*exec_search_path(t_path path, char *path_var, char *exec_name)
+int	exec_search_path(t_path path, char *path_var, char *exec_name, char **exec_path)
 {
-	char			*exec_path;
-
 	if (ft_strchr(exec_name, '/') != NULL) // TODO test recursive link
-		return (exec_name);
+	{
+		*exec_path = exec_name;
+		return (0);
+	}
 	// TODO if PATH contain empty path, consider current directory files as cmd
-	if ((exec_path = ft_htget(path, exec_name)) == NULL)
+	if ((*exec_path = ft_htget(path, exec_name)) == NULL)
 	{
 		if (path_update(path, path_var) == NULL) // optimise by not updating not changed path in ht
-			return (NULL);   // FIXME need to distiguish between malloc error and cmd not found error
-		if ((exec_path = ft_htget(path, exec_name)) == NULL)
-			return (NULL);
+			return (EVAL_FATAL);   // FIXME need to distiguish between malloc error and cmd not found error
+		if ((*exec_path = ft_htget(path, exec_name)) == NULL)
+			return (127);
 	}
-	return (exec_path);
+	return (0);
 }

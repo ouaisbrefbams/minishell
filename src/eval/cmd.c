@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 15:50:15 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 17:18:05 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,6 @@ int 		wrapped_cmd(void *void_param)
 	}
 }
 
-int			check_exec_path(char *exec_path)
-{
-	struct stat	statbuf;
-
-	if (stat(exec_path, &statbuf) == -1)
-		return (errorf_ret(126, "%s: %s\n", exec_path, strerror(errno)));
-	if (S_ISDIR(statbuf.st_mode))
-		return (errorf_ret(126, "%s: Is a directory\n", exec_path));
-	if (!(statbuf.st_mode & 0444))
-		return (errorf_ret(126, "%s: %s\n", exec_path, strerror(EACCES)));
-	return (0);
-}
-
 int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
 {
 	t_fork_param_cmd	param;
@@ -67,14 +54,15 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
 
 	if (param.builtin == NULL)
 	{
-		param.exec_path = exec_search_path(path, env_search(env, "PATH"), argv[0]);
-		if (param.exec_path == NULL)
+		status = exec_search_path(path, env_search(env, "PATH"), argv[0], &param.exec_path);
+		if (status != 0)
 		{
-			errorf("%s: command not found\n", argv[0]);
+			if (status == 127)
+				errorf("%s: command not found\n", argv[0]);
 			ft_split_destroy(argv);
-			return (127);
+			return (status);
 		}
-		if ((status = check_exec_path(param.exec_path)) != 0)
+		if ((status = exec_path_check(param.exec_path)) != 0)
 			return (status);
 	}
 
