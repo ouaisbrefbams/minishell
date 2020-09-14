@@ -6,13 +6,13 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 20:38:26 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 19:39:16 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
-int			eval_operation(int fds[2], t_env env, t_path path, t_ast *ast)
+int			eval_operation(int fds[2], t_env env, t_ast *ast)
 {
 	int	status;
 	int	left_fds[2];
@@ -31,9 +31,9 @@ int			eval_operation(int fds[2], t_env env, t_path path, t_ast *ast)
 
 		pid_t left_pid;
 		pid_t right_pid;
-		eval(left_fds, env, path, ast->op.left, &left_pid);
+		eval(left_fds, env, ast->op.left, &left_pid);
 		close(p[FD_WRITE]);
-		eval(right_fds, env, path, ast->op.right, &right_pid);
+		eval(right_fds, env, ast->op.right, &right_pid);
 		close(p[FD_READ]);
 
 		pid_t finished;
@@ -49,12 +49,12 @@ int			eval_operation(int fds[2], t_env env, t_path path, t_ast *ast)
 		}
 		return (0);
 	}
-	if ((status = eval(left_fds, env, path, ast->op.left, NULL)) == EVAL_FATAL)
+	if ((status = eval(left_fds, env, ast->op.left, NULL)) == EVAL_FATAL)
 		return (EVAL_FATAL);
 	g_last_status = status;
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_PIPE && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))
 		return (status);
-	return (eval(right_fds, env, path, ast->op.right, NULL));
+	return (eval(right_fds, env, ast->op.right, NULL));
 }

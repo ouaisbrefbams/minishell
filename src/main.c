@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/14 16:24:30 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 19:52:26 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ void tok_lst_debug(t_tok_lst *tokens);
 
 /*
 ** TODO
-** $?
-** pipe make 2 new children
-** concurrent pipeline
-** signal on whole line instead of single command
+** signal whole line
+** path optimisation on command not found
+** path tricks
 */
 
 bool	env_set_default(t_env env, char *key, char *value)
@@ -45,7 +44,6 @@ char	*g_basename = "minishell";
 
 int main(int argc, char **argv, char **envp)
 {
-	t_path	path;
 	t_env	env;
 
 	env = env_from_array(envp);
@@ -67,7 +65,6 @@ int main(int argc, char **argv, char **envp)
 		!env_set_default(env, "PATH", "/sbin:"))
 		return (1);
 
-#ifndef MINISHELL_TEST
 	char *path_str = env_search(env, "PATH");
 	if (ft_strstr(path_str, "/sbin") == NULL)
 	{
@@ -75,14 +72,11 @@ int main(int argc, char **argv, char **envp)
 		env_export(env, "PATH", value);
 		free(value);
 	}
-#endif
 
-	path = path_update(NULL, env_search(env, "PATH"));
-
-	char *env_exec_path;
-	if ((env_exec_path = ft_htget(path, "env")) == NULL)
+	char env_exec_path[PATH_MAX + 1];
+	if (!path_search(env, "env", env_exec_path))
 	{
-		env_exec_path = "/sbin/env";
+		ft_strcpy(env_exec_path, "/sbin/env");
 		/* errorf("env: command not found\n"); */
 		/* return (127); */
 	}
@@ -126,7 +120,7 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 		int fds[2] = {FD_NONE, FD_NONE};
-		status = eval(fds, env, path, parser_out->ast, NULL);
+		status = eval(fds, env, parser_out->ast, NULL);
 		if (status == EVAL_FATAL)
 			exit(1);
 		g_last_status = status;
@@ -162,7 +156,7 @@ int main(int argc, char **argv, char **envp)
 			}
 
 			int fds[2] = {FD_NONE, FD_NONE};
-			int status = eval(fds, env, path, parser_out->ast, NULL);
+			int status = eval(fds, env, parser_out->ast, NULL);
 			if (status == EVAL_FATAL)
 				exit(1);
 			g_last_status = status;
@@ -172,7 +166,6 @@ int main(int argc, char **argv, char **envp)
 			return (1);
 	}
 
-	ft_htdestroy(path, free);
 	ft_vecdestroy(env, free);
 	return (g_last_status);
 }

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 17:18:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 19:50:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int 		wrapped_cmd(void *void_param)
 	}
 }
 
-int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
+int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid)
 {
 	t_fork_param_cmd	param;
 	char				**argv;
@@ -54,13 +54,12 @@ int			eval_cmd(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
 
 	if (param.builtin == NULL)
 	{
-		status = exec_search_path(path, env_search(env, "PATH"), argv[0], &param.exec_path);
-		if (status != 0)
+
+		if (!path_search(env, argv[0], param.exec_path))
 		{
-			if (status == 127)
-				errorf("%s: command not found\n", argv[0]);
+			errorf("%s: command not found\n", argv[0]);
 			ft_split_destroy(argv);
-			return (status);
+			return (127);
 		}
 		if ((status = exec_path_check(param.exec_path)) != 0)
 			return (status);

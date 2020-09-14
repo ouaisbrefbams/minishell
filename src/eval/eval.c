@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 16:49:31 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/14 19:39:33 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,13 @@ int			fork_wrap(
 ** \return   The last command status or EVAL_FATAL on error
 */
 
-int			eval(int fds[2], t_env env, t_path path, t_ast *ast, pid_t *child_pid)
+int			eval(int fds[2], t_env env, t_ast *ast, pid_t *child_pid)
 {
 	if (ast->tag == AST_PARENT)
-		return (eval_parenthesis(fds, env, path, ast));
+		return (eval_parenthesis(fds, env, ast));
 	if (ast->tag == AST_OP)
-		return (eval_operation(fds, env, path, ast));
+		return (eval_operation(fds, env, ast));
 	if (ast->tag == AST_CMD)
-		return (eval_cmd(fds, env, path, ast, child_pid));
+		return (eval_cmd(fds, env, ast, child_pid));
 	return (EVAL_FATAL);
 }
