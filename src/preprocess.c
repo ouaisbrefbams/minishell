@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 17:40:25 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 18:35:09 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	**st_tokens_to_argv(t_tok_lst *tokens)
 
 bool escape(char *str, enum e_tok tag)
 {
-	if (str[0] == '\\'
+	if (str[0] == '\\' && str[1] != '\0'
 			&& (tag & TAG_STR
 				|| ((tag & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[1]))))
 	{

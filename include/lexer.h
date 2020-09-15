@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/14 16:28:13 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 18:24:12 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include "libft_lst.h"
 # include "libft_str.h"
+# include "error.h"
 
 /*
 ** \brief                  token tags (type of token)

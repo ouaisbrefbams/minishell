@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/14 16:33:13 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 18:31:56 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,17 @@ void	del_space(char *str)
 int 	del_quote(char *str)
 {
     size_t	i;
-    int nb_q;
+    size_t	quote_counter;
 
     i = 0;
-    nb_q = 1;
+    quote_counter = 1;
     if (str[0] == '\'')
 	{
         while (str[i++] != '\0')
         {
-            if (str[i] == '\\')
-                i += 2;
             if (str[i] == '\'')
             {
-                nb_q++;
+                quote_counter++;
                 break ;
             }
         }
@@ -60,21 +58,19 @@ int 	del_quote(char *str)
                 i += 2;
             if (str[i] == '"')
             {
-                nb_q++;
+                quote_counter++;
                 break ;
             }
         }
 	}
-    if (nb_q % 2 == 0)
-    {
-        str[i] = '\0';
-    	if(!(ft_memmove(str, str + 1, ft_strlen(str + 1) + 1)))
-            return 1;
-        else
-            return 0;
-    }
-    else
-        return 2;
+    if (quote_counter % 2 == 1)
+	{
+		errorf("unexpected EOF while looking for matching `%c'\n", str[0]);
+        return (1);
+	}
+	str[i] = '\0';
+	ft_memmove(str, str + 1, ft_strlen(str + 1) + 1);
+	return (0);
 }
 
 int	lexer_trim(t_tok_lst *tokens)
