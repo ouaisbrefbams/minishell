@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/15 13:31:30 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:04:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void tok_lst_debug(t_tok_lst *tokens);
 
 bool	env_set_default(t_env env, char *key, char *value)
 {
-	if (env_search(env, key) != NULL)
+	if (env_search(env, key, NULL) != NULL)
 		return (true);
 	return (env_export(env, key, value) != NULL);
 }
@@ -52,7 +52,7 @@ int main(int argc, char **argv, char **envp)
 	if (!(getcwd(buf, PATH_MAX)))
 		return(1);
 
-	char *shlvl_str = env_search(env, "SHLVL");
+	char *shlvl_str = env_search(env, "SHLVL", NULL);
 	if (shlvl_str != NULL)
 	{
 		shlvl_str = ft_itoa(ft_atoi(shlvl_str));

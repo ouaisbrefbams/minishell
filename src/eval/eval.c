@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 19:39:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:45:58 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@
 */
 
 int			fork_wrap(
-	int fds[2],
-	void *passed,
-	int (*wrapped)(void *param),
-	pid_t *child_pid
+	int fds[2], void *passed, t_wrapped_func wrapped, pid_t *child_pid
 )
 {
 	int		status;

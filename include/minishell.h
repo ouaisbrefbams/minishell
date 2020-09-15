@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/15 13:07:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:43:16 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@
 
 # define BUILTIN_NOT_FOUND -2
 
-typedef t_ftvec*		t_env;
+typedef t_ftvec*	t_env;
 
-extern int		g_last_status;
-extern char		*g_basename;
+extern int			g_last_status;
+extern char			*g_basename;
 
 /*
 ** path.c
@@ -63,14 +63,11 @@ int					path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1], bo
 ** env.c
 */
 
-// FIXME refactor env code
-t_env					env_from_array(char **envp);
-int						env_keycmp(char *var, char *key);
-char					*env_search(t_env env, char *key);
-int						env_search_index(t_env env, char *key);
-char					*env_search_first_match(t_env env, const char *haystack);
-char					*env_export(t_env env, char *key, char *value);
-char					*env_export_full(t_env env, char *variable);
+t_env				env_from_array(char **envp);
+char				*env_search(t_env env, char *key, size_t *found_index);
+char				*env_export(t_env env, char *key, char *value);
+char				*env_search_first_match(t_env env, const char *haystack);
+size_t				env_key_len(char *key, bool allow_status);
 
 /*
 ** builtin*.c - directory with all builtin commands
@@ -80,7 +77,7 @@ char					*env_export_full(t_env env, char *variable);
 ** \brief       Type of a builtin main function
 */
 
-typedef int	(*t_builtin_func)(char **argv, t_env env);
+typedef int			(*t_builtin_func)(char **argv, t_env env);
 
 /*
 ** \brief       Entry of builtin lookup array
@@ -90,43 +87,40 @@ typedef int	(*t_builtin_func)(char **argv, t_env env);
 
 typedef struct
 {
-	char				*name;
-	t_builtin_func		func;
-	bool				forked;
-}						t_builtin_entry;
+	char			*name;
+	t_builtin_func	func;
+	bool			forked;
+}					t_builtin_entry;
 
-t_builtin_entry			*builtin_search_func(char *name);
+t_builtin_entry		*builtin_search_func(char *name);
 
-int						builtin_echo(char **argv, t_env env);
-int						builtin_cd(char **argv, t_env env);
-int						builtin_pwd(char **argv, t_env env);
-int						builtin_export(char **argv, t_env env);
-int						builtin_unset(char **argv, t_env env);
-int						builtin_env(char **argv, t_env env);
-int						builtin_exit(char **argv, t_env env);
+int					builtin_echo(char **argv, t_env env);
+int					builtin_cd(char **argv, t_env env);
+int					builtin_pwd(char **argv, t_env env);
+int					builtin_export(char **argv, t_env env);
+int					builtin_unset(char **argv, t_env env);
+int					builtin_env(char **argv, t_env env);
+int					builtin_exit(char **argv, t_env env);
 
 /*
 ** preprocess.c
 */
 
-char					**preprocess(t_tok_lst **tokens, t_env env);
-int						preprocess_filename(t_tok_lst **tokens, t_env env, char **filename);
+char				**preprocess(t_tok_lst **tokens, t_env env);
+int					preprocess_filename(t_tok_lst **tokens, t_env env, char **filename);
 
 /*
 ** signal.c
 */
 
-void signal_sigint(int signum);
-void signal_sigquit(int signum);
-void signal_sigterm(int signum);
+void				signal_sigint(int signum);
+void				signal_sigquit(int signum);
+void				signal_sigterm(int signum);
 
 /*
 ** utils.c
 */
 
-size_t	utils_var_end(char *name);
-bool	utils_valid_identifier(char *name);
-bool	utils_start_with_valid_identifier(char *name);
-void	print_prompt(void);
+void				print_prompt(void);
 
 #endif

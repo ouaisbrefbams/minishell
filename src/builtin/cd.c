@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:20 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 20:20:13 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:03:32 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	builtin_cd(char **argv, t_env env)
 		return (0);
 	if (argv[1] == NULL)
 	{
-		if ((home = env_search(env, "HOME")) == NULL)
+		if ((home = env_search(env, "HOME", NULL)) == NULL)
 			return (errorf_ret(1, "cd: HOME not set\n"));
 		argv[1] = home;
 	}

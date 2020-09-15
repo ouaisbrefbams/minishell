@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 19:49:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:50:35 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef struct
 	t_builtin_entry	*builtin;
 }					t_fork_param_cmd;
 
+typedef int (*t_wrapped_func)(void *param);
+
 # define FD_NONE -2
 # define FD_WRITE 1
 # define FD_READ 0
@@ -47,7 +49,7 @@ extern pid_t		g_child_pid;
 ** eval.c
 */
 
-int					fork_wrap(int fds[2], void *passed, int (*wrapped)(void *param), pid_t *child_pid);
+int					fork_wrap(int fds[2], void *passed, t_wrapped_func wrapped, pid_t *child_pid);
 int					eval(int fds[2], t_env env, t_ast *ast, pid_t *child_pid);
 
 /*
@@ -73,11 +75,5 @@ int					eval_parenthesis(int fds[2], t_env env, t_ast *ast);
 */
 
 int					redir_extract(t_tok_lst **redirs, t_env env, int fds[2]);
-
-/*
-** exec.c
-*/
-
-int					exec_path_check(char *exec_path);
 
 #endif

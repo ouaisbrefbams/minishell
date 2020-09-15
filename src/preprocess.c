@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 15:42:18 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:40:25 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_t
 	t_tok_lst	*last;
 
 	curr = *curr_addr;
-	var_len = utils_var_end(&str[i + 1]);
+	var_len = env_key_len(&str[i + 1], true) + 1;
 	if ((match = env_search_first_match(env, &str[i + 1])) == NULL)
 	{
 		ft_memmove(&str[i], &str[i + var_len], ft_strlen(&str[i + var_len]) + 1);

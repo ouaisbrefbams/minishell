@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 19:39:16 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 16:43:21 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,21 +33,21 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 		pid_t right_pid;
 		eval(left_fds, env, ast->op.left, &left_pid);
 		close(p[FD_WRITE]);
-		eval(right_fds, env, ast->op.right, &right_pid);
+		status = eval(right_fds, env, ast->op.right, &right_pid);
 		close(p[FD_READ]);
 
 		pid_t finished;
-		finished = wait(NULL);
+		finished = wait(&finished);
 		if (finished == left_pid)
 		{
-			waitpid(right_pid, &right_pid, 0);
+			waitpid(right_pid, &finished, 0);
 		}
 		else if (finished == right_pid)
 		{
-			kill(left_pid, SIGKILL);
-			/* waitpid(left_pid, &left_pid, 0); */
+			/* kill(left_pid, SIGTERM); // FIXME weird bug with parent on both sides */
+			waitpid(left_pid, &finished, 0);
 		}
-		return (0);
+		return (status);
 	}
 	if ((status = eval(left_fds, env, ast->op.left, NULL)) == EVAL_FATAL)
 		return (EVAL_FATAL);

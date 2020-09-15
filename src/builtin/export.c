@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 20:22:10 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:49:35 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 #include "minishell.h"
 
 /*
-** \brief    Put an environment variable in the format "declare -x id=value" of bash
+** \brief    Put an environment variable in the format
+**           "declare -x id=value" of bash
 ** \param s  Full variable (id=value)
 */
 
@@ -81,7 +82,8 @@ int			builtin_export(char **argv, t_env env)
 		equal_ptr = ft_strchr(argv[i], '=');
 		if (equal_ptr != NULL)
 			*equal_ptr = '\0';
-		if (!utils_valid_identifier(argv[i]))
+		if (*argv[i] == '\0'
+			|| env_key_len(argv[i], false) != ft_strlen(argv[i]))
 		{
 			if (equal_ptr != NULL)
 				*equal_ptr = '=';
@@ -89,7 +91,8 @@ int			builtin_export(char **argv, t_env env)
 			status = 1;
 			continue;
 		}
-		if (env_export(env, argv[i], equal_ptr == NULL ? "" : equal_ptr + 1) == NULL)
+		if (equal_ptr != NULL
+			&& env_export(env, argv[i], equal_ptr + 1) == NULL)
 			return (EVAL_FATAL);
 	}
 	return (status);

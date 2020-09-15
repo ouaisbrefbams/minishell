@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:51 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 20:22:35 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 17:46:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,21 @@
 int	builtin_unset(char **argv, t_env env)
 {
 	size_t	i;
-	int		found_index;
+	size_t	found_index;
 	int		status;
 
 	status = 0;
 	i = 0;
 	while (argv[++i] != NULL)
 	{
-		if (!utils_valid_identifier(argv[i]))
+		if (*argv[i] == '\0'
+			|| env_key_len(argv[i], false) != ft_strlen(argv[i]))
 		{
 			errorf("unset: `%s': not a valid identifier\n", argv[i]);
 			status = 1;
 			continue ;
 		}
-		found_index = env_search_index(env, argv[i]);
-		if (found_index == -1)
+		if (env_search(env, argv[i], &found_index) == NULL)
 			continue ;
 		ft_vecremove(env, found_index, free);
 	}
