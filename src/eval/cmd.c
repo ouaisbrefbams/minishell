@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 17:51:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 20:06:39 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int			wrapped_cmd(t_fork_param_cmd *param)
 	return (status);
 }
 
-int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid)
+int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_close)
 {
 	t_fork_param_cmd	param;
 	char				**argv;
@@ -56,7 +56,7 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid)
 
 	param.argv = argv;
 	param.env = env;
-	status = fork_wrap(fds, &param, (t_wrapped_func)wrapped_cmd, child_pid);
+	status = fork_wrap(fds, &param, (t_wrapped_func)wrapped_cmd, child_pid, fd_to_close);
 	ft_split_destroy(argv);
 	g_last_status = status;
 	return (status);

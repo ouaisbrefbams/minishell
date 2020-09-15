@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 16:43:21 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 20:30:27 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,30 +31,37 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 
 		pid_t left_pid;
 		pid_t right_pid;
-		eval(left_fds, env, ast->op.left, &left_pid);
+
+		/* left_pid = fork(); */
+		/* if (left_pid != 0) */
+		/* { */
+		/* 	dup2(p[FD_WRITE], STDOUT_FILENO); */
+		/* 	close(p[FD_READ]); */
+		/* 	exit(eval(left_fds, env, ast->op.left, NULL)); */
+		/* } */
+        /*  */
+		/* right_pid = fork(); */
+		/* if (right_pid != 0) */
+		/* { */
+		/* 	dup2(p[FD_READ], STDIN_FILENO); */
+		/* 	close(p[FD_WRITE]); */
+		/* 	exit(eval(right_fds, env, ast->op.right, NULL)); */
+		/* } */
+		eval(left_fds, env, ast->op.left, &left_pid, p[FD_READ]);
 		close(p[FD_WRITE]);
-		status = eval(right_fds, env, ast->op.right, &right_pid);
+		status = eval(right_fds, env, ast->op.right, &right_pid, p[FD_WRITE]);
 		close(p[FD_READ]);
 
-		pid_t finished;
-		finished = wait(&finished);
-		if (finished == left_pid)
-		{
-			waitpid(right_pid, &finished, 0);
-		}
-		else if (finished == right_pid)
-		{
-			/* kill(left_pid, SIGTERM); // FIXME weird bug with parent on both sides */
-			waitpid(left_pid, &finished, 0);
-		}
+		wait(&left_pid);
+		wait(&left_pid);
 		return (status);
 	}
-	if ((status = eval(left_fds, env, ast->op.left, NULL)) == EVAL_FATAL)
+	if ((status = eval(left_fds, env, ast->op.left, NULL, FD_NONE)) == EVAL_FATAL)
 		return (EVAL_FATAL);
 	g_last_status = status;
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_PIPE && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))
 		return (status);
-	return (eval(right_fds, env, ast->op.right, NULL));
+	return (eval(right_fds, env, ast->op.right, NULL, FD_NONE));
 }

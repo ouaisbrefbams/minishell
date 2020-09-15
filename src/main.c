@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/15 17:04:20 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 20:34:09 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int main(int argc, char **argv, char **envp)
 		/* printf("===redirs===\n"); */
 		/* ft_lstiter(parser_out->ast->redirs, token_debug); */
 		int fds[2] = {FD_NONE, FD_NONE};
-		status = eval(fds, env, parser_out->ast, NULL);
+		status = eval(fds, env, parser_out->ast, NULL, FD_NONE);
 		if (status == EVAL_FATAL)
 			exit(1);
 		g_last_status = status;
@@ -156,7 +156,7 @@ int main(int argc, char **argv, char **envp)
 			}
 
 			int fds[2] = {FD_NONE, FD_NONE};
-			int status = eval(fds, env, parser_out->ast, NULL);
+			int status = eval(fds, env, parser_out->ast, NULL, FD_NONE);
 			if (status == EVAL_FATAL)
 				exit(1);
 			g_last_status = status;
