@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/14 20:44:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 13:36:34 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,31 @@
 */
 
 #include "minishell.h"
+
+int		path_check(char exec_path[PATH_MAX + 1], bool in_path)
+{
+	struct stat	statbuf;
+	/* char	cwd[PATH_MAX + 1]; */
+
+	if (stat(exec_path, &statbuf) == -1)
+		return (errorf_ret(127, "%s: %s\n", exec_path, strerror(errno)));
+	if (S_ISDIR(statbuf.st_mode))
+		return (errorf_ret(126, "%s: Is a directory\n", exec_path));
+	/* if (S_ISLNK(statbuf.st_mode)) */
+	/* 	return (errorf_ret(127, "%s: command not found\n", exec_path)); */
+	if (!in_path && !(statbuf.st_mode & 0444))
+		return (errorf_ret(126, "%s: %s\n", exec_path, strerror(EACCES)));
+	/* if (*exec_path != '/') */
+	/* { */
+	/* 	getcwd(cwd, PATH_MAX + 1); */
+	/* 	ft_strcat(cwd, "/"); */
+	/* 	ft_strcat(cwd, exec_path); */
+	/* 	ft_strcpy(exec_path, cwd); */
+	/* } */
+	return (0);
+
+
+}
 
 static bool		st_dir_search(char *dirname, char *exec_name, char exec_path[PATH_MAX + 1])
 {
@@ -38,7 +63,7 @@ static bool		st_dir_search(char *dirname, char *exec_name, char exec_path[PATH_M
 	return (false);
 }
 
-bool			path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1])
+int				path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1], bool print)
 {
 	char	*current_dir;
 	char	*collon;
@@ -47,29 +72,28 @@ bool			path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1])
 	if (ft_strchr(exec_name, '/') != NULL)
 	{
 		ft_strcpy(exec_path, exec_name);
-		return (true);
+		return (path_check(exec_path, false));
 	}
-	/* printf("==========\n"); */
 	if ((current_dir = env_search(env, "PATH")) == NULL)
 		return (st_dir_search(getcwd(cwd, PATH_MAX + 1), exec_name, exec_path));
-	/* printf("%s\n", current_dir); */
 	while ((collon = ft_strchr(current_dir, ':')) != NULL)
 	{
 		*collon = '\0';
-		/* printf("%s\n", current_dir); */
 		if (*current_dir == '\0')
 			current_dir = getcwd(cwd, PATH_MAX + 1);
 		if (st_dir_search(current_dir, exec_name, exec_path))
-			return (true);
+		{
+			*collon = ':';
+			return (path_check(exec_path, true));
+		}
 		*collon = ':';
 		current_dir = collon + 1;
 	}
-	/* printf("> %s\n", current_dir); */
-
 	if (*current_dir == '\0')
 		current_dir = getcwd(cwd, PATH_MAX + 1);
 	if (st_dir_search(current_dir, exec_name, exec_path))
-		return (true);
-	/* printf("yo\n"); */
-	return (false);
+		return (path_check(exec_path, true));
+	if (print)
+		errorf("%s: command not found\n", exec_name);
+	return (127);
 }

@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:40 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 21:27:54 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 12:09:32 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@
 
 int	builtin_pwd(char **argv, t_env env)
 {
-	char	buf[PATH_MAX];
-	char	*working_directory;
+	char	buf[PATH_MAX + 1];
 
 	(void)argv;
 	(void)env;

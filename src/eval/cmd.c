@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 21:32:19 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 13:07:36 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,14 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid)
 	if (param.builtin == NULL)
 	{
 
-		if (!path_search(env, argv[0], param.exec_path))
+		if ((status = path_search(env, argv[0], param.exec_path, true)) != 0)
 		{
-			/* printf("--------%s---\n", env_search(env, "PATH")); */
-			errorf("%s: command not found\n", argv[0]);
+			/* errorf("%s: command not found\n", argv[0]); */
 			ft_split_destroy(argv);
-			return (127);
-		}
-		if ((status = exec_path_check(param.exec_path)) != 0)
 			return (status);
+		}
+		/* if ((status = exec_path_check(param.exec_path)) != 0) */
+		/* 	return (status); */
 	}
 
 	param.argv = argv;

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/14 21:32:07 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 13:31:30 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int main(int argc, char **argv, char **envp)
 	/* } */
 
 	char env_exec_path[PATH_MAX + 1];
-	if (!path_search(env, "env", env_exec_path))
+	if (path_search(env, "env", env_exec_path, false) != 0)
 	{
 		ft_strcpy(env_exec_path, "/sbin/env");
 		/* errorf("env: command not found\n"); */

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/14 19:50:06 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/15 13:07:20 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ extern char		*g_basename;
 ** path.c
 */
 
-bool					path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1]);
+int					path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1], bool print);
 
 /*
 ** env.c
