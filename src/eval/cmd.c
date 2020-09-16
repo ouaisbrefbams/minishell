@@ -6,14 +6,13 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 20:06:39 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:27:59 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
 pid_t	g_child_pid = -1;
-int		g_last_status = 0;
 
 int			wrapped_cmd(t_fork_param_cmd *param)
 {
@@ -58,6 +57,6 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_cl
 	param.env = env;
 	status = fork_wrap(fds, &param, (t_wrapped_func)wrapped_cmd, child_pid, fd_to_close);
 	ft_split_destroy(argv);
-	g_last_status = status;
+	g_state.last_status = status;
 	return (status);
 }

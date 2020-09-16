@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/15 18:31:56 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:39:37 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,83 +16,83 @@
 
 void	del_space(char *str)
 {
-    int i;
+	int i;
 
-    i = ft_strlen(str);
-    if (ft_isblank(str[i - 1]))
-    {
-        i -= 1;
-        while (ft_isblank(str[i]))
-        {
-            if (str[i - 1] == '\\')
-                break ;
-            i--;
-        }
+	i = ft_strlen(str);
+	if (ft_isblank(str[i - 1]))
+	{
+		i -= 1;
+		while (ft_isblank(str[i]))
+		{
+			if (str[i - 1] == '\\')
+				break ;
+			i--;
+		}
 		str[i + 1] = '\0';
-    }
+	}
 }
 
 int 	del_quote(char *str)
 {
-    size_t	i;
-    size_t	quote_counter;
+	size_t	i;
+	size_t	quote_counter;
 
-    i = 0;
-    quote_counter = 1;
-    if (str[0] == '\'')
+	i = 0;
+	quote_counter = 1;
+	if (str[0] == '\'')
 	{
-        while (str[i++] != '\0')
-        {
-            if (str[i] == '\'')
-            {
-                quote_counter++;
-                break ;
-            }
-        }
+		while (str[i++] != '\0')
+		{
+			if (str[i] == '\'')
+			{
+				quote_counter++;
+				break ;
+			}
+		}
 	}
-    else if (str[0] == '"')
+	else if (str[0] == '"')
 	{
-        while (str[i++] != '\0')
-        {
-            if (str[i] == '\\')
-                i += 2;
-            if (str[i] == '"')
-            {
-                quote_counter++;
-                break ;
-            }
-        }
+		while (str[i++] != '\0')
+		{
+			if (str[i] == '\\')
+				i += 2;
+			if (str[i] == '"')
+			{
+				quote_counter++;
+				break ;
+			}
+		}
 	}
-    if (quote_counter % 2 == 1)
+	if (quote_counter % 2 == 1)
 	{
 		errorf("unexpected EOF while looking for matching `%c'\n", str[0]);
-        return (1);
+		return (1);
 	}
 	str[i] = '\0';
 	ft_memmove(str, str + 1, ft_strlen(str + 1) + 1);
 	return (0);
 }
 
-int	lexer_trim(t_tok_lst *tokens)
+int		lexer_trim(t_tok_lst *tokens)
 {
-    int status;
+	int status;
 
-    while (tokens != NULL)
-    {
-        if (tokens->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
-        {
-            if ((status = del_quote(tokens->content)) != 0)
+	while (tokens != NULL)
+	{
+		if (tokens->tag & (TAG_STR_DOUBLE | TAG_STR_SINGLE))
+		{
+			if ((status = del_quote(tokens->content)) != 0)
 				return (status);
 			if (tokens->next == NULL)
 				tokens->tag &= ~TAG_STICK;
-        }
-        else
-        {
-            del_space(tokens->content);
-            if (tokens->next == NULL)
+		}
+		else
+		{
+			del_space(tokens->content);
+			if (tokens->next == NULL)
 				tokens->tag &= ~TAG_STICK;
-        }
-        tokens = tokens->next;
-    }
-    return (0);
+		}
+		tokens = tokens->next;
+	}
+	return (0);
 }

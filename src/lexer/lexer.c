@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/14 16:33:58 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:37:49 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int				tok_len(char *input)
 	}
 	if (input[i] == '(' || input[i] == ')')
 		return (i + 1);
-	if (lexer_sep(input[i])) // fucked on & alone
+	if (lexer_sep(input[i]))
 	{
 		if (input[i] == input[i + 1])
 			i++;
@@ -114,22 +114,3 @@ int     			lexer(char *input, t_tok_lst **out)
 	return status;
 
 }
-
-/* int 					check_input_out(char *input) */
-/* { */
-/* 	int i; */
-/* 	int j; */
-/*  */
-/* 	i = 0; */
-/* 	while(input[i] != '\0') */
-/* 	{ */
-/* 		j = 0; */
-/* 		j += len_until_sep(&input[i]); */
-/* 		if (j != 0) */
-/* 			return(j); */
-/* 		i += j; */
-/* 		j = check_input(&input[i]); */
-/* 		return(j); */
-/* 	} */
-/* 	return(0); */
-/* } */

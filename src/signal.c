@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 09:16:16 by charles           #+#    #+#             */
-/*   Updated: 2020/09/09 14:10:40 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:27:30 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 void signal_sigint(int signum)
 {
 	(void)signum;
-	g_last_status = 130;
+	g_state.last_status = 130;
 	if (g_child_pid != -1)
 	{
 		kill(g_child_pid, SIGINT);
@@ -32,7 +32,7 @@ void signal_sigint(int signum)
 void signal_sigquit(int signum)
 {
 	(void)signum;
-	g_last_status = 131;
+	g_state.last_status = 131;
 	if (g_child_pid != -1)
 	{
 		kill(g_child_pid, SIGQUIT);

@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:16 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 17:48:22 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:26:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	builtin_exit(char **argv, t_env env)
 
 	(void)env;
 	if (argv[1] == NULL)
-		status = g_last_status;
+		status = g_state.last_status;
 	else
 	{
 		errno = 0;

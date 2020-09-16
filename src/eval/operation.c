@@ -58,7 +58,7 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 	}
 	if ((status = eval(left_fds, env, ast->op.left, NULL, FD_NONE)) == EVAL_FATAL)
 		return (EVAL_FATAL);
-	g_last_status = status;
+	g_state.last_status = status;
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_PIPE && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))

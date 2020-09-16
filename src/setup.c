@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 15:46:09 by charles           #+#    #+#             */
-/*   Updated: 2020/09/16 16:17:35 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:24:28 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ void	setup_progname(char *first_arg)
 		return ;
 	last_slash = ft_strrchr(first_arg, '/');
 	if (last_slash == NULL)
-		g_progname = first_arg;
+		g_state.progname = first_arg;
 	else
-		g_progname = last_slash + 1;
+		g_state.progname = last_slash + 1;
 }
 
 bool	setup(char *first_arg, t_env env)
