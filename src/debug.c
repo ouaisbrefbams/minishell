@@ -1,14 +1,38 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   debug.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/09/16 15:58:35 by charles           #+#    #+#             */
+/*   Updated: 2020/09/16 16:18:11 by charles          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include <stdio.h>
+
 #include "lexer.h"
 
-void tok_lst_debug(t_tok_lst *tokens)
+void	debug_tok_lst(t_tok_lst *tokens)
 {
 	while (tokens != NULL)
 	{
+		// FIXME libft for safer correction
 		printf("[%#06x] |%s|%s\n", tokens->tag, tokens->content, tokens->tag & TAG_STICK ? " STICK" : "");
 		tokens = tokens->next;
 	}
+}
+
+int		debug_lexer(char *input)
+{
+	int			status;
+	t_tok_lst	*out;
+
+	status = lexer(input, &out);
+	if (status != 0)
+		return (status);
+	debug_tok_lst(out);
+	return (status);
 }
 
 /* void token_debug(void *v) */

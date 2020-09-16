@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 15:41:03 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:17:09 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static int	st_open_replace(char *filename, int *fd, int oflag)
 {
+	if (fd == NULL)
+		return (EVAL_FATAL);
 	if (*fd != FD_NONE)
 		close(*fd);
 	if (oflag & O_CREAT)
@@ -34,6 +36,8 @@ static int	st_open_replace_dispatch(char *filename, int fds[2], enum e_tok tag)
 	int	*fd;
 	int	oflag;
 
+	fd = NULL;
+	oflag = 0;
 	if (tag == TAG_REDIR_IN)
 	{
 		fd = &fds[FD_READ];

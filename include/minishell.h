@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/15 20:34:19 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 16:07:36 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@
 typedef t_ftvec*	t_env;
 
 extern int			g_last_status;
-extern char			*g_basename;
+extern char			*g_progname;
 
 /*
 ** path.c
@@ -122,5 +122,11 @@ void				signal_sigterm(int signum);
 */
 
 void				print_prompt(void);
+
+/*
+** setup.c
+*/
+
+bool	setup(char *first_arg, t_env env);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 11:02:52 by charles           #+#    #+#             */
-/*   Updated: 2020/09/14 16:42:01 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 15:42:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void		verrorf(const char *format, va_list ap)
 	char	*str;
 	char	c;
 
-	ft_putstr_fd(g_basename, STDERR_FILENO);
+	ft_putstr_fd(g_progname, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	while (*format != '\0')
 	{
