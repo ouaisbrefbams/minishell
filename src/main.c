@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/16 16:28:47 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 19:51:55 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int		debug_lexer(char *input);
 ** path tricks
 */
 
-char	*g_progname = "minishell";
-
 t_state	g_state;
 
 int		execute(t_env env, char *input)
@@ -49,6 +47,8 @@ int		execute(t_env env, char *input)
 	fds[0] = FD_NONE;
 	fds[1] = FD_NONE;
 	status = eval(fds, env, parser_out->ast, NULL, FD_NONE);
+	ast_destroy(parser_out->ast);
+	free(parser_out);
 	if (status == EVAL_FATAL)
 		exit(1);
 	g_state.last_status = status;
@@ -91,7 +91,7 @@ int		main(int argc, char **argv, char **envp)
 	if ((env = env_from_array(envp)) == NULL)
 		return (1);
 	setup(argv[0], env);
-	g_state.child_pid = 0;
+	/* g_state.child_pid = 0; */
 	repl(env);
 	ft_vecdestroy(env, free);
 	return (g_state.last_status);
@@ -101,6 +101,7 @@ int		main(int argc, char **argv, char **envp)
 
 int		main(int argc, char **argv, char **envp)
 {
+	int		status;
 	t_env	env;
 
 	if ((env = env_from_array(envp)) == NULL)
@@ -110,9 +111,12 @@ int		main(int argc, char **argv, char **envp)
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 		return (debug_lexer(argv[2]));
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
-		return (execute(env, argv[2]));
+	{
+		status = execute(env, argv[2]);
+		ft_vecdestroy(env, free);
+		return (status);
+	}
 	repl(env);
-	ft_vecdestroy(env, free);
 	return (g_state.last_status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/16 16:26:25 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 17:20:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ typedef struct
 {
 	int				last_status;
 	char			*progname;
-
 }					t_state;
 
 extern t_state		g_state;

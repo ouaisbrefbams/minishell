@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 18:35:09 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 19:42:25 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,21 +62,23 @@ t_tok_lst *st_stick_tokens(t_tok_lst *tokens)
 	return (tokens);
 }
 
-char	**st_tokens_to_argv(t_tok_lst *tokens)
+char	**st_tokens_to_argv(t_tok_lst **tokens)
 {
-	char	**ret;
-	size_t	i;
+	char		**ret;
+	size_t		i;
+	t_tok_lst	*curr;
 
-	ret = ft_calloc(ft_lstsize((t_ftlst*)tokens) + 1, sizeof(char*));
+	curr = *tokens;
+	ret = ft_calloc(ft_lstsize((t_ftlst*)curr) + 1, sizeof(char*));
 	if (ret == NULL)
 		return (NULL);
 	i = 0;
-	while (tokens != NULL)
+	while (curr != NULL)
 	{
-		ret[i++] = tokens->content;
-		tokens = tokens->next;
+		ret[i++] = curr->content;
+		curr = curr->next;
 	}
-	tok_lst_destroy(&tokens, NULL);
+	tok_lst_destroy(tokens, NULL);
 	return (ret);
 }
 
@@ -185,7 +187,7 @@ char			**preprocess(t_tok_lst **tokens, t_env env)
 		curr = curr->next;
 	}
 	st_stick_tokens(*tokens);
-	return (st_tokens_to_argv(*tokens));
+	return (st_tokens_to_argv(tokens));
 }
 
 int		preprocess_filename(t_tok_lst **tokens, t_env env, char **filename)

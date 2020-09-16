@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/15 17:45:44 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 19:28:34 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static bool		st_dir_search(
 			ft_strcpy(exec_path, dirname);
 			ft_strcat(exec_path, "/");
 			ft_strcat(exec_path, exec_name);
+			closedir(dir);
 			return (true);
 		}
 	}

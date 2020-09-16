@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/16 16:27:59 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 19:39:42 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_cl
 		return (status);
 	if ((argv = preprocess(&ast->cmd_argv, env)) == NULL)
 		return (EVAL_FATAL);
+	/* ast->cmd_argv = NULL; */
 	if (argv[0] == NULL)
 		return (0);
 	param.builtin = builtin_search_func(argv[0]);

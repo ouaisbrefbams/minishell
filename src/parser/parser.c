@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/13 11:50:11 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/16 20:19:05 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ t_parsed	*parse_op(t_tok_lst *input)
 		return (left);
 	input = left->rest;
 	if (input == NULL || input->tag & TAG_PARENT_CLOSE)
-		return (parsed_new(left->ast, input));
+		return (left);
 	sep_tag = input->tag;
 	if (!(sep_tag & TAG_IS_SEP))
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
@@ -100,7 +100,10 @@ t_parsed	*parse_op(t_tok_lst *input)
 	ast->op.left = left->ast;
 	ast->op.right = right->ast;
 	ast->op.sep = sep_tag;
-	return (parsed_new(ast, right->rest));
+	free(left);
+	left = parsed_new(ast, right->rest);
+	free(right);
+	return (left);
 }
 
 /*
@@ -122,7 +125,8 @@ t_parsed	*parse_expr(t_tok_lst *input)
 		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
 			return (parsed_error("syntax error expected token\n"));
         input = input->next;
-        ast = ast_new(AST_PARENT);
+        if ((ast = ast_new(AST_PARENT)) == NULL)
+			return (NULL);
         ast->parent_ast = parsed->ast;
         parsed->ast = ast;
 		while (input != NULL && input->tag & TAG_IS_REDIR)
