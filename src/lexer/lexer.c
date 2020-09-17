@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/16 20:17:10 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/17 10:59:13 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int				tok_len(char *input)
 		return (i + 1);
 	if (lexer_sep(input[i]))
 	{
-		if (input[i] == input[i + 1])
+		if (input[i] != ';' && input[i] == input[i + 1])
 			i++;
 		return (i + 1 + lexer_space(&input[i + 1]));
 	}
@@ -105,22 +105,22 @@ t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
 int     			lexer(char *input, t_tok_lst **out)
 {
 	int status;
-	t_tok_lst	*curr;
+	/* t_tok_lst	*curr; */
 
 	if (!input)
 		return (2);
 	*out = NULL;
 	*out = create_token_list(input, out);
 	status = lexer_trim(*out);
-	curr = *out;
-	while (curr != NULL)
-	{
-		if (!(curr->tag & TAG_IS_STR))
-		{
-			free(curr->content);
-			curr->content = NULL;
-		}
-		curr = curr->next;
-	}
+	/* curr = *out; */
+	/* while (curr != NULL) */
+	/* { */
+	/* 	if (!(curr->tag & TAG_IS_STR)) */
+	/* 	{ */
+	/* 		free(curr->content); */
+	/* 		curr->content = NULL; */
+	/* 	} */
+	/* 	curr = curr->next; */
+	/* } */
 	return (status);
 }

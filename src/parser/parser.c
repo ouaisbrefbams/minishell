@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/16 20:19:05 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/17 11:20:53 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,18 @@
 */
 
 #include "parser.h"
+
+static char *g_sep_str_lookup[] = {
+	[TAG_END] = ";",
+	[TAG_AND] = "&&",
+	[TAG_OR] = "||",
+	[TAG_PIPE] = "|",
+	[TAG_REDIR_IN] = "<",
+	[TAG_REDIR_OUT] = ">",
+	[TAG_REDIR_APPEND] = ">>",
+	[TAG_PARENT_OPEN] = "(",
+	[TAG_PARENT_CLOSE] = ")",
+};
 
 /*
 ** push redirection token
@@ -28,7 +40,8 @@ t_parsed	*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 	tok_lst_push_back(redirs, tok_lst_uncons(&input));
 	if (input == NULL)
 		return (parsed_error("syntax error near unexpected token `newline'\n"));
-	// FIXME big condition could be avoided with lexer not putting STICK if the next tokens isn't a string
+	// FIXME big condition could be avoided with lexer not putting STICK
+	// if the next tokens isn't a string
 	while (input != NULL
 			&& input->tag & TAG_IS_STR && input->tag & TAG_STICK
 			&& input->next != NULL && input->next->tag & TAG_IS_STR)
@@ -86,7 +99,7 @@ t_parsed	*parse_op(t_tok_lst *input)
 		return (left);
 	sep_tag = input->tag;
 	if (!(sep_tag & TAG_IS_SEP))
-		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
+		return (parsed_error("syntax error near unexpected token `%s'\n", g_sep_str_lookup[sep_tag]));
 	ft_lstpop_front((t_ftlst**)&input, free);
 	if (input == NULL && sep_tag == TAG_END)
 		return (left);
