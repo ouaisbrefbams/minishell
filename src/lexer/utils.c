@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/16 20:07:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/17 13:27:44 by nahaddac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,11 @@ enum e_tok                tok_assign_tag(char *content)
 		return (TAG_PARENT_CLOSE);
 	return (0);
 }
+/*
+** return tag
+** le tag stick est rajouter si
+** a la fin (char *)tk->tok ne figure pas d'espace.
+*/
 
 enum e_tok tok_assign_stick(t_tok_lst *tok)
 {
@@ -47,6 +52,10 @@ enum e_tok tok_assign_stick(t_tok_lst *tok)
 	return (tok->tag | TAG_STICK);
 }
 
+/*
+** return tag si
+** la chaine de character est un str où '' où ''
+*/
 enum e_tok tok_assign_str(t_tok_lst *tok)
 {
 	char	*found;
