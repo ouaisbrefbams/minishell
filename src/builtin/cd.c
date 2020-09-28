@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:20 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 17:03:32 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/28 10:54:15 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	builtin_cd(char **argv, t_env env)
 	char	*home;
 
 	(void)env;
-	if (argv[1] != NULL && argv[2] != NULL)
-		return (errorf_ret(1, "cd: too many arguments\n"));
+	/* if (argv[1] != NULL && argv[2] != NULL) */
+	/* 	return (1); //errorf_ret(1, "cd: too many arguments\n")); */
 	if (argv[1] != NULL && argv[1][0] == '\0')
 		return (0);
 	if (argv[1] == NULL)

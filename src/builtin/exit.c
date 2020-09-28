@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:16 by charles           #+#    #+#             */
-/*   Updated: 2020/09/16 16:26:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/09/28 10:51:42 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	builtin_exit(char **argv, t_env env)
 		if (*after != '\0' || errno == ERANGE)
 		{
 			errorf("exit: %s: numeric argument required\n", argv[1]);
-			return (2);
+			return (255);
 		}
 		if (argv[2] != NULL)
 			return (errorf_ret(1, "exit: too many arguments\n"));
