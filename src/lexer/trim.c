@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/16 20:09:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 16:14:54 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int 	del_quote(char *str)
 	if (quote_counter % 2 == 1)
 	{
 		errorf("unexpected EOF while looking for matching `%c'\n", str[0]);
-		return (1);
+		return (2);
 	}
 	str[i] = '\0';
 	ft_memmove(str, str + 1, ft_strlen(str + 1) + 1);

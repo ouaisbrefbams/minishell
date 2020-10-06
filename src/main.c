@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/06 10:36:28 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/06 16:14:07 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ int		execute(t_env env, char *input)
 		return (status);
 	parser_out = parse(lexer_out);
 	if (parser_out == NULL || parser_out->syntax_error)
-		return (1);
+		return (2);
 	fds[0] = FD_NONE;
 	fds[1] = FD_NONE;
 	status = eval(fds, env, parser_out->ast, NULL, FD_NONE);
-	ast_destroy(parser_out->ast);
+	/* ast_destroy(parser_out->ast); */
 	free(parser_out);
 	if (status == EVAL_FATAL)
 		exit(1);
@@ -69,11 +69,11 @@ int		repl(t_env env)
 			continue ;
 		}
 		if (execute(env, line) == EVAL_FATAL)
-			return (1);
+			return (2);
 		print_prompt();
 	}
 	if (ret != FTGL_EOF)
-		return (1);
+		return (2);
 	return (0);
 }
 

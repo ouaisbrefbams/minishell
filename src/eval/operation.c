@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/06 15:53:12 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/06 16:11:54 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,6 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 	prev_output = STDIN_FILENO;
 	curr = ast->pipeline;
 
-
-	// create pipe
-	// fork
-	//    dup2 pipe write -> stdout
-	//    dup2 prev_output -> stdin
-
 	while (curr->next != NULL)
 	{
 		pipe(p);
@@ -75,11 +69,18 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 		{
 			dup2(p[FD_WRITE], STDOUT_FILENO);
 			if (prev_output != STDIN_FILENO)
+			{
 				dup2(prev_output, STDIN_FILENO);
+				close(prev_output);
+			}
 			close(p[FD_READ]);
+			fds[0] = FD_NONE;
+			fds[1] = FD_NONE;
 			exit(eval(fds, env, curr->data, NULL, FD_NONE));
 		}
 		close(p[FD_WRITE]);
+		if (prev_output != STDIN_FILENO)
+			close(prev_output);
 		prev_output = p[FD_READ];
 		curr = curr->next;
 	}
@@ -89,10 +90,16 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 	{
 		/* dup2(p[FD_WRITE], STDOUT_FILENO); */
 		if (prev_output != STDIN_FILENO)
+		{
 			dup2(prev_output, STDIN_FILENO);
+			close(prev_output);
+		}
 		close(p[FD_WRITE]);
+		fds[0] = FD_NONE;
+		fds[1] = FD_NONE;
 		exit(eval(fds, env, curr->data, NULL, FD_NONE));
 	}
+	close(p[FD_READ]);
 
 	while (wait(NULL) != -1)
 		;

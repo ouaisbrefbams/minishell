@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/06 11:22:14 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/06 16:26:48 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ static char *g_sep_str_lookup[] = {
 t_parsed	*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 {
 	tok_lst_push_back(redirs, tok_lst_uncons(&input));
-	if (input == NULL)
-		return (parsed_error("syntax error near unexpected token `newline'\n"));
 	// FIXME big condition could be avoided with lexer not putting STICK
 	// if the next tokens isn't a string
 	while (input != NULL
@@ -59,7 +57,7 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 	t_ast		*ast;
 	t_parsed	*tmp;
 
-	if (input->tag & TAG_IS_SEP)
+	if (input->tag & TAG_IS_SEP || input->tag == TAG_PIPE)
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
 	if ((ast = ast_new(AST_CMD)) == NULL)
 		return (NULL);
@@ -90,6 +88,8 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	if (expr == NULL || expr->syntax_error ||
 		expr->rest == NULL || expr->rest->tag != TAG_PIPE)
 		return (expr);
+	if (expr->rest->next == NULL)
+		return (parsed_error("syntax error expected token\n"));
 	tail = parse_pipeline(expr->rest->next);
 	if (tail == NULL || tail->syntax_error)
 		return (tail);

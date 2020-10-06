@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/15 18:24:12 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 16:21:01 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ enum                    e_tok
 
 	TAG_IS_STR       = TAG_STR | TAG_STR_SINGLE | TAG_STR_DOUBLE,
     TAG_IS_REDIR     = TAG_REDIR_IN | TAG_REDIR_OUT | TAG_REDIR_APPEND,
-    TAG_IS_SEP       = TAG_AND | TAG_END | TAG_OR | TAG_PIPE,
+    TAG_IS_SEP       = TAG_AND | TAG_END | TAG_OR,
 };
 
 /*
