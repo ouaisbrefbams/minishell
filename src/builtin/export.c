@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 17:49:35 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 17:40:22 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,11 @@ static void	st_put_declare_x(char *s)
 	ft_putstr(s);
 	ft_putchar('=');
 	ft_putchar('"');
-	if (ft_strcmp(s, "SHLVL") == 0)
+	while (*++equal_ptr != '\0')
 	{
-		shlvl = ft_atoi(equal_ptr + 1);
-		ft_putnbr(shlvl + 1);
-	}
-	else
-	{
-		while (*++equal_ptr != '\0')
-		{
-			if (*equal_ptr == '"')
-				ft_putchar('\\');
-			ft_putchar(*equal_ptr);
-		}
+		if (*equal_ptr == '"')
+			ft_putchar('\\');
+		ft_putchar(*equal_ptr);
 	}
 	ft_putchar('"');
 	ft_putchar('\n');

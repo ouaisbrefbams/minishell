@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 15:46:09 by charles           #+#    #+#             */
-/*   Updated: 2020/09/16 16:24:28 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 17:36:40 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	setup_env(t_env env)
 	if (!(getcwd(buf, PATH_MAX)))
 		return (false);
 	if (!st_export_default(env, "PWD", buf) ||
-		!st_export_default(env, "SHLVL", "0") ||
+		!st_export_default(env, "SHLVL", "1") ||
 		!st_export_default(env, "PATH", "/sbin:"))
 		return (false);
 

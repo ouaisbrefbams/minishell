@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/06 16:26:48 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/06 17:28:31 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_parsed	*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 			&& input->next != NULL && input->next->tag & TAG_IS_STR)
 		tok_lst_push_back(redirs, tok_lst_uncons(&input));
 	if (input == NULL)
-		return (NULL);
+		return (parsed_error("syntax error near unexpected token `newline'\n"));
 	if (!(input->tag & TAG_IS_STR))
 		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
 	tok_lst_push_back(redirs, tok_lst_uncons(&input));

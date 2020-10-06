@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/16 19:28:34 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 17:26:05 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int		st_path_check(char exec_path[PATH_MAX + 1], bool in_path)
 	if (stat(exec_path, &statbuf) == -1)
 		return (errorf_ret(127, "%s: %s\n", exec_path, strerror(errno)));
 	if (S_ISDIR(statbuf.st_mode))
-		return (errorf_ret(126, "%s: Is a directory\n", exec_path));
+		return (errorf_ret(126, "%s: is a directory\n", exec_path));
 	if (!in_path && !(statbuf.st_mode & 0444))
 		return (errorf_ret(126, "%s: %s\n", exec_path, strerror(EACCES)));
 	return (0);
