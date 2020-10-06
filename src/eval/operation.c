@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/06 16:11:54 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/06 17:21:38 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 	left_fds[FD_WRITE] = FD_NONE;
 	right_fds[FD_READ] = FD_NONE;
 	right_fds[FD_WRITE] = fds[FD_WRITE];
-	if ((status = eval(left_fds, env, ast->op.left, NULL, FD_NONE)) == EVAL_FATAL)
+	if ((status = eval(left_fds, env, ast->op.left)) == EVAL_FATAL)
 		return (EVAL_FATAL);
 	g_state.last_status = status;
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))
 		return (status);
-	return (eval(right_fds, env, ast->op.right, NULL, FD_NONE));
+	return (eval(right_fds, env, ast->op.right));
 }
 
 /* pid_t	run_piped_child(t_env env, t_ast *ast, int copied, int closed) */
@@ -76,7 +76,7 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 			close(p[FD_READ]);
 			fds[0] = FD_NONE;
 			fds[1] = FD_NONE;
-			exit(eval(fds, env, curr->data, NULL, FD_NONE));
+			exit(eval(fds, env, curr->data));
 		}
 		close(p[FD_WRITE]);
 		if (prev_output != STDIN_FILENO)
@@ -97,7 +97,7 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 		close(p[FD_WRITE]);
 		fds[0] = FD_NONE;
 		fds[1] = FD_NONE;
-		exit(eval(fds, env, curr->data, NULL, FD_NONE));
+		exit(eval(fds, env, curr->data));
 	}
 	close(p[FD_READ]);
 

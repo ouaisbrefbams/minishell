@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/06 16:14:07 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/06 17:22:40 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		execute(t_env env, char *input)
 		return (2);
 	fds[0] = FD_NONE;
 	fds[1] = FD_NONE;
-	status = eval(fds, env, parser_out->ast, NULL, FD_NONE);
+	status = eval(fds, env, parser_out->ast);
 	/* ast_destroy(parser_out->ast); */
 	free(parser_out);
 	if (status == EVAL_FATAL)

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/09/16 19:39:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 17:18:20 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int			wrapped_cmd(t_fork_param_cmd *param)
 	return (status);
 }
 
-int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_close)
+int			eval_cmd(int fds[2], t_env env, t_ast *ast)
 {
 	t_fork_param_cmd	param;
 	char				**argv;
@@ -44,7 +44,7 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_cl
 	if (argv[0] == NULL)
 		return (0);
 	param.builtin = builtin_search_func(argv[0]);
-	if (param.builtin != NULL && !param.builtin->forked && child_pid == NULL)
+	if (param.builtin != NULL && !param.builtin->forked)
 		return (param.builtin->func(argv, env));
 
 	if (param.builtin == NULL
@@ -56,7 +56,7 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_cl
 
 	param.argv = argv;
 	param.env = env;
-	status = fork_wrap(fds, &param, (t_wrapped_func)wrapped_cmd, child_pid, fd_to_close);
+	status = fork_wrap(fds, &param, (t_wrapped_func)wrapped_cmd);
 	ft_split_destroy(argv);
 	g_state.last_status = status;
 	return (status);

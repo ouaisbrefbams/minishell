@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/09/15 20:09:27 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 17:22:12 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,26 +49,27 @@ extern pid_t		g_child_pid;
 ** eval.c
 */
 
-int					fork_wrap(int fds[2], void *passed, t_wrapped_func wrapped, pid_t *child_pid, int fd_to_close);
-int					eval(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_close);
+int					fork_wrap(int fds[2], void *passed, t_wrapped_func wrapped);
+int					eval(int fds[2], t_env env, t_ast *ast);
 
 /*
 ** cmd.c
 */
 
-int					eval_cmd(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_close);
+int					eval_cmd(int fds[2], t_env env, t_ast *ast);
 
 /*
 ** operation.c
 */
 
 int					eval_operation(int fds[2], t_env env, t_ast *ast);
+int					eval_pipeline(int fds[2], t_env env, t_ast *ast);
 
 /*
 ** parenthesis.c
 */
 
-int					eval_parenthesis(int fds[2], t_env env, t_ast *ast, pid_t *child_pid, int fd_to_close);
+int					eval_parenthesis(int fds[2], t_env env, t_ast *ast);
 
 /*
 ** redir.c
