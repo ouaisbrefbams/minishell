@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/17 11:20:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 11:22:14 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,43 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 	return (parsed_new(ast, input));
 }
 
+t_parsed	*parse_pipeline(t_tok_lst *input)
+{
+	t_parsed	*expr;
+	t_parsed	*tail;
+	t_ast		*expr_ast;
+
+	expr = parse_expr(input);
+	if (expr == NULL || expr->syntax_error ||
+		expr->rest == NULL || expr->rest->tag != TAG_PIPE)
+		return (expr);
+	tail = parse_pipeline(expr->rest->next);
+	if (tail == NULL || tail->syntax_error)
+		return (tail);
+	expr_ast = expr->ast;
+	free(expr);
+	t_ast *pipeline_ast;
+	if (tail->ast->tag == AST_CMD)
+	{
+		pipeline_ast = ast_new(AST_PIPELINE);
+		if ((pipeline_ast->pipeline = ft_lstnew(tail->ast)) == NULL)
+		{
+			/* ast_destroy(expr_ast); */
+			/* ft_lstdestroy(&tail, NULL); */
+			return (NULL);
+		}
+	}
+	else
+		pipeline_ast = tail->ast;
+	if (ft_lstpush_front_node(&pipeline_ast->pipeline, expr_ast) == NULL)
+	{
+		/* ast_destroy(expr_ast); */
+		/* ft_lstdestroy(&tail, NULL); */
+		return (NULL);
+	}
+	return (parsed_new(pipeline_ast, tail->rest));
+}
+
 /*
 ** parse and operation (| ; && ||)
 */
@@ -91,7 +128,7 @@ t_parsed	*parse_op(t_tok_lst *input)
 	t_parsed	*right;
 	enum e_tok	sep_tag;
 
-	left = parse_expr(input);
+	left = parse_pipeline(input);
 	if (left == NULL || left->syntax_error)
 		return (left);
 	input = left->rest;
@@ -99,7 +136,8 @@ t_parsed	*parse_op(t_tok_lst *input)
 		return (left);
 	sep_tag = input->tag;
 	if (!(sep_tag & TAG_IS_SEP))
-		return (parsed_error("syntax error near unexpected token `%s'\n", g_sep_str_lookup[sep_tag]));
+		return (parsed_error("syntax error near unexpected token `%s'\n",
+				g_sep_str_lookup[sep_tag]));
 	ft_lstpop_front((t_ftlst**)&input, free);
 	if (input == NULL && sep_tag == TAG_END)
 		return (left);

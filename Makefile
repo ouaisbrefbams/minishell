@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/09/14 19:10:10 by charles          ###   ########.fr        #
+#    Updated: 2020/10/02 12:52:19 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ OBJDIRS = $(shell find $(SRCDIR) -type d | sed 's/src/$(OBJDIR)/')
 
 INCLUDE = $(shell find $(INCLUDEDIR) -name "*.h")
 
-SRC = $(shell find $(SRCDIR) -name "*.c")
+SRC = $(shell find $(SRCDIR) -type f -name "*.c")
+
 
 OBJ = $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 

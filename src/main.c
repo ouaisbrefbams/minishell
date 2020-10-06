@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/16 19:51:55 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 10:36:28 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ int		main(int argc, char **argv, char **envp)
 	g_state.last_status = 0;
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
 		return (debug_lexer(argv[2]));
+	if (argc == 3 && ft_strcmp(argv[1], "-p") == 0)
+		return (debug_parser(argv[2]));
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 	{
 		status = execute(env, argv[2]);

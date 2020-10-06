@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/08/27 20:31:48 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 09:58:35 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,11 @@ void			ast_destroy(t_ast *ast)
 		ast_destroy(ast->op.right);
 	}
 	else if (ast->tag == AST_PARENT)
+	{
 		ast_destroy(ast->parent_ast);
+		tok_lst_destroy(&ast->redirs, free);
+	}
+	else if (ast->tag == AST_PIPELINE)
+		ft_lstdestroy(&ast->pipeline, (void (*)(void*))ast_destroy);
 	free(ast);
 }

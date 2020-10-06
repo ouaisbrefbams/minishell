@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/08/28 10:06:44 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/06 08:35:42 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,19 @@ typedef struct			s_op
 }						t_op;
 
 /*
-** \brief            AST node tag (type)
-** \param TAG_CMD    Command AST node
-** \param TAG_OP     Operation AST node
-** \param TAG_PARENT Parenthesis AST node
+** \brief              AST node tag (type)
+** \param TAG_CMD      Command AST node
+** \param TAG_OP       Operation AST node
+** \param TAG_PARENT   Parenthesis AST node
+** \param TAG_PIPELINE Pipeline AST node
 */
 
-enum			e_ast
+enum					e_ast
 {
 	AST_CMD,
 	AST_OP,
 	AST_PARENT,
+	AST_PIPELINE,
 };
 
 /*
@@ -72,6 +74,7 @@ enum			e_ast
 ** \param tag         Node tag
 ** \param op          Operation struct
 ** \param cmd_argv    Command argv tokens
+** \param pipline     List of commands in a pipeline
 ** \param parend_ast  AST inside parenthesis
 ** \param redirs      Redirections tokens
 */
@@ -83,6 +86,7 @@ typedef struct			s_ast
 	{
 		t_op			op;
 		t_tok_lst		*cmd_argv;
+		t_ftlst			*pipeline;
 		struct s_ast	*parent_ast;
 	};
 	t_tok_lst			*redirs;
@@ -102,17 +106,12 @@ void					ast_destroy(t_ast *ast);
 typedef struct			s_parsed
 {
 	bool				syntax_error;
-	union
-	{
-		t_ast			*ast;
-		t_tok_lst		*redir; // more general
-	};
+	t_ast				*ast;
 	t_tok_lst			*rest;
 }						t_parsed;
 
 t_parsed				*parsed_new(t_ast *ast, t_tok_lst *rest);
 t_parsed				*parsed_error(const char *format, ...);
-
 
 /*
 ** parse.c
