@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/07 11:20:46 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 14:58:27 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ typedef struct
 	char			*progname;
 	pid_t			pids[STATE_PIDS_MAX_SIZE];
 	size_t			pids_len;
+	bool			killed;
+	bool			is_child;
 }					t_state;
 
 extern t_state		g_state;

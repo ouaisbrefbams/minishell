@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 10:25:39 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 15:02:21 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,26 +35,23 @@ int st_replace(int oldfd, int newfd)
 int			fork_wrap(int fds[2], void *passed, t_wrapped_func wrapped)
 {
 	int		status;
-	/* bool	waiting; */
 	pid_t	pid;
 
 	if ((pid = fork()) == -1)
 		return (EVAL_FATAL);
 	if (pid == 0)
 	{
+			g_state.is_child = true;
 		if (st_replace(fds[FD_READ], STDIN_FILENO) != 0)
 			exit(EXIT_FAILURE);
 		if (st_replace(fds[FD_WRITE], STDOUT_FILENO) != 0)
 			exit(EXIT_FAILURE);
-		/* if (fd_to_close != FD_NONE) */
-		/* 	close(fd_to_close); */
 		if ((status = wrapped(passed)) == EVAL_FATAL)
 			exit(EXIT_FAILURE);
 		exit(status);
 	}
 	g_child_pid = pid;
 	waitpid(pid, &pid, 0);
-	/* close(fds[FD_WRITE]); */
 	return (WEXITSTATUS(pid));
 }
 

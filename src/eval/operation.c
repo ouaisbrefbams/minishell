@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 11:31:47 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 15:08:11 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 	if ((status = eval(left_fds, env, ast->op.left)) == EVAL_FATAL)
 		return (EVAL_FATAL);
 	g_state.last_status = status;
+	if (g_state.killed)
+		return (status);
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))
 		return (status);
@@ -50,6 +52,7 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 		int pid = fork();
 		if (pid == 0)
 		{
+			g_state.is_child = true;
 			dup2(p[FD_WRITE], STDOUT_FILENO);
 			if (prev_output != STDIN_FILENO)
 			{
@@ -71,6 +74,7 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 	int pid = fork();
 	if (pid == 0)
 	{
+		g_state.is_child = true;
 		if (prev_output != STDIN_FILENO)
 		{
 			dup2(prev_output, STDIN_FILENO);
@@ -81,6 +85,7 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 		fds[1] = FD_NONE;
 		exit(eval(fds, env, curr->data));
 	}
+	g_child_pid = pid;
 	close(p[FD_READ]);
 
 	int status = 0;

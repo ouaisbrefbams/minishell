@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/06 17:22:40 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 14:56:19 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,10 @@ int		repl(t_env env)
 			print_prompt();
 			continue ;
 		}
+		g_state.killed = false;
 		if (execute(env, line) == EVAL_FATAL)
 			return (2);
+		g_child_pid = -1;
 		print_prompt();
 	}
 	if (ret != FTGL_EOF)
