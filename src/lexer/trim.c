@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/06 16:14:54 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 10:36:41 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int 	del_quote(char *str)
 			}
 		}
 	}
+	else
+		return (0);
 	if (quote_counter % 2 == 1)
 	{
 		errorf("unexpected EOF while looking for matching `%c'\n", str[0]);

@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/10/06 17:21:54 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 10:25:39 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int st_replace(int oldfd, int newfd)
 	if (oldfd != FD_NONE)
 	{
 		dup2(oldfd, newfd);
-		close(oldfd);
+		/* close(oldfd); */
 	}
 	return 0;
 }

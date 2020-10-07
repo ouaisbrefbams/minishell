@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/06 17:28:31 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 10:31:26 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	expr_ast = expr->ast;
 	free(expr);
 	t_ast *pipeline_ast;
-	if (tail->ast->tag == AST_CMD)
+	if (tail->ast->tag == AST_CMD || tail->ast->tag == AST_PARENT)
 	{
 		pipeline_ast = ast_new(AST_PIPELINE);
 		if ((pipeline_ast->pipeline = ft_lstnew(tail->ast)) == NULL)

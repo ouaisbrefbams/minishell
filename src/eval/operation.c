@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/06 17:31:43 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 11:31:47 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,6 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 		return (status);
 	return (eval(right_fds, env, ast->op.right));
 }
-
-/* pid_t	run_piped_child(t_env env, t_ast *ast, int copied, int closed) */
-/* { */
-/* 	pid_t	pid; */
-/* 	int		fds[2]; */
-/*  */
-/* 	pid = fork(); */
-/* 	if (pid == 0) */
-/* 	{ */
-/* 		dup2(copied, STDOUT_FILENO); */
-/* 		close(closed); */
-/* 		fds[0] = FD_NONE; */
-/* 		fds[1] = FD_NONE; */
-/* 		exit(eval(fds, env, ast, NULL, FD_NONE)); */
-/* 	} */
-/* 	return (pid); */
-/* } */
 
 int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 {
@@ -88,7 +71,6 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 	int pid = fork();
 	if (pid == 0)
 	{
-		/* dup2(p[FD_WRITE], STDOUT_FILENO); */
 		if (prev_output != STDIN_FILENO)
 		{
 			dup2(prev_output, STDIN_FILENO);
@@ -101,7 +83,10 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 	}
 	close(p[FD_READ]);
 
+	int status = 0;
+
+	waitpid(pid, &pid, 0);
 	while (wait(NULL) != -1)
 		;
-	return (0);
+	return (WEXITSTATUS(pid));
 }

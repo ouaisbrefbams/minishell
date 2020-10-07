@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/16 17:20:42 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/07 11:20:46 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,19 @@
 
 typedef t_ftvec*	t_env;
 
+/*
+** \note  Having a fixed size buffer for pids should be fine
+**        as long as it's greater than the process hard limit
+*/
+
+# define STATE_PIDS_MAX_SIZE 4096
+
 typedef struct
 {
 	int				last_status;
 	char			*progname;
+	pid_t			pids[STATE_PIDS_MAX_SIZE];
+	size_t			pids_len;
 }					t_state;
 
 extern t_state		g_state;

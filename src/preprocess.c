@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/10/06 16:30:30 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 11:12:31 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,10 @@ char	**st_tokens_to_argv(t_tok_lst **tokens)
 	return (ret);
 }
 
-
 bool escape(char *str, enum e_tok tag)
 {
-	if (str[0] == '\\' // && str[1] != '\0' not on mac
-			&& (tag & TAG_STR
-				|| ((tag & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[1]))))
+	if (str[0] == '\\' && (tag & TAG_STR
+		|| ((tag & TAG_STR_DOUBLE) && ft_strchr("\\\"$", str[1]))))
 	{
 		ft_memmove(str, str + 1, ft_strlen(str + 1) + 1);
 		return (true);
