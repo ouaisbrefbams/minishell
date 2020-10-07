@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 11:12:31 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 16:50:42 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ int		preprocess_filename(t_tok_lst **tokens, t_env env, char **filename)
 		ft_split_destroy(strs);
 		return (1);
 	}
-	*filename = ft_strdup(strs[0]);
+	*filename = strs[0];
 	free(strs);
 	return (*filename == NULL ? EVAL_FATAL : 0);
 }

@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/07 10:31:26 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 16:43:08 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 			if (tmp == NULL || tmp->syntax_error)
 				return (tmp);
 			input = tmp->rest;
+			free(tmp);
 		}
 		else
 			break;
@@ -90,7 +91,8 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 		return (expr);
 	if (expr->rest->next == NULL)
 		return (parsed_error("syntax error expected token\n"));
-	tail = parse_pipeline(expr->rest->next);
+	ft_lstpop_front(&expr->rest, free);
+	tail = parse_pipeline(expr->rest);
 	if (tail == NULL || tail->syntax_error)
 		return (tail);
 	expr_ast = expr->ast;
@@ -114,7 +116,8 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 		/* ft_lstdestroy(&tail, NULL); */
 		return (NULL);
 	}
-	return (parsed_new(pipeline_ast, tail->rest));
+	tail->ast = pipeline_ast;
+	return (tail);
 }
 
 /*
@@ -170,12 +173,13 @@ t_parsed	*parse_expr(t_tok_lst *input)
 
     if (input->tag & TAG_PARENT_OPEN)
     {
-        if (!(parsed = parse_op(input->next)) || parsed->syntax_error)
+		ft_lstpop_front(&input, free);
+        if (!(parsed = parse_op(input)) || parsed->syntax_error)
 			return (parsed);
         input = parsed->rest;
 		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
 			return (parsed_error("syntax error expected token\n"));
-        input = input->next;
+		ft_lstpop_front(&input, free);
         if ((ast = ast_new(AST_PARENT)) == NULL)
 			return (NULL);
         ast->parent_ast = parsed->ast;
@@ -185,6 +189,7 @@ t_parsed	*parse_expr(t_tok_lst *input)
 			tmp = parse_redir(input, &parsed->ast->redirs);
 			if (tmp == NULL || tmp->syntax_error)
 				return (tmp);
+			free(tmp);
 			input = tmp->rest;
 		}
         parsed->rest = input;

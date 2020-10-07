@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:42 by charles           #+#    #+#             */
-/*   Updated: 2020/10/06 09:58:35 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/07 15:56:19 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ t_ast			*ast_new(enum e_ast tag)
 		return (NULL);
 	ast->tag = tag;
 	ast->redirs = NULL;
-	ast->op.left = NULL;
-	ast->op.right = NULL;
 	ast->cmd_argv = NULL;
 	return (ast);
 }
