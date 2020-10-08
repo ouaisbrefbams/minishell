@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/08 17:02:52 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 17:43:06 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	print_prompt(void)
 	ft_putstr_fd("\033[0m$ ", STDERR_FILENO);
 }
 
-void	try(void *ptr)
+void	exit_if(bool predicate)
 {
-	if (ptr != NULL)
+	if (predicate)
 		return ;
 	ft_putendl_fd("minishell: fatal error", STDERR_FILENO);
 	exit(3);

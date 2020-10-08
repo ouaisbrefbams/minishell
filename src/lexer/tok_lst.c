@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 09:32:58 by charles           #+#    #+#             */
-/*   Updated: 2020/09/13 20:31:53 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/08 17:38:59 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ t_tok_lst				*tok_lst_push_front(t_tok_lst **tokens, t_tok_lst *pushed)
 		return (NULL);
 	ft_lstpush_front((t_ftlst**)tokens, (t_ftlst*)pushed);
 	return (*tokens);
+}
+
+void					tok_lst_pop_front(t_tok_lst **tokens, void (*del)(void*))
+{
+	ft_lstpop_front((t_ftlst**)tokens, del);
 }
 
 void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*))

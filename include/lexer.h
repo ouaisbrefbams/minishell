@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/06 16:21:01 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 17:38:33 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ t_tok_lst				*tok_lst_new(enum e_tok tag, char *content);
 t_tok_lst				*tok_lst_new_until(enum e_tok tag, char *content, size_t n);
 void					tok_lst_push_back(t_tok_lst **tokens, t_tok_lst *pushed);
 t_tok_lst				*tok_lst_push_front(t_tok_lst **tokens, t_tok_lst *pushed);
+void					tok_lst_pop_front(t_tok_lst **tokens, void (*del)(void*));
 void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*));
 t_tok_lst				*tok_lst_last(t_tok_lst *tokens);
 t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens);

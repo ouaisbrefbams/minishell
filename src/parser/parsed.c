@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 20:27:42 by charles           #+#    #+#             */
-/*   Updated: 2020/09/10 19:31:46 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/08 17:07:35 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ t_parsed	*parsed_error(const char *format, ...)
 	va_start(ap, format);
 	verrorf(format, ap);
 	va_end(ap);
+	ft_putchar_fd('\n', STDERR_FILENO);
 	return (err);
 }

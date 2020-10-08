@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/08 16:58:19 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 17:42:53 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 */
 
 #include "parser.h"
+#include "minishell.h"
 
 static char *g_sep_str_lookup[] = {
 	[TAG_END] = ";",
@@ -45,10 +46,10 @@ t_parsed	*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 			&& input->next != NULL && input->next->tag & TAG_IS_STR)
 		tok_lst_push_back(redirs, tok_lst_uncons(&input));
 	if (input == NULL)
-		return (parsed_error("syntax error near unexpected token `newline'\n"));
+		return (parsed_error("syntax error near unexpected token `newline'"));
 	if (!(input->tag & TAG_IS_STR))
 	{
-		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'\n", input->content);
+		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'", input->content);
 		tok_lst_destroy(&input, free);
 		return (ret);
 	}
@@ -63,7 +64,7 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 
 	if (input->tag & TAG_IS_SEP || input->tag == TAG_PIPE || input->tag == TAG_PARENT_CLOSE)
 	{
-		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'\n", input->content);
+		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'", input->content);
 		tok_lst_destroy(&input, free);
 		return (ret);
 	}
@@ -101,13 +102,13 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	if (expr == NULL || expr->syntax_error ||
 		expr->rest == NULL || expr->rest->tag != TAG_PIPE)
 		return (expr);
-	ft_lstpop_front(&expr->rest, free);
+	tok_lst_pop_front(&expr->rest, free);
 	if (expr->rest == NULL)
 	{
 		ast_destroy(expr->ast);
 		free(expr);
 		/* tok_lst_destroy(expr->rest, free); */
-		return (parsed_error("syntax error expected token\n"));
+		return (parsed_error("syntax error expected token"));
 	}
 	tail = parse_pipeline(expr->rest);
 	if (tail == NULL || tail->syntax_error)
@@ -122,11 +123,11 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	if (tail->ast->tag == AST_CMD || tail->ast->tag == AST_PARENT)
 	{
 		pipeline_ast = ast_new(AST_PIPELINE);
-		try(pipeline_ast->pipeline = ft_lstnew(tail->ast));
+		exit_if((pipeline_ast->pipeline = ft_lstnew(tail->ast)) == NULL);
 	}
 	else
 		pipeline_ast = tail->ast;
-	try(ft_lstpush_front_node(&pipeline_ast->pipeline, expr_ast));
+	exit_if(ft_lstpush_front_node(&pipeline_ast->pipeline, expr_ast) == NULL);
 	tail->ast = pipeline_ast;
 	return (tail);
 }
@@ -152,9 +153,11 @@ t_parsed	*parse_op(t_tok_lst *input)
 		return (left);
 	sep_tag = input->tag;
 	if (!(sep_tag & TAG_IS_SEP))
-		return (parsed_error("syntax error near unexpected token `%s'\n",
+	{
+		return (parsed_error("syntax error near unexpected token `%s'",
 				g_sep_str_lookup[sep_tag]));
-	ft_lstpop_front((t_ftlst**)&input, free);
+	}
+	tok_lst_pop_front(&input, free);
 	if (input == NULL && sep_tag == TAG_END)
 	{
 		left->rest = NULL;
@@ -164,7 +167,7 @@ t_parsed	*parse_op(t_tok_lst *input)
 	{
 		ast_destroy(left->ast);
 		free(left);
-		return (parsed_error("syntax error expected token\n"));
+		return (parsed_error("syntax error expected token"));
 	}
 	right = parse_op(input);
 	if (right == NULL  || right->syntax_error)
@@ -197,16 +200,16 @@ t_parsed	*parse_expr(t_tok_lst *input)
 
     if (input->tag & TAG_PARENT_OPEN)
     {
-		ft_lstpop_front(&input, free);
+		tok_lst_pop_front(&input, free);
 		if (input == NULL)
-			return (parsed_error("syntax error: unexpected end of file\n"));
+			return (parsed_error("syntax error expected token"));
 		parsed = parse_op(input);
         if (parsed == NULL || parsed->syntax_error)
 			return (parsed);
         input = parsed->rest;
 		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
-			return (parsed_error("syntax error expected token\n"));
-		ft_lstpop_front(&input, free);
+			return (parsed_error("syntax error expected token"));
+		tok_lst_pop_front(&input, free);
         if ((ast = ast_new(AST_PARENT)) == NULL)
 			return (NULL);
         ast->parent_ast = parsed->ast;
@@ -233,6 +236,12 @@ t_parsed	*parse(t_tok_lst *input)
 	if (parsed == NULL || parsed->syntax_error)
 		return parsed;
 	if (parsed->rest != NULL)
-		return (parsed_error("syntax error near unexpected token `%s'\n", parsed->rest->content));
+	{
+		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'", parsed->rest->content);
+		tok_lst_destroy(&parsed->rest, free);
+		ast_destroy(parsed->ast);
+		free(parsed);
+		return ret;
+	}
 	return (parsed);
 }
