@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 11:12:33 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 16:59:28 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 static void	st_put_declare_x(char *s)
 {
 	char	*equal_ptr;
-	int		shlvl;
 
 	if (s == NULL)
 		return ;

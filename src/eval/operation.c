@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 15:08:11 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 16:59:42 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 	g_child_pid = pid;
 	close(p[FD_READ]);
 
-	int status = 0;
+	/* int status = 0; */
 
 	waitpid(pid, &pid, 0);
 	while (wait(NULL) != -1)

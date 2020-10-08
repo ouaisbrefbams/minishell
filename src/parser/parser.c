@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/08 12:29:52 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 16:58:19 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 	t_ast		*ast;
 	t_parsed	*tmp;
 
-	if (input->tag & TAG_IS_SEP || input->tag == TAG_PIPE)
+	if (input->tag & TAG_IS_SEP || input->tag == TAG_PIPE || input->tag == TAG_PARENT_CLOSE)
 	{
 		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'\n", input->content);
 		tok_lst_destroy(&input, free);
@@ -142,6 +142,8 @@ t_parsed	*parse_op(t_tok_lst *input)
 	t_parsed	*right;
 	enum e_tok	sep_tag;
 
+	if (input == NULL)
+		return (NULL);
 	left = parse_pipeline(input);
 	if (left == NULL || left->syntax_error)
 		return (left);
@@ -154,7 +156,10 @@ t_parsed	*parse_op(t_tok_lst *input)
 				g_sep_str_lookup[sep_tag]));
 	ft_lstpop_front((t_ftlst**)&input, free);
 	if (input == NULL && sep_tag == TAG_END)
+	{
+		left->rest = NULL;
 		return (left);
+	}
 	if (input == NULL)
 	{
 		ast_destroy(left->ast);
@@ -193,7 +198,10 @@ t_parsed	*parse_expr(t_tok_lst *input)
     if (input->tag & TAG_PARENT_OPEN)
     {
 		ft_lstpop_front(&input, free);
-        if (!(parsed = parse_op(input)) || parsed->syntax_error)
+		if (input == NULL)
+			return (parsed_error("syntax error: unexpected end of file\n"));
+		parsed = parse_op(input);
+        if (parsed == NULL || parsed->syntax_error)
 			return (parsed);
         input = parsed->rest;
 		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
@@ -221,5 +229,10 @@ t_parsed	*parse(t_tok_lst *input)
 {
 	if (input == NULL)
 		return (NULL);
-	return (parse_op(input));
+	t_parsed *parsed = parse_op(input);
+	if (parsed == NULL || parsed->syntax_error)
+		return parsed;
+	if (parsed->rest != NULL)
+		return (parsed_error("syntax error near unexpected token `%s'\n", parsed->rest->content));
+	return (parsed);
 }

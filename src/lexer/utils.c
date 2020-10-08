@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/08 14:10:17 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 14:11:51 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ enum e_tok                tok_assign_tag(char *content)
 		return (TAG_PARENT_CLOSE);
 	return (0);
 }
+
 /*
 ** return tag
 ** le tag stick est rajouter si
