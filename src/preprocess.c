@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 16:50:42 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 09:58:48 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_t
 	if (curr->tag & TAG_STR_DOUBLE)
 	{
 		curr->content = ft_strjoin3(before, match, after);
+		free(before);
 		return i + ft_strlen(match);
 	}
 	if (curr->tag & TAG_STR)
@@ -139,6 +140,8 @@ size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_t
 		else if (fields->next == NULL)
 		{
 			curr->content = ft_strjoin3(before, fields->content, after);
+			free(before);
+			tok_lst_destroy(&fields, free);
 			return i + len;
 		}
 		else
@@ -146,13 +149,15 @@ size_t	interpolate(char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_t
 			last = tok_lst_last(fields);
 			last->tag = curr->tag;
 			curr->tag = TAG_STR;
-			curr->content = ft_strjoin(before, fields->content);
-			last->content = ft_strjoin(last->content, after);
+			curr->content = ft_strjoinf_snd(before, fields->content);
+			last->content = ft_strjoinf_fst(last->content, after);
+			free(before);
 
 			t_tok_lst *tmp = curr->next;
 			curr->next = fields->next;
 			(*curr_addr) = last;
 			(*curr_addr)->next = tmp;
+			free(fields);
 			return len;
 		}
 	}

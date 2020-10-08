@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/17 13:19:40 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/10/08 09:21:55 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int				tok_len(char *input)
 **        get the number of character for the current token
 **        create a token from a substring in input
 **        assign a tag to the token
-**		  return all token 
+**		  return all token
 */
 
 t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
@@ -90,8 +90,10 @@ t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
 		tok->tag = tok_assign_tag(tok->content);
 		if (tok->tag == 0)
 			tok->tag = tok_assign_str(tok);
-		if (!ft_isblank(tok->content[0])) // ?
+		if (!ft_isblank(tok->content[0]))
 			tok_lst_push_back(lst, tok);
+		else
+			tok_lst_destroy(&tok, free);
 		i += j;
 	}
 	return (*lst);

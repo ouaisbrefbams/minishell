@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/07 16:01:29 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 11:36:46 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "eval.h"
 
 int		debug_lexer(char *input);
+int		debug_parser(char *input);
 
 /*
 ** TODO
@@ -40,10 +41,17 @@ int		execute(t_env env, char *input)
 
 	status = lexer(input, &lexer_out);
 	if (status != 0)
+	{
+		tok_lst_destroy(&lexer_out, free);
 		return (status);
+	}
 	parser_out = parse(lexer_out);
 	if (parser_out == NULL || parser_out->syntax_error)
+	{
+		ast_destroy(parser_out->ast);
+		free(parser_out);
 		return (2);
+	}
 	fds[0] = FD_NONE;
 	fds[1] = FD_NONE;
 	status = eval(fds, env, parser_out->ast);
@@ -103,7 +111,6 @@ int		main(int argc, char **argv, char **envp)
 
 int		main(int argc, char **argv, char **envp)
 {
-	int		status;
 	t_env	env;
 
 	if ((env = env_from_array(envp)) == NULL)
@@ -111,16 +118,14 @@ int		main(int argc, char **argv, char **envp)
 	setup(argv[0], env);
 	g_state.last_status = 0;
 	if (argc == 3 && ft_strcmp(argv[1], "-l") == 0)
-		return (debug_lexer(argv[2]));
-	if (argc == 3 && ft_strcmp(argv[1], "-p") == 0)
-		return (debug_parser(argv[2]));
-	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
-	{
-		status = execute(env, argv[2]);
-		ft_vecdestroy(env, free);
-		return (status);
-	}
-	repl(env);
+		g_state.last_status = debug_lexer(argv[2]);
+	else if (argc == 3 && ft_strcmp(argv[1], "-p") == 0)
+		g_state.last_status = debug_parser(argv[2]);
+	else if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
+		g_state.last_status = execute(env, argv[2]);
+	else
+		repl(env);
+	ft_vecdestroy(env, free);
 	return (g_state.last_status);
 }
 

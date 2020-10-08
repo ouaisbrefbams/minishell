@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/07 16:43:08 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/08 12:29:52 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@ t_parsed	*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 	if (input == NULL)
 		return (parsed_error("syntax error near unexpected token `newline'\n"));
 	if (!(input->tag & TAG_IS_STR))
-		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
+	{
+		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'\n", input->content);
+		tok_lst_destroy(&input, free);
+		return (ret);
+	}
 	tok_lst_push_back(redirs, tok_lst_uncons(&input));
 	return (parsed_new(NULL, input));
 }
@@ -58,7 +62,11 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 	t_parsed	*tmp;
 
 	if (input->tag & TAG_IS_SEP || input->tag == TAG_PIPE)
-		return (parsed_error("syntax error near unexpected token `%s'\n", input->content));
+	{
+		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'\n", input->content);
+		tok_lst_destroy(&input, free);
+		return (ret);
+	}
 	if ((ast = ast_new(AST_CMD)) == NULL)
 		return (NULL);
 	while (input != NULL)
@@ -69,7 +77,11 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 		{
 			tmp = parse_redir(input, &ast->redirs);
 			if (tmp == NULL || tmp->syntax_error)
+			{
+				tok_lst_destroy(&tmp->rest, free);
+				ast_destroy(ast);
 				return (tmp);
+			}
 			input = tmp->rest;
 			free(tmp);
 		}
@@ -89,33 +101,32 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	if (expr == NULL || expr->syntax_error ||
 		expr->rest == NULL || expr->rest->tag != TAG_PIPE)
 		return (expr);
-	if (expr->rest->next == NULL)
-		return (parsed_error("syntax error expected token\n"));
 	ft_lstpop_front(&expr->rest, free);
+	if (expr->rest == NULL)
+	{
+		ast_destroy(expr->ast);
+		free(expr);
+		/* tok_lst_destroy(expr->rest, free); */
+		return (parsed_error("syntax error expected token\n"));
+	}
 	tail = parse_pipeline(expr->rest);
 	if (tail == NULL || tail->syntax_error)
+	{
+		ast_destroy(expr->ast);
+		free(expr);
 		return (tail);
+	}
 	expr_ast = expr->ast;
 	free(expr);
 	t_ast *pipeline_ast;
 	if (tail->ast->tag == AST_CMD || tail->ast->tag == AST_PARENT)
 	{
 		pipeline_ast = ast_new(AST_PIPELINE);
-		if ((pipeline_ast->pipeline = ft_lstnew(tail->ast)) == NULL)
-		{
-			/* ast_destroy(expr_ast); */
-			/* ft_lstdestroy(&tail, NULL); */
-			return (NULL);
-		}
+		try(pipeline_ast->pipeline = ft_lstnew(tail->ast));
 	}
 	else
 		pipeline_ast = tail->ast;
-	if (ft_lstpush_front_node(&pipeline_ast->pipeline, expr_ast) == NULL)
-	{
-		/* ast_destroy(expr_ast); */
-		/* ft_lstdestroy(&tail, NULL); */
-		return (NULL);
-	}
+	try(ft_lstpush_front_node(&pipeline_ast->pipeline, expr_ast));
 	tail->ast = pipeline_ast;
 	return (tail);
 }
@@ -145,10 +156,18 @@ t_parsed	*parse_op(t_tok_lst *input)
 	if (input == NULL && sep_tag == TAG_END)
 		return (left);
 	if (input == NULL)
+	{
+		ast_destroy(left->ast);
+		free(left);
 		return (parsed_error("syntax error expected token\n"));
+	}
 	right = parse_op(input);
 	if (right == NULL  || right->syntax_error)
+	{
+		ast_destroy(left->ast);
+		free(left);
 		return (right);
+	}
 	if ((ast = ast_new(AST_OP)) == NULL)
 		return (NULL);
 	ast->op.left = left->ast;
