@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/09/17 13:27:44 by nahaddac         ###   ########.fr       */
+/*   Updated: 2020/10/08 14:10:17 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,15 @@ enum e_tok tok_assign_stick(t_tok_lst *tok)
 /*
 ** return tag si
 ** la chaine de character est un str où '' où ''
+** \note the loop after ft_strpbrk is to search again if the quote was escaped
 */
 enum e_tok tok_assign_str(t_tok_lst *tok)
 {
 	char	*found;
 
 	found = ft_strpbrk(tok->content, "'\"");
+	while (found != NULL && found != tok->content && found[-1] == '\\')
+		found = ft_strpbrk(found + 1, "'\"");
 	if (found == NULL)
 		tok->tag = TAG_STR;
 	else if (*found == '\'')
