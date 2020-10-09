@@ -6,13 +6,12 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 12:41:09 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 13:45:24 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-#include <stdio.h>  // for debugging - dont remove
 
 /*
 ** \file   minishell.h
@@ -73,7 +72,9 @@ extern t_state		g_state;
 ** path.c
 */
 
-int					path_search(t_env env, char *exec_name, char exec_path[PATH_MAX + 1], bool print);
+int					path_search(
+						t_env env, char *exec_name,
+						char exec_path[PATH_MAX + 1], bool print);
 
 /*
 ** env.c
@@ -101,7 +102,7 @@ typedef int			(*t_builtin_func)(char **argv, t_env env);
 ** \param func  Associated function
 */
 
-typedef struct
+typedef struct		s_builtin_entry
 {
 	char			*name;
 	t_builtin_func	func;
@@ -123,7 +124,8 @@ int					builtin_exit(char **argv, t_env env);
 */
 
 char				**preprocess(t_tok_lst **tokens, t_env env);
-int					preprocess_filename(t_tok_lst **tokens, t_env env, char **filename);
+int					preprocess_filename(
+						t_tok_lst **tokens, t_env env, char **filename);
 
 /*
 ** signal.c

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/07 16:33:16 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 13:45:41 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # include "lexer.h"
 # include "error.h"
 
-struct s_ast;
+struct					s_ast;
 
 /*
 ** \brief            Operation struct
@@ -121,6 +121,5 @@ t_parsed				*parse(t_tok_lst *input);
 t_parsed		        *parse_op(t_tok_lst *input);
 t_parsed		        *parse_expr(t_tok_lst *input);
 t_parsed               	*parse_cmd(t_tok_lst *input);
-
 
 #endif

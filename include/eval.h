@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/10/06 17:22:12 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 13:40:26 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include "lexer.h"
 # include "parser.h"
 
-typedef struct
+typedef struct		s_fork_param_args
 {
 	t_env			env;
 	t_ast			*ast;
@@ -37,7 +37,7 @@ typedef struct
 	t_builtin_entry	*builtin;
 }					t_fork_param_cmd;
 
-typedef int (*t_wrapped_func)(void *param);
+typedef int			(*t_wrapped_func)(void *param);
 
 # define FD_NONE -2
 # define FD_WRITE 1

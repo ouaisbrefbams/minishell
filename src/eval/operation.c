@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/08 16:59:42 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:00:04 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
 			dup2(prev_output, STDIN_FILENO);
 			close(prev_output);
 		}
-		close(p[FD_WRITE]);
+		/* close(p[FD_WRITE]); */
 		fds[0] = FD_NONE;
 		fds[1] = FD_NONE;
 		exit(eval(fds, env, curr->data));

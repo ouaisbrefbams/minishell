@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/09 12:35:51 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 13:58:05 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,8 +225,8 @@ t_parsed	*parse_expr(t_tok_lst *input)
 			tmp = parse_redir(input, &parsed->ast->redirs);
 			if (tmp == NULL || tmp->syntax_error)
 				return (tmp);
-			free(tmp);
 			input = tmp->rest;
+			free(tmp);
 		}
         parsed->rest = input;
         return (parsed);

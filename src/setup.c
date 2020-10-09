@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 15:46:09 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 11:21:14 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 13:38:34 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,8 @@ bool	setup_env(t_env env)
 		!st_export_default(env, "SHLVL", "1") ||
 		!st_export_default(env, "PATH", "/sbin:"))
 		return (false);
-
-	/* char *path_str = env_search(env, "PATH"); */
-	/* if (ft_strstr(path_str, "/sbin") == NULL) */
-	/* { */
-	/* 	char *value = ft_strjoin("/sbin:", path_str); */
-	/* 	env_export(env, "PATH", value); */
-	/* 	free(value); */
-	/* } */
-
 	if (path_search(env, "env", buf, false) != 0)
-	{
 		ft_strcpy(buf, "/sbin/env");
-		/* errorf("env: command not found\n"); */
-		/* return (127); */
-	}
 	env_export(env, "_", buf);
 	return (true);
 }
