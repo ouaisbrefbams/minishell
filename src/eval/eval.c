@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 14:03:31 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:12:27 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int			eval(int fds[2], t_env env, t_ast *ast)
 	if (ast->tag == AST_CMD)
 		return (eval_cmd(fds, env, ast));
 	if (ast->tag == AST_PIPELINE)
-		return (eval_pipeline(fds, env, ast));
+		return (eval_pipeline(env, ast));
 	if (ast->tag == AST_PARENT)
 		return (eval_parenthesis(fds, env, ast));
 	return (EVAL_FATAL);

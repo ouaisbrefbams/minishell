@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 13:45:41 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:02:40 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,9 @@ typedef struct			s_parsed
 
 t_parsed				*parsed_new(t_ast *ast, t_tok_lst *rest);
 t_parsed				*parsed_error(const char *format, ...);
+t_parsed	*parsed_expected(void);
+t_parsed	*parsed_unexpected(char *content);
+void					parsed_destroy(t_parsed *parsed);
 
 /*
 ** parse.c

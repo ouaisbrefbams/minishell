@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 13:57:22 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 15:51:00 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,27 @@ int		debug_parser(char *input);
 
 t_state	g_state;
 
+int		run_eval(t_env env, t_parsed *parser_out)
+{
+	int	status;
+	int	fds[2];
+
+	fds[0] = FD_NONE;
+	fds[1] = FD_NONE;
+	status = eval(fds, env, parser_out->ast);
+	ast_destroy(parser_out->ast);
+	free(parser_out);
+	if (status == EVAL_FATAL)
+		exit(1);
+	g_state.last_status = status;
+	return (status);
+}
+
 int		execute(t_env env, char *input)
 {
 	t_tok_lst	*lexer_out;
 	int			status;
 	t_parsed	*parser_out;
-	int			fds[2];
 
 	if (utils_strisblank(input))
 		return (0);
@@ -46,15 +61,7 @@ int		execute(t_env env, char *input)
 		free(parser_out);
 		return (2);
 	}
-	fds[0] = FD_NONE;
-	fds[1] = FD_NONE;
-	status = eval(fds, env, parser_out->ast);
-	ast_destroy(parser_out->ast);
-	free(parser_out);
-	if (status == EVAL_FATAL)
-		exit(1);
-	g_state.last_status = status;
-	return (status);
+	return (run_eval(env, parser_out));
 }
 
 int		repl(t_env env)
@@ -65,11 +72,6 @@ int		repl(t_env env)
 	print_prompt();
 	while ((ret = ft_getline(STDIN_FILENO, &line)) == FTGL_OK)
 	{
-		if (*line == '\0')
-		{
-			print_prompt();
-			continue ;
-		}
 		g_state.killed = false;
 		if (execute(env, line) == EVAL_FATAL)
 			return (2);

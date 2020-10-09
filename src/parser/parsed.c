@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 20:27:42 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 14:08:46 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:00:02 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,20 @@ t_parsed	*parsed_error(const char *format, ...)
 	va_end(ap);
 	ft_putchar_fd('\n', STDERR_FILENO);
 	return (err);
+}
+
+t_parsed	*parsed_expected(void)
+{
+	return (parsed_error("syntax error expected token"));
+}
+
+t_parsed	*parsed_unexpected(char *content)
+{
+	return (parsed_error("syntax error near unexpected token `%s'", content));
+}
+
+void		parsed_destroy(t_parsed *parsed)
+{
+	ast_destroy(parsed->ast);
+	free(parsed);
 }

@@ -6,14 +6,13 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/08 14:11:51 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 15:24:31 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-// return token tag corresponding to string id
-enum e_tok                tok_assign_tag(char *content)
+enum e_tok	tok_assign_tag(char *content)
 {
 	if (content[0] == ';')
 		return (TAG_END);
@@ -21,7 +20,7 @@ enum e_tok                tok_assign_tag(char *content)
 		return (TAG_AND);
 	if (ft_strncmp(content, "||", 2) == 0)
 		return (TAG_OR);
-	if(content[0]  == '|')
+	if (content[0] == '|')
 		return (TAG_PIPE);
 	if (content[0] == '>')
 		return (TAG_REDIR_OUT);
@@ -42,14 +41,13 @@ enum e_tok                tok_assign_tag(char *content)
 ** a la fin (char *)tk->tok ne figure pas d'espace.
 */
 
-enum e_tok tok_assign_stick(t_tok_lst *tok)
+enum e_tok	tok_assign_stick(t_tok_lst *tok)
 {
 	int i;
 
 	i = ft_strlen(tok->content);
-	if (i > 0)
-		if (ft_isblank(tok->content[i - 1]))
-			return (tok->tag);
+	if (i > 0 && ft_isblank(tok->content[i - 1]))
+		return (tok->tag);
 	return (tok->tag | TAG_STICK);
 }
 
@@ -58,7 +56,8 @@ enum e_tok tok_assign_stick(t_tok_lst *tok)
 ** la chaine de character est un str où '' où ''
 ** \note the loop after ft_strpbrk is to search again if the quote was escaped
 */
-enum e_tok tok_assign_str(t_tok_lst *tok)
+
+enum e_tok	tok_assign_str(t_tok_lst *tok)
 {
 	char	*found;
 
@@ -74,20 +73,17 @@ enum e_tok tok_assign_str(t_tok_lst *tok)
 	return (tok_assign_stick(tok));
 }
 
-
-// check is char is separator
-int                 	lexer_sep(char c)
+int			lexer_sep(char c)
 {
 	return (ft_strchr(";&|><()", c) != NULL);
 }
 
-// number of starting space character
-int             		lexer_space(char *input)
+int			lexer_space(char *input)
 {
 	return (ft_strspn(input, " \t"));
 }
 
-int             		quote_len(char *input, int i)
+int			quote_len(char *input, int i)
 {
 	char	quote_type;
 

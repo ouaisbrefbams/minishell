@@ -6,13 +6,11 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:36 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/07 10:36:41 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 15:17:45 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "lexer.h"
-#include <stdio.h>
 
 void	del_space(char *str)
 {
@@ -32,7 +30,7 @@ void	del_space(char *str)
 	}
 }
 
-int 	del_quote(char *str)
+int		del_quote(char *str)
 {
 	size_t	i;
 	size_t	quote_counter;

@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:05:30 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 13:40:26 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:12:05 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int					eval_cmd(int fds[2], t_env env, t_ast *ast);
 */
 
 int					eval_operation(int fds[2], t_env env, t_ast *ast);
-int					eval_pipeline(int fds[2], t_env env, t_ast *ast);
+int					eval_pipeline(t_env env, t_ast *ast);
 
 /*
 ** parenthesis.c

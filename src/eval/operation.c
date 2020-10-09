@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 14:54:43 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 16:12:14 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	st_run_piped(
 	return (pid);
 }
 
-int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
+int			eval_pipeline(t_env env, t_ast *ast)
 {
 	t_ftlst	*curr;
 	int		pipes[3];
