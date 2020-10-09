@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:20 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 11:51:47 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 08:41:17 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,26 +26,33 @@
 
 int	builtin_cd(char **argv, t_env env)
 {
-	char	buf[PATH_MAX + 1];
+	char	cwd[PATH_MAX + 1];
+	char	*oldwd;
 	char	*home;
 
 	(void)env;
-	/* if (argv[1] != NULL && argv[2] != NULL) */
-	/* 	return (1); //errorf_ret(1, "cd: too many arguments\n")); */
+	oldwd = env_search(env, "PWD", NULL);
+	if (oldwd == NULL)
+		oldwd = "";
 	if (argv[1] != NULL && argv[1][0] == '\0')
+	{
+		if (env_export(env, "OLDPWD", oldwd) == NULL)
+			return (EVAL_FATAL);
 		return (0);
+	}
 	if (argv[1] == NULL)
 	{
 		if ((home = env_search(env, "HOME", NULL)) == NULL)
 			return (errorf_ret(1, "cd: HOME not set\n"));
 		argv[1] = home;
 	}
-	errno = 0;
 	if (chdir(argv[1]) == -1)
 		return (errorf_ret(1, "cd: %s: %s\n", argv[1], strerror(errno)));
-	if (getcwd(buf, PATH_MAX) == NULL)
+	if (env_export(env, "OLDPWD", oldwd) == NULL)
+		return (EVAL_FATAL);
+	if (getcwd(cwd, PATH_MAX) == NULL)
 		return (1);
-	if (env_export(env, "PWD", buf) == NULL)
+	if (env_export(env, "PWD", cwd) == NULL)
 		return (EVAL_FATAL);
 	return (0);
 }

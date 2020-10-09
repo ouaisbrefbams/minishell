@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/08 17:43:06 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 08:11:23 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	print_prompt(void)
 
 void	exit_if(bool predicate)
 {
-	if (predicate)
+	if (!predicate)
 		return ;
 	ft_putendl_fd("minishell: fatal error", STDERR_FILENO);
 	exit(3);
