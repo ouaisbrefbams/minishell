@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/08 17:42:53 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 11:10:55 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,9 @@ t_parsed	*parse_op(t_tok_lst *input)
 	sep_tag = input->tag;
 	if (!(sep_tag & TAG_IS_SEP))
 	{
+		ast_destroy(left->ast);
+		tok_lst_destroy(&left->rest, free);
+		free(left);
 		return (parsed_error("syntax error near unexpected token `%s'",
 				g_sep_str_lookup[sep_tag]));
 	}

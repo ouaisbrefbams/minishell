@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/08 11:36:46 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 09:39:22 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,9 @@ int		repl(t_env env)
 			return (2);
 		g_child_pid = -1;
 		print_prompt();
+		free(line);
 	}
+	free(line);
 	if (ret != FTGL_EOF)
 		return (2);
 	return (0);
@@ -101,7 +103,7 @@ int		main(int argc, char **argv, char **envp)
 	if ((env = env_from_array(envp)) == NULL)
 		return (1);
 	setup(argv[0], env);
-	/* g_state.child_pid = 0; */
+	g_state.child_pid = -1;
 	repl(env);
 	ft_vecdestroy(env, free);
 	return (g_state.last_status);
