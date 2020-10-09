@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:11:34 by charles           #+#    #+#             */
-/*   Updated: 2020/10/08 16:59:28 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 12:50:37 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,16 @@ static void	st_put_declare_x(char *s)
 }
 
 /*
+** \brief      Garbage function for norm complience
+*/
+
+int			st_declare_x_iter(t_env env)
+{
+	ft_veciter(env, (void (*)(void*))st_put_declare_x);
+	return (0);
+}
+
+/*
 ** \brief       Export variables to the environment
 ** \param argv  arguments
 ** \param env   environment
@@ -62,16 +72,12 @@ int			builtin_export(char **argv, t_env env)
 	char	*equal_ptr;
 
 	if (argv[1] == NULL)
-	{
-		ft_veciter(env, (void (*)(void*))st_put_declare_x);
-		return (0);
-	}
+		return (st_declare_x_iter(env));
 	status = 0;
 	i = 0;
 	while (argv[++i] != NULL)
 	{
-		equal_ptr = ft_strchr(argv[i], '=');
-		if (equal_ptr != NULL)
+		if ((equal_ptr = ft_strchr(argv[i], '=')) != NULL)
 			*equal_ptr = '\0';
 		if (*argv[i] == '\0'
 			|| env_key_len(argv[i], false) != ft_strlen(argv[i]))
@@ -80,9 +86,8 @@ int			builtin_export(char **argv, t_env env)
 				*equal_ptr = '=';
 			errorf("export: `%s': not a valid identifier\n", argv[i]);
 			status = 1;
-			continue;
 		}
-		if (equal_ptr != NULL
+		else if (equal_ptr != NULL
 			&& env_export(env, argv[i], equal_ptr + 1) == NULL)
 			return (EVAL_FATAL);
 	}

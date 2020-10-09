@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 09:29:51 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 13:36:26 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,40 +53,47 @@ static bool		st_dir_search(
 	return (false);
 }
 
+static int		st_path_search_iter(
+	char *exec_name, char exec_path[PATH_MAX + 1], char **current_dir)
+{
+	char	*collon;
+	char	cwd[PATH_MAX + 1];
+
+	while ((collon = ft_strchr(*current_dir, ':')) != NULL)
+	{
+		*collon = '\0';
+		if (**current_dir == '\0')
+			*current_dir = getcwd(cwd, PATH_MAX + 1);
+		if (st_dir_search(*current_dir, exec_name, exec_path))
+		{
+			*collon = ':';
+			return (st_path_check(exec_path, false));
+		}
+		*collon = ':';
+		*current_dir = collon + 1;
+	}
+	return (-1);
+}
+
 int				path_search(
 	t_env env, char *exec_name, char exec_path[PATH_MAX + 1], bool print)
 {
 	char	*current_dir;
-	char	*collon;
 	char	cwd[PATH_MAX + 1];
+	int		status;
 
-	if (ft_strchr(exec_name, '/') != NULL)
-	{
-		ft_strcpy(exec_path, exec_name);
-		return (st_path_check(exec_path, false));
-	}
-	if ((current_dir = env_search(env, "PATH", NULL)) == NULL)
+	if (ft_strchr(exec_name, '/') != NULL ||
+		(current_dir = env_search(env, "PATH", NULL)) == NULL)
 		return (st_path_check(ft_strcpy(exec_path, exec_name), false));
 	if (*current_dir == '\0')
 	{
-		ft_strcpy(exec_path, exec_name);
 		if (print)
-			return (st_path_check(exec_name, false));
+			return (st_path_check(ft_strcpy(exec_path, exec_name), false));
 		return (0);
 	}
-	while ((collon = ft_strchr(current_dir, ':')) != NULL)
-	{
-		*collon = '\0';
-		if (*current_dir == '\0')
-			current_dir = getcwd(cwd, PATH_MAX + 1);
-		if (st_dir_search(current_dir, exec_name, exec_path))
-		{
-			*collon = ':';
-			return (st_path_check(exec_path, true));
-		}
-		*collon = ':';
-		current_dir = collon + 1;
-	}
+	status = st_path_search_iter(exec_name, exec_path, &current_dir);
+	if (status != -1)
+		return (status);
 	if (*current_dir == '\0')
 		current_dir = getcwd(cwd, PATH_MAX + 1);
 	if (st_dir_search(current_dir, exec_name, exec_path))
