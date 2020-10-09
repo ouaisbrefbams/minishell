@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/07 12:24:27 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 09:15:09 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,14 @@ int				path_search(
 		return (st_path_check(exec_path, false));
 	}
 	if ((current_dir = env_search(env, "PATH", NULL)) == NULL)
-		return (st_dir_search(getcwd(cwd, PATH_MAX + 1), exec_name, exec_path));
+		return (st_path_check(ft_strcpy(exec_path, exec_name), false));
+	if (*current_dir == '\0')
+	{
+		ft_strcpy(exec_path, exec_name);
+		if (print)
+			return (st_path_check(exec_name, false));
+		return (0);
+	}
 	while ((collon = ft_strchr(current_dir, ':')) != NULL)
 	{
 		*collon = '\0';
