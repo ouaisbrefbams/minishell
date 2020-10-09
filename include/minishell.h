@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 13:45:24 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 20:40:08 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,5 +148,8 @@ bool				utils_strisblank(char *str);
 */
 
 bool				setup(char *first_arg, t_env env);
+
+size_t				interpolate(
+	char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_tag, t_env env);
 
 #endif

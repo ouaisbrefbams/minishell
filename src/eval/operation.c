@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 16:12:14 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 20:39:33 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int			eval_pipeline(t_env env, t_ast *ast)
 	int		pid;
 
 	pipes[PIPES_PREV_OUTPUT] = STDIN_FILENO;
+	pipes[FD_READ] = -1;
 	curr = ast->pipeline;
 	while (curr->next != NULL)
 	{
