@@ -1,4 +1,4 @@
-# minishell
+# minishell [![forthebadge](https://forthebadge.com/images/badges/just-plain-nasty.svg)](https://forthebadge.com)
 
 minishell project of school 42.
 
