@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/09 11:10:55 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 12:35:51 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	{
 		ast_destroy(expr->ast);
 		free(expr);
-		/* tok_lst_destroy(expr->rest, free); */
 		return (parsed_error("syntax error expected token"));
 	}
 	tail = parse_pipeline(expr->rest);
@@ -211,7 +210,11 @@ t_parsed	*parse_expr(t_tok_lst *input)
 			return (parsed);
         input = parsed->rest;
 		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
+		{
+			ast_destroy(parsed->ast);
+			free(parsed);
 			return (parsed_error("syntax error expected token"));
+		}
 		tok_lst_pop_front(&input, free);
         if ((ast = ast_new(AST_PARENT)) == NULL)
 			return (NULL);

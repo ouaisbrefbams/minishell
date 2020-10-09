@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 09:39:22 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 12:39:36 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,6 @@
 int		debug_lexer(char *input);
 int		debug_parser(char *input);
 
-/*
-** TODO
-** signal whole line
-** path optimisation on command not found
-** path tricks
-*/
-
 t_state	g_state;
 
 int		execute(t_env env, char *input)
@@ -39,6 +32,8 @@ int		execute(t_env env, char *input)
 	t_parsed	*parser_out;
 	int			fds[2];
 
+	if (utils_strisblank(input))
+		return (0);
 	status = lexer(input, &lexer_out);
 	if (status != 0)
 	{

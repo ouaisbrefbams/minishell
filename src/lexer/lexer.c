@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/08 09:21:55 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 12:29:32 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,22 +108,9 @@ t_tok_lst				*create_token_list(char *input, t_tok_lst **lst)
 int     			lexer(char *input, t_tok_lst **out)
 {
 	int status;
-	/* t_tok_lst	*curr; */
 
-	if (!input)
-		return (2);
 	*out = NULL;
 	*out = create_token_list(input, out);
 	status = lexer_trim(*out);
-	/* curr = *out; */
-	/* while (curr != NULL) */
-	/* { */
-	/* 	if (!(curr->tag & TAG_IS_STR)) */
-	/* 	{ */
-	/* 		free(curr->content); */
-	/* 		curr->content = NULL; */
-	/* 	} */
-	/* 	curr = curr->next; */
-	/* } */
 	return (status);
 }

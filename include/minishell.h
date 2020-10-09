@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/08 17:42:07 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 12:41:09 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ void				signal_sigterm(int signum);
 
 void				print_prompt(void);
 void				exit_if(bool predicate);
+bool				utils_strisblank(char *str);
 
 /*
 ** setup.c

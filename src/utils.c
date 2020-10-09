@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 08:11:23 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 12:40:51 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,15 @@ void	exit_if(bool predicate)
 		return ;
 	ft_putendl_fd("minishell: fatal error", STDERR_FILENO);
 	exit(3);
+}
+
+bool	utils_strisblank(char *str)
+{
+	while (*str != '\0')
+	{
+		if (!ft_isblank(*str))
+			return (false);
+		str++;
+	}
+	return (true);
 }
