@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/09 13:58:05 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:30:29 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 ** \brief  Parser
 */
 
-#include "parser.h"
 #include "minishell.h"
+#include "parser.h"
 
 static char *g_sep_str_lookup[] = {
 	[TAG_END] = ";",
@@ -24,10 +24,10 @@ static char *g_sep_str_lookup[] = {
 	[TAG_OR] = "||",
 	[TAG_PIPE] = "|",
 	[TAG_REDIR_IN] = "<",
-	[TAG_REDIR_OUT] = ">",
 	[TAG_REDIR_APPEND] = ">>",
-	[TAG_PARENT_OPEN] = "(",
 	[TAG_PARENT_CLOSE] = ")",
+	[TAG_REDIR_OUT] = ">",
+	[TAG_PARENT_OPEN] = "(",
 };
 
 /*
@@ -38,18 +38,17 @@ static char *g_sep_str_lookup[] = {
 
 t_parsed	*parse_redir(t_tok_lst *input, t_tok_lst **redirs)
 {
+	t_parsed *ret;
+
 	tok_lst_push_back(redirs, tok_lst_uncons(&input));
-	// FIXME big condition could be avoided with lexer not putting STICK
-	// if the next tokens isn't a string
-	while (input != NULL
-			&& input->tag & TAG_IS_STR && input->tag & TAG_STICK
-			&& input->next != NULL && input->next->tag & TAG_IS_STR)
+	while (input != NULL && input->tag & TAG_IS_STR && input->tag & TAG_STICK &&
+			input->next != NULL && input->next->tag & TAG_IS_STR)
 		tok_lst_push_back(redirs, tok_lst_uncons(&input));
 	if (input == NULL)
 		return (parsed_error("syntax error near unexpected token `newline'"));
 	if (!(input->tag & TAG_IS_STR))
 	{
-		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'", input->content);
+		ret = parsed_error("syntax error near unexpected token `%s'", input->content);
 		tok_lst_destroy(&input, free);
 		return (ret);
 	}
@@ -64,9 +63,9 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 
 	if (input->tag & TAG_IS_SEP || input->tag == TAG_PIPE || input->tag == TAG_PARENT_CLOSE)
 	{
-		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'", input->content);
+		tmp = parsed_error("syntax error near unexpected token `%s'", input->content);
 		tok_lst_destroy(&input, free);
-		return (ret);
+		return (tmp);
 	}
 	if ((ast = ast_new(AST_CMD)) == NULL)
 		return (NULL);
@@ -87,7 +86,7 @@ t_parsed	*parse_cmd(t_tok_lst *input)
 			free(tmp);
 		}
 		else
-			break;
+			break ;
 	}
 	return (parsed_new(ast, input));
 }
@@ -97,10 +96,10 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	t_parsed	*expr;
 	t_parsed	*tail;
 	t_ast		*expr_ast;
+	t_ast		*pipeline_ast;
 
 	expr = parse_expr(input);
-	if (expr == NULL || expr->syntax_error ||
-		expr->rest == NULL || expr->rest->tag != TAG_PIPE)
+	if (expr == NULL || expr->syntax_error || expr->rest == NULL || expr->rest->tag != TAG_PIPE)
 		return (expr);
 	tok_lst_pop_front(&expr->rest, free);
 	if (expr->rest == NULL)
@@ -118,7 +117,6 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	}
 	expr_ast = expr->ast;
 	free(expr);
-	t_ast *pipeline_ast;
 	if (tail->ast->tag == AST_CMD || tail->ast->tag == AST_PARENT)
 	{
 		pipeline_ast = ast_new(AST_PIPELINE);
@@ -156,8 +154,8 @@ t_parsed	*parse_op(t_tok_lst *input)
 		ast_destroy(left->ast);
 		tok_lst_destroy(&left->rest, free);
 		free(left);
-		return (parsed_error("syntax error near unexpected token `%s'",
-				g_sep_str_lookup[sep_tag]));
+		return (parsed_error(
+			"syntax error near unexpected token `%s'", g_sep_str_lookup[sep_tag]));
 	}
 	tok_lst_pop_front(&input, free);
 	if (input == NULL && sep_tag == TAG_END)
@@ -172,7 +170,7 @@ t_parsed	*parse_op(t_tok_lst *input)
 		return (parsed_error("syntax error expected token"));
 	}
 	right = parse_op(input);
-	if (right == NULL  || right->syntax_error)
+	if (right == NULL || right->syntax_error)
 	{
 		ast_destroy(left->ast);
 		free(left);
@@ -196,19 +194,19 @@ t_parsed	*parse_op(t_tok_lst *input)
 
 t_parsed	*parse_expr(t_tok_lst *input)
 {
-    t_parsed	*parsed;
-    t_parsed	*tmp;
+	t_parsed	*parsed;
+	t_parsed	*tmp;
 	t_ast		*ast;
 
-    if (input->tag & TAG_PARENT_OPEN)
-    {
+	if (input->tag & TAG_PARENT_OPEN)
+	{
 		tok_lst_pop_front(&input, free);
 		if (input == NULL)
 			return (parsed_error("syntax error expected token"));
 		parsed = parse_op(input);
-        if (parsed == NULL || parsed->syntax_error)
+		if (parsed == NULL || parsed->syntax_error)
 			return (parsed);
-        input = parsed->rest;
+		input = parsed->rest;
 		if (input == NULL || !(input->tag & TAG_PARENT_CLOSE))
 		{
 			ast_destroy(parsed->ast);
@@ -216,10 +214,10 @@ t_parsed	*parse_expr(t_tok_lst *input)
 			return (parsed_error("syntax error expected token"));
 		}
 		tok_lst_pop_front(&input, free);
-        if ((ast = ast_new(AST_PARENT)) == NULL)
+		if ((ast = ast_new(AST_PARENT)) == NULL)
 			return (NULL);
-        ast->parent_ast = parsed->ast;
-        parsed->ast = ast;
+		ast->parent_ast = parsed->ast;
+		parsed->ast = ast;
 		while (input != NULL && input->tag & TAG_IS_REDIR)
 		{
 			tmp = parse_redir(input, &parsed->ast->redirs);
@@ -228,26 +226,30 @@ t_parsed	*parse_expr(t_tok_lst *input)
 			input = tmp->rest;
 			free(tmp);
 		}
-        parsed->rest = input;
-        return (parsed);
-    }
-    return (parse_cmd(input));
+		parsed->rest = input;
+		return (parsed);
+	}
+	return (parse_cmd(input));
 }
 
 t_parsed	*parse(t_tok_lst *input)
 {
+	t_parsed	*parsed;
+	t_parsed	*ret;
+
 	if (input == NULL)
 		return (NULL);
-	t_parsed *parsed = parse_op(input);
+	parsed = parse_op(input);
 	if (parsed == NULL || parsed->syntax_error)
-		return parsed;
+		return (parsed);
 	if (parsed->rest != NULL)
 	{
-		t_parsed *ret = parsed_error("syntax error near unexpected token `%s'", parsed->rest->content);
+		ret = parsed_error(
+			"syntax error near unexpected token `%s'", parsed->rest->content);
 		tok_lst_destroy(&parsed->rest, free);
 		ast_destroy(parsed->ast);
 		free(parsed);
-		return ret;
+		return (ret);
 	}
 	return (parsed);
 }

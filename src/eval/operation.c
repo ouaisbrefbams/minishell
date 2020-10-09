@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 14:00:04 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:54:43 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,63 +33,56 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 	return (eval(right_fds, env, ast->op.right));
 }
 
-int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
+#define PIPES_PREV_OUTPUT 2
+
+static int	st_run_piped(
+	t_env env, t_ast *ast, int pipes[3], bool is_last)
 {
-	t_ftlst	*curr;
-	/* t_ftvec	*pids; */
-	int	p[2];
-	int prev_output;
+	pid_t	pid;
+	int		fds[2];
 
-	/* pids = ft_vecnew(16); */
-
-	prev_output = STDIN_FILENO;
-	curr = ast->pipeline;
-
-	while (curr->next != NULL)
-	{
-		pipe(p);
-
-		int pid = fork();
-		if (pid == 0)
-		{
-			g_state.is_child = true;
-			dup2(p[FD_WRITE], STDOUT_FILENO);
-			if (prev_output != STDIN_FILENO)
-			{
-				dup2(prev_output, STDIN_FILENO);
-				close(prev_output);
-			}
-			close(p[FD_READ]);
-			fds[0] = FD_NONE;
-			fds[1] = FD_NONE;
-			exit(eval(fds, env, curr->data));
-		}
-		close(p[FD_WRITE]);
-		if (prev_output != STDIN_FILENO)
-			close(prev_output);
-		prev_output = p[FD_READ];
-		curr = curr->next;
-	}
-
-	int pid = fork();
+	if ((pid = fork()) == -1)
+		return (EVAL_FATAL);
 	if (pid == 0)
 	{
 		g_state.is_child = true;
-		if (prev_output != STDIN_FILENO)
+		if (!is_last)
+			dup2(pipes[FD_WRITE], STDOUT_FILENO);
+		if (pipes[PIPES_PREV_OUTPUT] != STDIN_FILENO)
 		{
-			dup2(prev_output, STDIN_FILENO);
-			close(prev_output);
+			dup2(pipes[PIPES_PREV_OUTPUT], STDIN_FILENO);
+			close(pipes[PIPES_PREV_OUTPUT]);
 		}
-		/* close(p[FD_WRITE]); */
+		if (!is_last)
+			close(pipes[FD_READ]);
 		fds[0] = FD_NONE;
 		fds[1] = FD_NONE;
-		exit(eval(fds, env, curr->data));
+		exit(eval(fds, env, ast));
 	}
+	return (pid);
+}
+
+int			eval_pipeline(int fds[2], t_env env, t_ast *ast)
+{
+	t_ftlst	*curr;
+	int		pipes[3];
+	int		pid;
+
+	pipes[PIPES_PREV_OUTPUT] = STDIN_FILENO;
+	curr = ast->pipeline;
+	while (curr->next != NULL)
+	{
+		pipe(pipes);
+		st_run_piped(env, curr->data, pipes, false);
+		close(pipes[FD_WRITE]);
+		if (pipes[PIPES_PREV_OUTPUT] != STDIN_FILENO)
+			close(pipes[PIPES_PREV_OUTPUT]);
+		pipes[PIPES_PREV_OUTPUT] = pipes[FD_READ];
+		curr = curr->next;
+	}
+	pid = st_run_piped(env, curr->data, pipes, true);
 	g_child_pid = pid;
-	close(p[FD_READ]);
-
-	/* int status = 0; */
-
+	close(pipes[FD_READ]);
 	waitpid(pid, &pid, 0);
 	while (wait(NULL) != -1)
 		;

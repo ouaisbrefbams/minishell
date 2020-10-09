@@ -6,20 +6,17 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 15:02:21 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:03:31 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
-int st_replace(int oldfd, int newfd)
+static int	st_replace(int oldfd, int newfd)
 {
 	if (oldfd != FD_NONE)
-	{
 		dup2(oldfd, newfd);
-		/* close(oldfd); */
-	}
-	return 0;
+	return (0);
 }
 
 /*
@@ -41,7 +38,7 @@ int			fork_wrap(int fds[2], void *passed, t_wrapped_func wrapped)
 		return (EVAL_FATAL);
 	if (pid == 0)
 	{
-			g_state.is_child = true;
+		g_state.is_child = true;
 		if (st_replace(fds[FD_READ], STDIN_FILENO) != 0)
 			exit(EXIT_FAILURE);
 		if (st_replace(fds[FD_WRITE], STDOUT_FILENO) != 0)

@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 20:27:42 by charles           #+#    #+#             */
-/*   Updated: 2020/10/08 17:07:35 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:08:46 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_parsed	*parsed_new(t_ast *ast, t_tok_lst *rest)
 	ret->syntax_error = false;
 	ret->rest = rest;
 	ret->ast = ast;
-	return ret;
+	return (ret);
 }
 
 t_parsed	*parsed_error(const char *format, ...)

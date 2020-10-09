@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/10/08 10:15:07 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:31:45 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 pid_t	g_child_pid = -1;
 
-int			wrapped_cmd(t_fork_param_cmd *param)
+static int	st_wrapped_cmd(t_fork_param_cmd *param)
 {
 	int	status;
 
@@ -30,6 +30,12 @@ int			wrapped_cmd(t_fork_param_cmd *param)
 	return (status);
 }
 
+static int	st_split_destroy_ret(int ret, char **strs)
+{
+	ft_split_destroy(strs);
+	return (ret);
+}
+
 int			eval_cmd(int fds[2], t_env env, t_ast *ast)
 {
 	t_fork_param_cmd	param;
@@ -40,31 +46,20 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast)
 		return (status);
 	if ((argv = preprocess(&ast->cmd_argv, env)) == NULL)
 		return (EVAL_FATAL);
-	/* printf("%p\n", ast->cmd_argv); */
-	/* ast->cmd_argv = NULL; */
 	if (argv[0] == NULL)
-	{
-		ft_split_destroy(argv);
-		return (0);
-	}
+		return (st_split_destroy_ret(0, argv));
 	param.builtin = builtin_search_func(argv[0]);
 	if (param.builtin != NULL && !param.builtin->forked)
 	{
 		status = param.builtin->func(argv, env);
-		ft_split_destroy(argv);
-		return (status);
+		return (st_split_destroy_ret(status, argv));
 	}
-
 	if (param.builtin == NULL
 		&& (status = path_search(env, argv[0], param.exec_path, true)) != 0)
-	{
-		ft_split_destroy(argv);
-		return (status);
-	}
-
+		return (st_split_destroy_ret(status, argv));
 	param.argv = argv;
 	param.env = env;
-	status = fork_wrap(fds, &param, (t_wrapped_func)wrapped_cmd);
+	status = fork_wrap(fds, &param, (t_wrapped_func)st_wrapped_cmd);
 	ft_split_destroy(argv);
 	g_state.last_status = status;
 	return (status);

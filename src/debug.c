@@ -6,10 +6,9 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 15:58:35 by charles           #+#    #+#             */
-/*   Updated: 2020/10/08 11:37:57 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/09 14:27:40 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdio.h>
 
 #include "lexer.h"
 #include "parser.h"
@@ -55,7 +54,6 @@ void print_level(int level)
 
 void ast_print(int level, t_ast *ast)
 {
-	/* printf("%p\n", ast); */
 	if (ast == NULL)
 		return ;
 	if (ast->tag == AST_PARENT)
@@ -71,12 +69,6 @@ void ast_print(int level, t_ast *ast)
 		print_level(level);
 		printf("pipeline: {\n");
 		t_ftlst *curr = ast->pipeline;
-		/* printf("%p\n", curr); */
-		/* printf("%p\n", curr->next); */
-		/* printf("%p\n", curr->next->next); */
-
-		/* printf("%p\n", curr->data); */
-		/* printf("%p\n", curr->next->); */
 		while (curr != NULL)
 		{
 			ast_print(level + 1, (t_ast*)curr->data);
@@ -96,21 +88,14 @@ void ast_print(int level, t_ast *ast)
 		printf(" ]");
 	}
 	else if (ast->tag == AST_OP) {
-		/* printf("SEP: %d\n", ast->op.sep); */
-		/* printf("redirs: ["); */
-		/* ft_lstiter(ast->redirs, token_put); */
-		/* printf(" ] "); */
 		printf("{\n");
-
 		print_level(level);
 		printf(" left:\n");
 		ast_print(level + 1, ast->op.left);
-
 		printf("\n");
 		print_level(level);
 		printf(" right:\n");
 		ast_print(level + 1, ast->op.right);
-
 		printf("\n");
 		print_level(level);
 		printf("}\n");

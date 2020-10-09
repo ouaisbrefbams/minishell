@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/09/16 16:17:09 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/09 14:38:16 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,14 @@ static int	st_open_replace_dispatch(char *filename, int fds[2], enum e_tok tag)
 	return (st_open_replace(filename, fd, oflag));
 }
 
+static int	st_tok_lsts_destroy_ret(
+	int ret, t_tok_lst **tokens1, t_tok_lst **tokens2)
+{
+	tok_lst_destroy(tokens1, free);
+	tok_lst_destroy(tokens2, free);
+	return (ret);
+}
+
 int			redir_extract(t_tok_lst **redirs, t_env env, int fds[2])
 {
 	t_tok_lst	*after;
@@ -65,9 +73,6 @@ int			redir_extract(t_tok_lst **redirs, t_env env, int fds[2])
 
 	if (*redirs == NULL)
 		return (0);
-	if (!((*redirs)->tag & TAG_IS_REDIR) || (*redirs)->next == NULL
-		|| !((*redirs)->next->tag & TAG_IS_STR))
-		return (EVAL_FATAL);
 	curr = (*redirs)->next;
 	after = NULL;
 	while (curr != NULL && curr->tag & TAG_IS_STR)
@@ -80,17 +85,9 @@ int			redir_extract(t_tok_lst **redirs, t_env env, int fds[2])
 		curr = curr->next;
 	}
 	if ((status = preprocess_filename(&(*redirs)->next, env, &filename)))
-	{
-		tok_lst_destroy(redirs, free);
-		tok_lst_destroy(&after, free);
-		return (status);
-	}
+		return (st_tok_lsts_destroy_ret(status, redirs, &after));
 	if ((status = st_open_replace_dispatch(filename, fds, (*redirs)->tag)) != 0)
-	{
-		tok_lst_destroy(redirs, free);
-		tok_lst_destroy(&after, free);
-		return (status);
-	}
+		return (st_tok_lsts_destroy_ret(status, redirs, &after));
 	tok_lst_destroy(redirs, free);
 	free(filename);
 	return (redir_extract(&after, env, fds));
