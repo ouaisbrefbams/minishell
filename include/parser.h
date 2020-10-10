@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 07:37:55 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 09:20:53 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,6 @@ typedef struct			s_ast
 t_ast					*ast_new(enum e_ast tag);
 void					ast_destroy(t_ast *ast);
 
-/*
-** parsed.c
-*/
-
 typedef struct			s_parsed
 {
 	bool				syntax_error;
@@ -109,11 +105,21 @@ typedef struct			s_parsed
 	t_tok_lst			*rest;
 }						t_parsed;
 
+/*
+** parsed.c
+*/
+
 t_parsed				*parsed_new(t_ast *ast, t_tok_lst *rest);
+void					parsed_destroy(t_parsed *parsed);
+
+/*
+** parsed_error.c
+*/
+
 t_parsed				*parsed_error(const char *format, ...);
 t_parsed				*parsed_expected(void);
 t_parsed				*parsed_unexpected(char *content);
-void					parsed_destroy(t_parsed *parsed);
+bool					parsed_err(t_parsed *parsed);
 
 /*
 ** parse.c
@@ -121,6 +127,11 @@ void					parsed_destroy(t_parsed *parsed);
 
 t_parsed				*parse(t_tok_lst *input);
 t_parsed				*parse_op(t_tok_lst *input);
+
+/*
+** parse.c
+*/
+
 t_parsed				*parse_expr(t_tok_lst *input);
 t_parsed				*parse_cmd(t_tok_lst *input);
 
