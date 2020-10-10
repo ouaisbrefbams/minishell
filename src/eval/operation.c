@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/10 13:01:56 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 18:17:15 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 **             stat code of the right hand side otherwise.
 */
 
-int			eval_operation(int fds[2], t_env env, t_ast *ast)
+int				eval_operation(int fds[2], t_env env, t_ast *ast)
 {
 	int	status;
 	int	left_fds[2];
@@ -44,7 +44,20 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 
 #define PIPES_PREV_OUTPUT 2
 
-static int	st_run_piped(
+/*
+** \brief          Evaluate a piped expression (i.e command or parenthesis)
+** \param env      Environment
+** \param ast      AST of the expression to evaluate
+** \param pipes    File descriptor to setup in the child
+**                 pipes[0] - read end
+**                 pipes[1] - write end
+**                 pipes[2] - output of the previous command
+** \param is_last  Setup file dscriptors differently if
+**                 it's the last expression in the pipeline
+** \return         pid of the child process
+*/
+
+static pid_t	st_run_piped(
 	t_env env, t_ast *ast, int pipes[3], bool is_last)
 {
 	pid_t	pid;
@@ -78,7 +91,7 @@ static int	st_run_piped(
 ** \return     Status of the last command in the pipeline
 */
 
-int			eval_pipeline(t_env env, t_ast *ast)
+int				eval_pipeline(t_env env, t_ast *ast)
 {
 	t_ftlst	*curr;
 	int		pipes[3];

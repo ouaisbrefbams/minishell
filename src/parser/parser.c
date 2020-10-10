@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/10 09:24:28 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 18:38:37 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "minishell.h"
 #include "parser.h"
 
-static char *g_sep_str_lookup[] = {
+static char		*g_sep_str_lookup[] = {
 	[TAG_END] = ";",
 	[TAG_OR] = "||",
 	[TAG_REDIR_IN] = "<",
@@ -30,13 +30,21 @@ static char *g_sep_str_lookup[] = {
 	[TAG_PARENT_OPEN] = "(",
 };
 
-t_parsed	*destroy_ret(t_parsed *destroyed, t_parsed *ret)
+t_parsed		*destroy_ret(t_parsed *destroyed, t_parsed *ret)
 {
 	parsed_destroy(destroyed);
 	return (ret);
 }
 
-t_parsed	*parse_pipeline(t_tok_lst *input)
+/*
+** \brief        Parse a expression pipeline
+** \param input  Input tokens
+** \return       Parsed containning a pipeline of expression
+**               Parsed error if a pipe is missing
+**               or the expression parser return an error
+*/
+
+t_parsed		*parse_pipeline(t_tok_lst *input)
 {
 	t_parsed	*expr;
 	t_parsed	*tail;
@@ -65,7 +73,17 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	return (tail);
 }
 
-t_parsed	*parse_op_build(t_parsed *left, t_parsed *right, enum e_tok sep_tag)
+/*
+** \brief          Build a operation AST node from left, right components
+**                 and a separator tag
+** \param left     Left hand side of the operation
+** \param right    Right hand side of the operation
+** \param sep_tag  Separator tag of the operation
+** \return         Parsed containning an operation AST
+*/
+
+static t_parsed	*st_parse_op_build(
+	t_parsed *left, t_parsed *right, enum e_tok sep_tag)
 {
 	t_ast	*ast;
 
@@ -73,17 +91,21 @@ t_parsed	*parse_op_build(t_parsed *left, t_parsed *right, enum e_tok sep_tag)
 	ast->op.left = left->ast;
 	ast->op.right = right->ast;
 	ast->op.sep = sep_tag;
-	free(left);
-	left = parsed_new(ast, right->rest);
+	left->rest = right->rest;
+	left->ast = ast;
 	free(right);
 	return (left);
 }
 
 /*
-** parse and operation (| ; && ||)
+** \brief        Parse an operation (&&, ||, ;)
+** \param input  Input tokens
+** \return       Parsed containning an operation AST
+**               Parsed error if separator isn't valid
+**               or left/right parser failed
 */
 
-t_parsed	*parse_op(t_tok_lst *input)
+t_parsed		*parse_op(t_tok_lst *input)
 {
 	t_parsed	*left;
 	t_parsed	*right;
@@ -109,10 +131,17 @@ t_parsed	*parse_op(t_tok_lst *input)
 	right = parse_op(input);
 	if (parsed_check(right))
 		return (destroy_ret(left, right));
-	return (parse_op_build(left, right, sep_tag));
+	return (st_parse_op_build(left, right, sep_tag));
 }
 
-t_parsed	*parse(t_tok_lst *input)
+/*
+** \brief        Parse the lexer output into an AST
+** \param input  Lexer output, a list of tokens
+** \return       Parsed containning the AST to evaluate
+**               Parsed error if one of the parser failed
+*/
+
+t_parsed		*parse(t_tok_lst *input)
 {
 	t_parsed	*parsed;
 	t_parsed	*ret;
