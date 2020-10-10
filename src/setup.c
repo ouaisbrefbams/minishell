@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 15:46:09 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 13:38:34 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 08:08:35 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,5 @@ bool	setup(char *first_arg, t_env env)
 	signal(SIGQUIT, signal_sigquit);
 	signal(SIGTERM, signal_sigterm);
 	setup_progname(first_arg);
-	ft_bzero(g_state.pids, STATE_PIDS_MAX_SIZE);
-	g_state.pids_len = 0;
 	return (setup_env(env) || setup_shlvl(env));
 }

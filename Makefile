@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/10/08 13:46:23 by cacharle         ###   ########.fr        #
+#    Updated: 2020/10/10 08:11:22 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ SRC = $(shell find $(SRCDIR) -type f -name "*.c")
 OBJ = $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 CC = gcc
-CCFLAGS = -g -I$(LIBFTDIR)/include -I$(INCLUDEDIR) -Wall -Wextra #-Werror
+CCFLAGS = -g -O2 -I$(LIBFTDIR)/include -I$(INCLUDEDIR) -Wall -Wextra #-Werror
 LDFLAGS = -L$(LIBFTDIR) -lft
 
 NAME = minishell

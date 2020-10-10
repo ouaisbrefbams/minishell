@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 20:40:08 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/10 08:08:21 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ typedef struct
 {
 	int				last_status;
 	char			*progname;
-	pid_t			pids[STATE_PIDS_MAX_SIZE];
-	size_t			pids_len;
+	pid_t			child_pid;
 	bool			killed;
 	bool			is_child;
 }					t_state;
@@ -126,6 +125,9 @@ int					builtin_exit(char **argv, t_env env);
 char				**preprocess(t_tok_lst **tokens, t_env env);
 int					preprocess_filename(
 						t_tok_lst **tokens, t_env env, char **filename);
+size_t				interpolate(
+						char *str, size_t i, t_tok_lst **curr_addr,
+						enum e_tok prev_tag, t_env env);
 
 /*
 ** signal.c
@@ -149,7 +151,19 @@ bool				utils_strisblank(char *str);
 
 bool				setup(char *first_arg, t_env env);
 
-size_t				interpolate(
-	char *str, size_t i, t_tok_lst **curr_addr, enum e_tok prev_tag, t_env env);
+
+/*
+** debug.c
+*/
+
+# ifdef MINISHELL_TEST
+
+#  include "parser.h"
+
+int					debug_lexer(char *input);
+int					debug_parser(char *input);
+void				ast_print(int level, t_ast *ast);
+
+# endif
 
 #endif
