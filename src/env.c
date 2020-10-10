@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:21:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/09/16 16:29:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/10 18:08:17 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ size_t		env_key_len(char *key, bool allow_status)
 	size_t	i;
 
 	if (allow_status && *key == '?')
-		return (2);
+		return (1);
 	if (ft_isdigit(*key))
 		return (0);
 	i = 0;
