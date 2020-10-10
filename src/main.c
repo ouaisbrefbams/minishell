@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 15:51:00 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 08:39:05 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@
 #include "lexer.h"
 #include "parser.h"
 #include "eval.h"
-
-int		debug_lexer(char *input);
-int		debug_parser(char *input);
 
 t_state	g_state;
 

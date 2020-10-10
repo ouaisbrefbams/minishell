@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 08:08:21 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 08:14:38 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # include "libft_dstr.h"
 
 # include "lexer.h"
+# include "parser.h"
 # include "error.h"
 
 /*
@@ -151,14 +152,11 @@ bool				utils_strisblank(char *str);
 
 bool				setup(char *first_arg, t_env env);
 
-
 /*
 ** debug.c
 */
 
 # ifdef MINISHELL_TEST
-
-#  include "parser.h"
 
 int					debug_lexer(char *input);
 int					debug_parser(char *input);

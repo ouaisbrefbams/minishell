@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/19 10:51:26 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/09 13:44:09 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 08:35:51 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,6 @@ enum					e_tok
 };
 
 /*
-** tok_lst.c
-*/
-
-/*
 ** \brief          Token list struct
 ** \param content  token string content
 ** \param next     next token in the list (NULL if end)
@@ -85,27 +81,33 @@ typedef struct			s_tok_lst
 	enum e_tok			tag;
 }						t_tok_lst;
 
+/*
+** tok_lst.c
+*/
+
 t_tok_lst				*tok_lst_new(enum e_tok tag, char *content);
 t_tok_lst				*tok_lst_new_until(
 							enum e_tok tag, char *content, size_t n);
-void					tok_lst_push_back(
-							t_tok_lst **tokens, t_tok_lst *pushed);
 t_tok_lst				*tok_lst_push_front(
+							t_tok_lst **tokens, t_tok_lst *pushed);
+t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens);
+
+/*
+** tok_lst_wrapper.c
+*/
+
+void					tok_lst_push_back(
 							t_tok_lst **tokens, t_tok_lst *pushed);
 void					tok_lst_pop_front(
 							t_tok_lst **tokens, void (*del)(void*));
 void					*tok_lst_destroy(
 							t_tok_lst **tokens, void (*del)(void*));
 t_tok_lst				*tok_lst_last(t_tok_lst *tokens);
-t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens);
 
 /*
 ** lexer.c
 */
 
-int						len_until_sep(char *input);
-int						tok_len(char *input);
-t_tok_lst				*create_token_list(char *input, t_tok_lst **lst);
 int						lexer(char *input, t_tok_lst **out);
 
 /*
@@ -113,9 +115,7 @@ int						lexer(char *input, t_tok_lst **out);
 */
 
 enum e_tok				tok_assign_tag(char *content);
-enum e_tok				tok_assign_stick(t_tok_lst *tok);
 enum e_tok				tok_assign_str(t_tok_lst *tok);
-int						lexer_sep(char input);
 int						lexer_space(char *input);
 int						quote_len(char *input, int i);
 

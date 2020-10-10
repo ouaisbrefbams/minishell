@@ -6,14 +6,19 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:25 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/09 15:12:51 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 08:35:03 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 #include <stdio.h>
 
-int				len_until_sep(char *input)
+static int			st_lexer_sep(char c)
+{
+	return (ft_strchr(";&|><()", c) != NULL);
+}
+
+static int			st_len_until_sep(char *input)
 {
 	int i;
 
@@ -26,10 +31,10 @@ int				len_until_sep(char *input)
 			if (ft_isblank(input[i]))
 				return (i + 1 + lexer_space(&input[i + 1]));
 			else if (input[i] != '\'' || input[i] != '"')
-				i += len_until_sep(&input[i]);
+				i += st_len_until_sep(&input[i]);
 			return (i);
 		}
-		if (lexer_sep(input[i]))
+		if (st_lexer_sep(input[i]))
 			return (i);
 		if (input[i] == '\'' || input[i] == '"')
 			return (i);
@@ -39,19 +44,19 @@ int				len_until_sep(char *input)
 	return (i);
 }
 
-int				tok_len(char *input)
+static int			st_tok_len(char *input)
 {
 	int i;
 
 	i = 0;
-	if (input[i] == '\\' && lexer_sep(input[i + 1]))
+	if (input[i] == '\\' && st_lexer_sep(input[i + 1]))
 	{
 		i += 2;
 		return (i + lexer_space(&input[i]));
 	}
 	if (input[i] == '(' || input[i] == ')')
 		return (i + 1);
-	if (lexer_sep(input[i]))
+	if (st_lexer_sep(input[i]))
 	{
 		if (input[i] != ';' && input[i] == input[i + 1])
 			i++;
@@ -61,7 +66,7 @@ int				tok_len(char *input)
 		return (quote_len(input, i));
 	if (ft_isblank(input[i]))
 		return (i + 1 + lexer_space(&input[i + 1]));
-	return (len_until_sep(&input[i]));
+	return (st_len_until_sep(&input[i]));
 }
 
 /*
@@ -72,7 +77,7 @@ int				tok_len(char *input)
 **		  return all token
 */
 
-t_tok_lst		*create_token_list(char *input, t_tok_lst **lst)
+static t_tok_lst	*st_create_token_list(char *input, t_tok_lst **lst)
 {
 	t_tok_lst	*tok;
 	size_t		i;
@@ -83,7 +88,7 @@ t_tok_lst		*create_token_list(char *input, t_tok_lst **lst)
 	i = 0;
 	while (i < len)
 	{
-		j = tok_len(&input[i]);
+		j = st_tok_len(&input[i]);
 		tok = tok_lst_new_until(0, input + i, j);
 		tok->tag = tok_assign_tag(tok->content);
 		if (tok->tag == 0)
@@ -103,12 +108,12 @@ t_tok_lst		*create_token_list(char *input, t_tok_lst **lst)
 ** \return       The created tokens or NULL on error
 */
 
-int				lexer(char *input, t_tok_lst **out)
+int					lexer(char *input, t_tok_lst **out)
 {
 	int status;
 
 	*out = NULL;
-	*out = create_token_list(input, out);
+	*out = st_create_token_list(input, out);
 	status = lexer_trim(*out);
 	return (status);
 }

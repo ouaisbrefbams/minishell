@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/27 09:32:58 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 15:14:38 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 08:15:34 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,6 @@ t_tok_lst				*tok_lst_new_until(
 	return (ret);
 }
 
-void					tok_lst_push_back(t_tok_lst **tokens, t_tok_lst *pushed)
-{
-	ft_lstpush_back((t_ftlst**)tokens, (t_ftlst*)pushed);
-}
-
 t_tok_lst				*tok_lst_push_front(
 	t_tok_lst **tokens, t_tok_lst *pushed)
 {
@@ -57,23 +52,6 @@ t_tok_lst				*tok_lst_push_front(
 		return (NULL);
 	ft_lstpush_front((t_ftlst**)tokens, (t_ftlst*)pushed);
 	return (*tokens);
-}
-
-void					tok_lst_pop_front(
-	t_tok_lst **tokens, void (*del)(void*))
-{
-	ft_lstpop_front((t_ftlst**)tokens, del);
-}
-
-void					*tok_lst_destroy(t_tok_lst **tokens, void (*del)(void*))
-{
-	ft_lstdestroy((t_ftlst**)tokens, del);
-	return (NULL);
-}
-
-t_tok_lst				*tok_lst_last(t_tok_lst *tokens)
-{
-	return ((t_tok_lst*)ft_lstlast((t_ftlst*)tokens));
 }
 
 t_tok_lst				*tok_lst_uncons(t_tok_lst **tokens)
