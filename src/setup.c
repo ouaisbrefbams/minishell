@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 15:46:09 by charles           #+#    #+#             */
-/*   Updated: 2020/10/10 11:19:44 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 13:49:11 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ bool	setup_env(t_env env)
 	if (!(getcwd(buf, PATH_MAX)))
 		return (false);
 	if (!st_export_default(env, "PWD", buf) ||
-		!st_export_default(env, "SHLVL", "1") ||
 		!st_export_default(env, "PATH", "/sbin:"))
 		return (false);
 	if (path_search(env, "env", buf, false) != 0)
@@ -58,12 +57,28 @@ bool	setup_env(t_env env)
 bool	setup_shlvl(t_env env)
 {
 	char	shlvl_str[64];
-	char	*shlvl_value;
+	char	*shlvl_old;
+	int		value;
+	char	*end;
 
-	shlvl_value = env_search(env, "SHLVL", NULL);
-	if (shlvl_value == NULL)
-		return (false);
-	ft_itoa_cpy(shlvl_str, ft_atoi(shlvl_str));
+	shlvl_old = env_search(env, "SHLVL", NULL);
+	if (shlvl_old == NULL)
+		shlvl_old = "0";
+	errno = 0;
+	value = (int)ft_strtol(shlvl_old, &end, 10);
+	if (errno != 0 || *end != '\0')
+		value = 0;
+	value++;
+	if (value < 0)
+		value = 0;
+	if (value > 1000)
+	{
+		errorf("warning: shell level (");
+		ft_putnbr_fd(value, STDERR_FILENO);
+		ft_putstr_fd(") too high, resetting to 1\n", STDERR_FILENO);
+		value = 1;
+	}
+	ft_itoa_cpy(shlvl_str, value);
 	return (env_export(env, "SHLVL", shlvl_str) != NULL);
 }
 
@@ -99,5 +114,5 @@ bool	setup(char *first_arg, t_env env)
 	signal(SIGQUIT, signal_sigquit);
 	signal(SIGTERM, signal_sigterm);
 	setup_progname(first_arg);
-	return (setup_env(env) || setup_shlvl(env));
+	return (setup_env(env) && setup_shlvl(env));
 }
