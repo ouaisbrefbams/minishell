@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 08:39:05 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 09:25:52 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int		execute(t_env env, char *input)
 		return (status);
 	}
 	parser_out = parse(lexer_out);
-	if (parser_out == NULL || parser_out->syntax_error)
+	if (parsed_check(parser_out))
 	{
 		free(parser_out);
 		return (2);

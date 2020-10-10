@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 18:09:04 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/10 09:19:32 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 09:24:28 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ t_parsed	*parse_pipeline(t_tok_lst *input)
 	t_ast		*pipeline_ast;
 
 	expr = parse_expr(input);
-	if (parsed_err(expr) || expr->rest == NULL || expr->rest->tag != TAG_PIPE)
+	if (parsed_check(expr) || expr->rest == NULL || expr->rest->tag != TAG_PIPE)
 		return (expr);
 	tok_lst_pop_front(&expr->rest, free);
 	if (expr->rest == NULL)
 		return (destroy_ret(expr, parsed_expected()));
-	if (parsed_err(tail = parse_pipeline(expr->rest)))
+	if (parsed_check(tail = parse_pipeline(expr->rest)))
 		return (destroy_ret(expr, tail));
 	expr_ast = expr->ast;
 	free(expr);
@@ -91,7 +91,7 @@ t_parsed	*parse_op(t_tok_lst *input)
 
 	if (input == NULL)
 		return (NULL);
-	if (parsed_err(left = parse_pipeline(input)))
+	if (parsed_check(left = parse_pipeline(input)))
 		return (left);
 	if ((input = left->rest) == NULL || input->tag & TAG_PARENT_CLOSE)
 		return (left);
@@ -107,7 +107,7 @@ t_parsed	*parse_op(t_tok_lst *input)
 	if (input == NULL)
 		return (destroy_ret(left, parsed_expected()));
 	right = parse_op(input);
-	if (parsed_err(right))
+	if (parsed_check(right))
 		return (destroy_ret(left, right));
 	return (parse_op_build(left, right, sep_tag));
 }
@@ -120,7 +120,7 @@ t_parsed	*parse(t_tok_lst *input)
 	if (input == NULL)
 		return (NULL);
 	parsed = parse_op(input);
-	if (parsed_err(parsed))
+	if (parsed_check(parsed))
 		return (parsed);
 	if (parsed->rest != NULL)
 	{

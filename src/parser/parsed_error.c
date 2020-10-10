@@ -6,7 +6,7 @@
 /*   By: cacharle <me@cacharle.xyz>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/10 09:20:17 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 09:20:30 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 09:24:59 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_parsed	*parsed_unexpected(char *content)
 	return (parsed_error("syntax error near unexpected token `%s'", content));
 }
 
-bool		parsed_err(t_parsed *parsed)
+bool		parsed_check(t_parsed *parsed)
 {
 	return (parsed == NULL || parsed->syntax_error);
 }

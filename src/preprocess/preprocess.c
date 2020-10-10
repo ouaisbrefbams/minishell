@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/03 08:58:49 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 15:31:33 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 10:32:53 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,15 @@ char				**preprocess(t_tok_lst **tokens, t_env env)
 	curr = *tokens;
 	while (curr != NULL)
 	{
-		if (curr->tag & (TAG_STR | TAG_STR_DOUBLE))
+		if (curr->tag & (TAG_STR | TAG_STR_DOUBLE) && (i = -1))
 		{
-			i = -1;
 			while ((str = curr->content) != NULL && str[++i] != '\0')
 			{
 				if (escape(str + i, curr->tag))
 					continue;
 				if (str[i] == '$')
-					i = interpolate(str, i, &curr, prev_tag, env) - 1;
+					i = interpolate((void*[2]){str, &curr},
+							i, prev_tag, env) - 1;
 			}
 		}
 		prev_tag = curr->tag;

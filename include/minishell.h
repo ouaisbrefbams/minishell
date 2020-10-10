@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/26 15:33:51 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 08:14:38 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 10:33:56 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,14 @@ int					builtin_exit(char **argv, t_env env);
 ** preprocess.c
 */
 
+# define INTERPOLATION_STR 0
+# define INTERPOLATION_CURR 1
+
 char				**preprocess(t_tok_lst **tokens, t_env env);
 int					preprocess_filename(
 						t_tok_lst **tokens, t_env env, char **filename);
 size_t				interpolate(
-						char *str, size_t i, t_tok_lst **curr_addr,
+						void *ptrs[2], size_t i,
 						enum e_tok prev_tag, t_env env);
 
 /*

@@ -6,7 +6,7 @@
 /*   By: cacharle <me@cacharle.xyz>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/10 08:42:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 09:11:10 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 09:24:33 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static t_parsed	*st_parse_cmd_body(t_tok_lst *input)
 		else if (input->tag & TAG_IS_REDIR)
 		{
 			tmp = parse_redir(input, &ast->redirs);
-			if (parsed_err(tmp))
+			if (parsed_check(tmp))
 			{
 				tok_lst_destroy(&tmp->rest, free);
 				ast_destroy(ast);
@@ -86,7 +86,7 @@ static t_parsed	*st_parse_parenthesis(t_tok_lst *input)
 	t_parsed	*tmp;
 	t_ast		*ast;
 
-	if (parsed_err(parsed = parse_op(input)))
+	if (parsed_check(parsed = parse_op(input)))
 		return (parsed);
 	if ((input = parsed->rest) == NULL || !(input->tag & TAG_PARENT_CLOSE))
 	{
@@ -100,7 +100,7 @@ static t_parsed	*st_parse_parenthesis(t_tok_lst *input)
 	parsed->ast = ast;
 	while (input != NULL && input->tag & TAG_IS_REDIR)
 	{
-		if (parsed_err(tmp = parse_redir(input, &parsed->ast->redirs)))
+		if (parsed_check(tmp = parse_redir(input, &parsed->ast->redirs)))
 			return (tmp);
 		input = tmp->rest;
 		free(tmp);

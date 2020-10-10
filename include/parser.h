@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 09:00:00 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 09:20:53 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 09:24:15 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void					parsed_destroy(t_parsed *parsed);
 t_parsed				*parsed_error(const char *format, ...);
 t_parsed				*parsed_expected(void);
 t_parsed				*parsed_unexpected(char *content);
-bool					parsed_err(t_parsed *parsed);
+bool					parsed_check(t_parsed *parsed);
 
 /*
 ** parse.c
