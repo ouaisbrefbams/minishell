@@ -6,11 +6,20 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/15 11:05:34 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 14:38:16 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 11:40:16 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
+
+/*
+** \brief           Open a file and close the previous opened file
+**                  if there was one already setup
+** \param filename  File to open
+** \param fd        File descriptor to set or replace
+** \param oflag     Flag passed to the open function
+** \return          0 on success, the error status code otherwise
+*/
 
 static int	st_open_replace(char *filename, int *fd, int oflag)
 {
@@ -30,6 +39,15 @@ static int	st_open_replace(char *filename, int *fd, int oflag)
 	}
 	return (0);
 }
+
+/*
+** \brief           Call st_open_replace with different argument
+**                  according to the redirection type
+** \param filename  Name of the file to open
+** \param fds       Input/output file descriptors
+** \param tag       Token tag of the redirection
+** \return          Whatever st_open_replace returns
+*/
 
 static int	st_open_replace_dispatch(char *filename, int fds[2], enum e_tok tag)
 {
@@ -63,6 +81,16 @@ static int	st_tok_lsts_destroy_ret(
 	tok_lst_destroy(tokens2, free);
 	return (ret);
 }
+
+/*
+** \brief         Extract redirections from tokens
+** \param redirs  List of token of redirection, in the format
+**                redir token -> n sticked string token -> redir token -> ...
+** \param env     Environement need for interpolation of redirection filename
+** \param fds     Input/output file descriptor to setup
+** \return        0 on success,
+**                the command evaluation error status code otherwise
+*/
 
 int			redir_extract(t_tok_lst **redirs, t_env env, int fds[2])
 {

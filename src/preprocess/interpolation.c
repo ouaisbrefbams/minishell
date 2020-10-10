@@ -6,13 +6,19 @@
 /*   By: cacharle <me@cacharle.xyz>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 15:27:46 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 10:26:43 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 11:07:57 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 #include "lexer.h"
 #include "minishell.h"
+
+/*
+** \brief      Split a string into token
+** \param str  String to split
+** \return     The list of tokens or NULL on error
+*/
 
 static t_tok_lst	*st_field_split(char *str)
 {
@@ -45,6 +51,19 @@ static t_tok_lst	*st_field_split(char *str)
 #define MATCH 1
 #define AFTER 2
 
+/*
+** \brief       Search for a match in the environmnet
+**              initialize strs variable if found
+** \param strs  Strings to intialise
+**              strs[0] string before the match
+**              strs[1] interpolation match
+**              strs[2] string after the match
+** \param env   Environment
+** \param str   Current string to search in the environment
+** \param i     Current position in the str
+** \return      Return true on match, false otherwise
+*/
+
 static bool			st_make_strs(char *strs[3], t_env env, char *str, size_t i)
 {
 	size_t	var_len;
@@ -61,6 +80,15 @@ static bool			st_make_strs(char *strs[3], t_env env, char *str, size_t i)
 	strs[AFTER] = &str[i + var_len];
 	return (true);
 }
+
+/*
+** \brief         Merge the fields tokens in the current token
+** \param strs    before/match/after strings
+** \param curr    Pointer to list where to merge the fields
+** \param fields  Fields to merge in curr
+** \param len     The current position in the string after the interpolation
+** \return        Returns len because of norm complience trick
+*/
 
 static size_t		st_merge_fields_in_curr(
 	char *strs[3], t_tok_lst **curr, t_tok_lst *fields, size_t len)
@@ -79,6 +107,15 @@ static size_t		st_merge_fields_in_curr(
 	free(fields);
 	return (len);
 }
+
+/*
+** \brief           Interpolate a non quoted string
+** \param strs      before/match/after strings
+** \param curr      Current token
+** \param i         Current position in string
+** \param prev_tag  Previous Token tag
+** \return          The position after the interpolation
+*/
 
 static size_t		st_interpolate_non_quoted(
 	char *strs[3], t_tok_lst **curr, size_t i, enum e_tok prev_tag)
@@ -108,6 +145,17 @@ static size_t		st_interpolate_non_quoted(
 		return (st_merge_fields_in_curr(strs, curr, fields, len));
 	return (i);
 }
+
+/*
+** \brief           Interpolate the string in a token
+** \param ptrs      Norm complience trick
+**                  ptrs[0] (char*)       current string
+**                  ptrs[1] (t_tok_lst**) current token
+** \param i         Current position in token
+** \param prev_tag  Tag of the previous token
+** \param env       Environment
+** \return          The position in the token after interpolation
+*/
 
 size_t				interpolate(
 	void *ptrs[2], size_t i, enum e_tok prev_tag, t_env env)

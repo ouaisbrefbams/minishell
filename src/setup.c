@@ -6,11 +6,19 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/16 15:46:09 by charles           #+#    #+#             */
-/*   Updated: 2020/10/10 08:08:35 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 11:19:44 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+** \brief        Export variable if not already in environment
+** \param env    Environment where to export
+** \param key    Key to check for export
+** \param value  Default value
+** \return       True if allocation succeded, false otherwise
+*/
 
 bool	st_export_default(t_env env, char *key, char *value)
 {
@@ -18,6 +26,12 @@ bool	st_export_default(t_env env, char *key, char *value)
 		return (true);
 	return (env_export(env, key, value) != NULL);
 }
+
+/*
+** \brief      Setup the environment variables
+** \param env  Environment to setup
+** \return     true on success, false otherwise
+*/
 
 bool	setup_env(t_env env)
 {
@@ -35,6 +49,12 @@ bool	setup_env(t_env env)
 	return (true);
 }
 
+/*
+** \brief      Increment the SHLVL variable
+** \param env  Environment where to set SHLVL
+** \return     true on success, false otherwise
+*/
+
 bool	setup_shlvl(t_env env)
 {
 	char	shlvl_str[64];
@@ -46,6 +66,12 @@ bool	setup_shlvl(t_env env)
 	ft_itoa_cpy(shlvl_str, ft_atoi(shlvl_str));
 	return (env_export(env, "SHLVL", shlvl_str) != NULL);
 }
+
+/*
+** \brief            Initialize the progname global variable
+**                   used in error messages
+** \param first_arg  argv[0] of minishell
+*/
 
 void	setup_progname(char *first_arg)
 {
@@ -59,6 +85,13 @@ void	setup_progname(char *first_arg)
 	else
 		g_state.progname = last_slash + 1;
 }
+
+/*
+** \brief            Setup minishell (signals, env variables, progname)
+** \param first_arg  Used in setup_progname
+** \param env        Environment
+** \return           true on succes, false otherwise
+*/
 
 bool	setup(char *first_arg, t_env env)
 {

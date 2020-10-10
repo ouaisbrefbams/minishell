@@ -6,13 +6,21 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 14:31:45 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 11:32:36 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 
 pid_t	g_child_pid = -1;
+
+/*
+** \brief        Function wrapped in fork_wrap.
+**               If it's a builtin, call the coresponding builtin function
+**               Otherwise call execve
+** \param param  Parameters of this function
+** \return       The status of the builtin or the error code of execve
+*/
 
 static int	st_wrapped_cmd(t_fork_param_cmd *param)
 {
@@ -35,6 +43,15 @@ static int	st_split_destroy_ret(int ret, char **strs)
 	ft_split_destroy(strs);
 	return (ret);
 }
+
+/*
+** \brief      Evaluate a command
+** \param fds  Input/output file descriptor of the command
+** \param env  Environment
+** \param ast  Comment AST node
+** \return     EVAL_FATAL no allocation error,
+**             the status of the runned command otherwise
+*/
 
 int			eval_cmd(int fds[2], t_env env, t_ast *ast)
 {

@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 12:40:51 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 11:12:47 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ void	print_prompt(void)
 	ft_putstr_fd("\033[0m$ ", STDERR_FILENO);
 }
 
+/*
+** \brief            Exit the program on condition
+** \param predicate  Exit if true
+*/
+
 void	exit_if(bool predicate)
 {
 	if (!predicate)
@@ -47,6 +52,12 @@ void	exit_if(bool predicate)
 	ft_putendl_fd("minishell: fatal error", STDERR_FILENO);
 	exit(3);
 }
+
+/*
+** \brief      Check if a string only contains spaces and tabs
+** \param str  String to chec
+** \return     True if only contains blank, false otherwise
+*/
 
 bool	utils_strisblank(char *str)
 {

@@ -6,13 +6,22 @@
 /*   By: cacharle <me@cacharle.xyz>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/09 15:29:04 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 15:30:03 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 10:49:50 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
 #include "lexer.h"
 #include "minishell.h"
+
+/*
+** \brief           Preprocess the tokens of a filename
+** \param tokens    List of sicked string tokens
+** \param env       Environment
+** \param filename  A pointer where to put the resulting filename
+** \return          Return 0 on success, 1 on ambiguous redirect,
+**                  EVAL_FATAL if an allocation failed
+*/
 
 int	preprocess_filename(t_tok_lst **tokens, t_env env, char **filename)
 {

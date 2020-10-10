@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 16:12:27 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 11:28:12 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,9 @@ static int	st_replace(int oldfd, int newfd)
 
 /*
 ** \brief            Wrap a function in a fork
-** \param fds        fork read/write file descriptors
-** \param passed     param of the wrapped function
-** \param wrapped    function to wrap
-** \param child_pid  Pointer where to store the child pid
-**                   or NULL if the child should be waited
+** \param fds        Fork read/write file descriptors
+** \param passed     Param of the wrapped function
+** \param wrapped    Function to wrap
 ** \return           The child status code or EVAL_FATAL on error
 */
 
