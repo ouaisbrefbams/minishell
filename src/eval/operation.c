@@ -6,11 +6,20 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/09 20:39:33 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/10 13:01:56 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "eval.h"
+
+/*
+** \brief      Evaluate an operation &&/||/;
+** \param fds  Input/output filedescriptor
+** \param env  Environment
+** \param ast  Operation AST node
+** \return     Status code of the left hand side if short circuit,
+**             stat code of the right hand side otherwise.
+*/
 
 int			eval_operation(int fds[2], t_env env, t_ast *ast)
 {
@@ -24,9 +33,9 @@ int			eval_operation(int fds[2], t_env env, t_ast *ast)
 	right_fds[FD_WRITE] = fds[FD_WRITE];
 	if ((status = eval(left_fds, env, ast->op.left)) == EVAL_FATAL)
 		return (EVAL_FATAL);
-	g_state.last_status = status;
 	if (g_state.killed)
 		return (status);
+	g_state.last_status = status;
 	if ((ast->op.sep == TAG_AND && status != 0) ||
 		(ast->op.sep == TAG_OR && status == 0))
 		return (status);
@@ -61,6 +70,13 @@ static int	st_run_piped(
 	}
 	return (pid);
 }
+
+/*
+** \brief      Evaluate a pipeline
+** \param env  Environment
+** \param ast  Pipeline AST node
+** \return     Status of the last command in the pipeline
+*/
 
 int			eval_pipeline(t_env env, t_ast *ast)
 {

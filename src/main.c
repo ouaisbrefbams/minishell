@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:45:44 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 09:25:52 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 12:57:07 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		run_eval(t_env env, t_parsed *parser_out)
 	free(parser_out);
 	if (status == EVAL_FATAL)
 		exit(1);
-	g_state.last_status = status;
+	g_state.last_status = g_state.killed ? g_state.last_status : status;
 	return (status);
 }
 

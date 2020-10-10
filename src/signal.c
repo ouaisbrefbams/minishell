@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 09:16:16 by charles           #+#    #+#             */
-/*   Updated: 2020/10/10 11:23:47 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 13:00:42 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	signal_sigint(int signum)
 		return ;
 	if (g_child_pid != -1)
 	{
-		g_state.last_status = 1;
+		g_state.last_status = 130;
 		if (kill(g_child_pid, SIGINT) != -1)
 			ft_putchar('\n');
 		g_state.killed = true;
@@ -54,7 +54,8 @@ void	signal_sigquit(int signum)
 	{
 		g_state.last_status = 131;
 		kill(g_child_pid, SIGQUIT);
-		ft_putstr("Quit (core dumped)\n");
+		g_state.killed = true;
+		ft_putstr("Quit: 3\n");
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:29 by charles           #+#    #+#             */
-/*   Updated: 2020/10/07 15:56:09 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 12:44:59 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,16 @@ int			wrapped_eval(t_fork_param_args *param)
 {
 	return (eval(param->fds, param->env, param->ast));
 }
+
+/*
+** \brief      Evaluate a parenthesized expression
+**             Extract parenthesis redirection and evaluate
+**             the expression contained in the parenthesis in a fork
+** \param fds  Input/output filedescriptor
+** \param env  Environment
+** \param ast  Parenthesis AST node
+** \return     Expression status code
+*/
 
 int			eval_parenthesis(int fds[2], t_env env, t_ast *ast)
 {

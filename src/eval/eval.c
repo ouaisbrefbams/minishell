@@ -6,7 +6,7 @@
 /*   By: charles <me@cacharle.xyz>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/13 20:38:06 by charles           #+#    #+#             */
-/*   Updated: 2020/10/10 11:28:12 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 13:00:11 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int			fork_wrap(int fds[2], void *passed, t_wrapped_func wrapped)
 
 int			eval(int fds[2], t_env env, t_ast *ast)
 {
+	if (g_state.killed)
+		return (0);
 	if (ast->tag == AST_OP)
 		return (eval_operation(fds, env, ast));
 	if (ast->tag == AST_CMD)

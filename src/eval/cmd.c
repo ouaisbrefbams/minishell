@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/14 10:41:31 by charles           #+#    #+#             */
-/*   Updated: 2020/10/10 11:32:36 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/10 12:57:23 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,6 @@ int			eval_cmd(int fds[2], t_env env, t_ast *ast)
 	param.env = env;
 	status = fork_wrap(fds, &param, (t_wrapped_func)st_wrapped_cmd);
 	ft_split_destroy(argv);
-	g_state.last_status = status;
+	g_state.last_status = g_state.killed ? g_state.last_status : status;
 	return (status);
 }
