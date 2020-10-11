@@ -6,13 +6,13 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/03 04:14:24 by cacharle          #+#    #+#              #
-#    Updated: 2020/10/10 08:11:22 by cacharle         ###   ########.fr        #
+#    Updated: 2020/10/11 16:15:18 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 RM = rm -f
 MAKE = make --no-print-directory
-JOBS = 2
+JOBS = 1
 DOXYGEN = doxygen
 DOXYGEN_FILE = Doxyfile
 DOC_DIR = doc
