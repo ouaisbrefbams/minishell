@@ -1,9 +1,0 @@
-[submodule "libft"]
-	path = libft
-	url = https://github.com/HappyTramp/libft
-	branch = minishell
-
-[submodule "minishell_test"]
-	path = minishell_test
-	url = https://github.com/HappyTramp/minishell_test
-	branch = master
