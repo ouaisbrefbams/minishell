@@ -6,7 +6,7 @@
 /*   By: cacharle <cacharle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/28 11:56:31 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/10 11:12:47 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/15 09:39:27 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 void	print_prompt(void)
 {
 	char	cwd[PATH_MAX + 1];
-	char	*last_slash;
 
 	ft_bzero(cwd, PATH_MAX + 1);
 	if (getcwd(cwd, PATH_MAX) == NULL)
@@ -32,9 +31,6 @@ void	print_prompt(void)
 		ft_putstr_fd("$ ", STDERR_FILENO);
 		return ;
 	}
-	last_slash = ft_strrchr(cwd, '/');
-	if (last_slash != NULL && ft_strlen(cwd) != 1)
-		ft_strcpy(cwd, last_slash + 1);
 	ft_putstr_fd("\033[0;32m", STDERR_FILENO);
 	ft_putstr_fd(cwd, STDERR_FILENO);
 	ft_putstr_fd("\033[0m$ ", STDERR_FILENO);
