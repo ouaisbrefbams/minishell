@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/04/01 17:10:20 by charles           #+#    #+#             */
-/*   Updated: 2020/10/11 21:11:40 by charles          ###   ########.fr       */
+/*   Updated: 2020/10/15 09:38:55 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,10 @@ int	builtin_cd(char **argv, t_env env)
 	if (argv[1] != NULL && argv[1][0] == '\0')
 		return (env_export(env, "OLDPWD", oldwd) == NULL ? EVAL_FATAL : 0);
 	if (argv[1] == NULL)
+	{
 		if ((home = env_search(env, "HOME", NULL)) == NULL)
 			return (errorf_ret(1, "cd: HOME not set\n"));
+	}
 	else
 		home = argv[1];
 	if (chdir(home) == -1)

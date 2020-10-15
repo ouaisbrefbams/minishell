@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 15:51:01 by cacharle          #+#    #+#             */
-/*   Updated: 2020/10/09 13:36:26 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/15 09:35:31 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static bool		st_dir_search(
 		return (false);
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if (ft_strcmp(entry->d_name, exec_name) == 0)
+		if (ft_strcasecmp(entry->d_name, exec_name) == 0)
 		{
 			ft_strcpy(exec_path, dirname);
 			ft_strcat(exec_path, "/");
