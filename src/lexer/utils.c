@@ -6,7 +6,7 @@
 /*   By: nahaddac <nahaddac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/16 08:18:15 by nahaddac          #+#    #+#             */
-/*   Updated: 2020/10/10 08:38:46 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/10/15 10:32:00 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ enum e_tok			tok_assign_tag(char *content)
 		return (TAG_OR);
 	if (content[0] == '|')
 		return (TAG_PIPE);
+	if (ft_strncmp(content, ">>", 2) == 0)
+		return (TAG_REDIR_APPEND);
 	if (content[0] == '>')
 		return (TAG_REDIR_OUT);
 	if (content[0] == '<')
 		return (TAG_REDIR_IN);
-	if (ft_strncmp(content, ">>", 2) == 0)
-		return (TAG_REDIR_APPEND);
 	if (content[0] == '(')
 		return (TAG_PARENT_OPEN);
 	if (content[0] == ')')
