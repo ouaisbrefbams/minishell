@@ -10,3 +10,5 @@ a.out
 vgcore.*
 *.orig
 *.dSYM
+*.ppm
+*.mp4
