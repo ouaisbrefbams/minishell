@@ -6,7 +6,7 @@
 /*   By: charles <charles.cabergs@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/17 15:27:22 by charles           #+#    #+#             */
-/*   Updated: 2020/10/10 18:17:15 by charles          ###   ########.fr       */
+/*   Updated: 2021/02/03 19:11:54 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ int				eval_pipeline(t_env env, t_ast *ast)
 	curr = ast->pipeline;
 	while (curr->next != NULL)
 	{
-		pipe(pipes);
+		if (pipe(pipes) != 0)
+			return (EVAL_FATAL);
 		st_run_piped(env, curr->data, pipes, false);
 		close(pipes[FD_WRITE]);
 		if (pipes[PIPES_PREV_OUTPUT] != STDIN_FILENO)
