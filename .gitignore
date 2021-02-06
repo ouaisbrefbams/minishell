@@ -12,3 +12,5 @@ vgcore.*
 *.dSYM
 *.ppm
 *.mp4
+*.log
+bin/
