@@ -1,0 +1,13 @@
+name: norminette
+
+on: [push, pull_request]
+
+jobs:
+  norminette:
+    runs-on: ubuntu-latest
+    name: 42 Norminette
+    steps:
+      - uses: actions/checkout@v2
+      - uses: alexandregv/norminette-action@v2
+        with:
+          flags: src include

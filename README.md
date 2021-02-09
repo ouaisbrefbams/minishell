@@ -1,4 +1,4 @@
-# minishell [![forthebadge](https://forthebadge.com/images/badges/just-plain-nasty.svg)](https://forthebadge.com)
+# minishell ![norminette](https://github.com/ouaisbrefbams/minishell/workflows/norminette/badge.svg)
 
 minishell project of school 42.
 
